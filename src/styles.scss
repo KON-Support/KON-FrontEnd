@@ -1,13 +1,13 @@
-/* Adicione isso ao seu styles.scss existente */
+* {
+    font-family: 'Inter', sans-serif;
+}
 
 .main-content {
     margin-left: 256px;
-    /* Largura da sidebar */
     min-height: 100vh;
     background-color: #f8f9fa;
 }
 
-/* Responsivo - esconde sidebar em telas pequenas */
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
