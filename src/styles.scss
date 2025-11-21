@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+/* Adicione isso ao seu styles.scss existente */
+
+.main-content {
+    margin-left: 256px;
+    /* Largura da sidebar */
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Responsivo - esconde sidebar em telas pequenas */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+
+        &.show {
+            transform: translateX(0);
+        }
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+}
