@@ -1,0 +1,99 @@
+.card-chamado {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    background-color: #fff;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-color: #667eea;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+}
+
+.ticket-id {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 0.875rem;
+}
+
+.card-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-description {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.status-aberto {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-andamento {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.status-resolvido {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.status-fechado {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+
+.users-info {
+    .user-row {
+        font-size: 0.813rem;
+
+        i {
+            font-size: 0.875rem;
+            width: 16px;
+        }
+    }
+}
+
+.card-footer-custom {
+
+    .date-info,
+    .sla-info {
+        font-size: 0.75rem;
+    }
+}
+
+.ticket-indicators {
+    display: flex;
+    gap: 0.25rem;
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.4rem;
+    }
+}
+
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+}

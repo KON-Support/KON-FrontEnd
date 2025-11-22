@@ -1,1 +1,70 @@
-<p>card-chamado works!</p>
+<div class="card card-chamado" (click)="onCardClick()">
+  <div class="card-body">
+    <div class="card-header-custom d-flex justify-content-between align-items-start mb-3">
+      <div class="ticket-info">
+        <span class="ticket-id">#{{ chamado().cdChamado }}</span>
+        <span class="badge ms-2" [ngClass]="getStatusClass()">
+          <i class="bi me-1" [ngClass]="getStatusIcon()"></i>
+          {{ getStatusLabel() }}
+        </span>
+      </div>
+      <div class="ticket-indicators">
+        @if (isSlaViolado()) {
+          <span class="badge bg-danger" title="SLA Violado">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </span>
+        }
+        @if (hasAnexo()) {
+          <span class="badge bg-secondary ms-1" title="Possui anexo">
+            <i class="bi bi-paperclip"></i>
+          </span>
+        }
+      </div>
+    </div>
+
+    <h6 class="card-title mb-2">{{ chamado().dsTitulo }}</h6>
+    <p class="card-description text-muted mb-3">{{ chamado().dsDescricao }}</p>
+
+    @if (chamado().categoria) {
+      <div class="mb-3">
+        <span class="badge bg-light text-dark">
+          <i class="bi bi-tag me-1"></i>
+          {{ chamado().categoria.nmCategoria }}
+        </span>
+      </div>
+    }
+
+    <div class="users-info mb-3">
+      <div class="user-row d-flex align-items-center mb-2">
+        <i class="bi bi-person text-muted me-2"></i>
+        <small class="text-muted me-1">Solicitante:</small>
+        <small class="fw-medium">{{ chamado().solicitante?.nmUsuario || 'Não informado' }}</small>
+      </div>
+      <div class="user-row d-flex align-items-center">
+        <i class="bi bi-person-gear text-muted me-2"></i>
+        <small class="text-muted me-1">Responsável:</small>
+        <small class="fw-medium">{{ chamado().responsavel?.nmUsuario || 'Não atribuído' }}</small>
+      </div>
+    </div>
+
+    <div class="card-footer-custom d-flex justify-content-between align-items-center pt-3 border-top">
+      <div class="date-info">
+        <small class="text-muted">
+          <i class="bi bi-calendar3 me-1"></i>
+          {{ formatDate(chamado().dtCriacao) }}
+          @if (chamado().hrCriacao) {
+            <span class="ms-1">{{ formatTime(chamado().hrCriacao) }}</span>
+          }
+        </small>
+      </div>
+      @if (chamado().dtVencimento) {
+        <div class="sla-info">
+          <small [ngClass]="isSlaViolado() ? 'text-danger' : 'text-warning'">
+            <i class="bi bi-clock me-1"></i>
+            Vence: {{ formatDate(chamado().dtVencimento) }}
+          </small>
+        </div>
+      }
+    </div>
+  </div>
+</div>
