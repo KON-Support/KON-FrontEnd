@@ -4,6 +4,8 @@ import { Tickets } from './views/tickets/tickets';
 import { Login } from './views/login/login';
 import { Cadastro } from './views/cadastro/cadastro';
 
+import { NovoTicket } from './components/novo-ticket/novo-ticket';
+
 export const routes: Routes = [
   // { Quando estiver funcionando o AuthGuard descomentar essa parte, pq é para quando abrir o site ja ir direto para o login
   //   path: '',
@@ -16,6 +18,11 @@ export const routes: Routes = [
     component: Login
   },
 
+  {
+    path: '',
+    redirectTo: 'agente/dashboard',
+    pathMatch: 'full',
+  },
   {
     path: 'agente/dashboard',
     component: AgenteDashboard,
@@ -30,4 +37,8 @@ export const routes: Routes = [
     component: Cadastro,
   },
 
+  {
+    path: 'novo-ticket',
+    component: NovoTicket,
+  },
 ];
