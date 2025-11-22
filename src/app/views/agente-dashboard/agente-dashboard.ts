@@ -9,6 +9,7 @@ import { TicketsUrgentes } from '../../components/tickets-urgentes/tickets-urgen
   templateUrl: './agente-dashboard.html',
   styleUrl: './agente-dashboard.scss',
 })
+
 export class AgenteDashboard {
   
 }
