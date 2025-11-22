@@ -1,0 +1,83 @@
+<div class="login-wrapper">
+  <div class="login-card card">
+    <div class="card-body p-4">
+      <div class="header text-center mb-4">
+        <div class="logo-circle mx-auto mb-2">
+          <i class="bi bi-grid-3x3-gap-fill"></i>
+        </div>
+
+        <h1 class="h3 mb-1">KON Support</h1>
+        <p class="text-muted mb-0">Sistema de Suporte Técnico</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-3">
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input
+            type="email"
+            class="form-control"
+            [class.is-invalid]="email?.invalid && email?.touched"
+            placeholder="seu@email.com"
+            formControlName="email"
+          />
+
+          <div class="invalid-feedback" *ngIf="email?.invalid && email?.touched">
+            <span *ngIf="email?.errors?.['required']">E-mail é obrigatório</span>
+            <span *ngIf="email?.errors?.['email']">E-mail inválido</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+
+          <div class="input-group">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control"
+              [class.is-invalid]="senha?.invalid && senha?.touched"
+              placeholder="••••••••"
+              formControlName="senha"
+            />
+            <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility()">
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+
+          <div class="invalid-feedback" *ngIf="senha?.invalid && senha?.touched">
+            <span *ngIf="senha?.errors?.['required']">Senha é obrigatória</span>
+            <span *ngIf="senha?.errors?.['minlength']">Mínimo de 6 caracteres</span>
+          </div>
+        </div>
+
+        <div class="alert alert-danger d-flex align-items-center" *ngIf="error">
+          <i class="bi bi-exclamation-circle me-2"></i>
+          {{ error }}
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100" [disabled]="loading || loginForm.invalid">
+          <ng-container *ngIf="loading; else normal">
+            <span class="spinner-border spinner-border-sm me-2"></span> Entrando...
+          </ng-container>
+          <ng-template #normal>Entrar</ng-template>
+        </button>
+
+        <div class="position-relative text-center my-3">
+          <hr class="position-absolute w-100 top-50">
+          <span class="position-relative bg-white px-3 text-muted small">Ou continue com</span>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="button" class="btn btn-outline-light text-dark border">
+            <img src="google.svg" class="me-2" width="20" height="20" />
+            Google
+          </button>
+        </div>
+
+        <div class="text-center text-muted mt-3">
+          Não tem uma conta?
+          <a class="text-decoration-none ms-1" (click)="irParaCadastro()">Cadastre-se</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

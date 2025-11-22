@@ -1,0 +1,87 @@
+.login-wrapper {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  width: 448px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: none;
+}
+
+.logo-circle {
+  width: 64px;
+  height: 64px;
+  background: #dbeafe;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  i {
+    font-size: 32px;
+    color: #155dfc;
+  }
+}
+
+.form-control {
+  background: #f3f3f5;
+  border: none;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.form-control:focus {
+  background: #f3f3f5;
+  box-shadow: none;
+  outline: 1px solid #155dfc;
+}
+
+.btn-primary {
+  background: #030213;
+  border: none;
+  border-radius: 8px;
+  height: 40px;
+}
+
+.btn-primary:hover {
+  background: #030213;
+  opacity: 0.9;
+}
+
+.btn-primary:disabled {
+  background: #030213;
+  opacity: 0.6;
+}
+
+.alert-danger {
+  background: #ffe5e5;
+  color: #b60000;
+  border: none;
+  border-radius: 8px;
+}
+
+.text-muted {
+  color: #4a5565 !important;
+}
+
+.form-label {
+  color: #0a0a0a;
+  font-size: 14px;
+}
+
+.btn-outline-secondary {
+  border: none;
+  color: #6a7282;
+}
+
+.btn-outline-secondary:hover {
+  background: transparent;
+  color: #4a5565;
+}
