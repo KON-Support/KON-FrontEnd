@@ -1,0 +1,48 @@
+<div class="container px-5 mt-4">
+  <div class="row border opacity-75 py-3 rounded m-0">
+    <div class="col-md-4">
+      <div class="input-group">
+        <span class="input-group-text bg-secondary border-secondary text-white">
+          <i class="bi bi-search text-muted"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control bg-secondary border-secondary"
+          placeholder="Buscar chamado..."
+        />
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="input-group">
+        <span class="input-group-text bg-secondary border-secondary text-white">
+          <i class="bi bi-file-earmark-text text-muted"></i>
+        </span>
+        <select name="status" id="todosStatus" class="form-select bg-secondary border-secondary">
+          <option value="" disabled selected>Filtrar por status</option>
+          <option value="aberto">Aberto</option>
+          <option value="em-andamento">Em Andamento</option>
+          <option value="fechado">Fechado</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="input-group">
+        <span class="input-group-text bg-secondary border-secondary text-white">
+          <i class="bi bi-flag text-muted"></i>
+        </span>
+        <select
+          name="prioridade"
+          id="todasPrioridades"
+          class="form-select bg-secondary border-secondary"
+        >
+          <option value="" disabled selected>Filtrar por prioridade</option>
+          <option value="baixa">Baixa</option>
+          <option value="media">Média</option>
+          <option value="alta">Alta</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

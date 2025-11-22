@@ -2,11 +2,11 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ListaTickets } from '../../components/lista-tickets/lista-tickets';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
-import { AsyncPipe } from '@angular/common';
+import { FiltrosTicket } from '../../components/filtros-ticket/filtros-ticket';
 
 @Component({
   selector: 'app-tickets',
-  imports: [ListaTickets, AsyncPipe],
+  imports: [ListaTickets, FiltrosTicket],
   templateUrl: './tickets.html',
   styleUrl: './tickets.scss',
 })
