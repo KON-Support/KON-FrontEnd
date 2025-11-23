@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
@@ -12,12 +12,11 @@ import { Router } from '@angular/router';
   templateUrl: './lista-tickets.html',
   styleUrl: './lista-tickets.scss',
 })
-
 export class ListaTickets implements OnInit {
   private chamadoService = inject(ChamadoService);
   private router = inject(Router);
 
-  protected tickets: Chamado[] = [];
+  @Input() tickets: Chamado[] = [];
   protected loading = true;
 
   ngOnInit(): void {

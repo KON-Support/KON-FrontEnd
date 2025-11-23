@@ -14,11 +14,15 @@ export class CardEstatistica implements OnInit {
 
   protected tickets: Chamado[] = [];
   protected qtdTickets: number = 0;
+  protected qtdSlaVencido = this.tickets.filter((ticket) => ticket.flSlaViolado).length;
+  protected qtdResolvidosHoje: number = 0;
+  protected qtdCriticos: number = 0;
 
   ngOnInit(): void {
     this.chamadoService.buscarChamados().subscribe((response) => {
       this.tickets = response;
       this.qtdTickets = this.tickets.length;
+      this.qtdSlaVencido = this.tickets.filter((ticket) => ticket.flSlaViolado).length;
       this.cdr.detectChanges();
     });
   }
