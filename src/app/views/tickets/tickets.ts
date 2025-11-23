@@ -35,8 +35,6 @@ export class Tickets {
     });
     this.categoriaService.listarCategoriasAtivas().subscribe((response) => {
       this.categorias = response;
-
-      console.log(this.categorias.length);
     });
   }
 
