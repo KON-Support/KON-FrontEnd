@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ListaTickets } from '../../components/lista-tickets/lista-tickets';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
@@ -6,10 +7,11 @@ import { FiltrosTicket } from '../../components/filtros-ticket/filtros-ticket';
 
 @Component({
   selector: 'app-tickets',
-  imports: [ListaTickets, FiltrosTicket],
+  imports: [ListaTickets, FiltrosTicket, RouterLink],
   templateUrl: './tickets.html',
   styleUrl: './tickets.scss',
 })
+
 export class Tickets {
   private chamadoService = inject(ChamadoService);
   private cdr = inject(ChangeDetectorRef);
