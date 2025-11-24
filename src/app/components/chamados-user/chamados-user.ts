@@ -4,18 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
-import { CardChamado } from '../../components/card-chamado/card-chamado';
+import { CardChamado } from '../card-chamado/card-chamado';
 import { Status } from '../../shared/models/Status';
+import { NavbarUsuario } from "../navbar-usuario/navbar-usuario";
 
 @Component({
-  selector: 'app-tickets-user',
+  selector: 'app-chamados-user',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, CardChamado],
-  templateUrl: './tickets-user.html',
-  styleUrl: './tickets-user.scss',
+  imports: [CommonModule, FormsModule, CardChamado, NavbarUsuario],
+  templateUrl: './chamados-user.html',
+  styleUrl: './chamados-user.scss',
 })
 
-export class TicketsUser implements OnInit {
+export class ChamadosUser implements OnInit {
 
   private chamadoService = inject(ChamadoService);
   private router = inject(Router);
@@ -96,7 +97,7 @@ export class TicketsUser implements OnInit {
 
   onTicketClick(chamado: Chamado): void {
     console.log('Ticket clicado:', chamado.cdChamado);
-    this.router.navigate(['/tickets', chamado.cdChamado]);
+    this.router.navigate(['/chamados', chamado.cdChamado]);
   }
 
   abrirNovoTicket(): void {
