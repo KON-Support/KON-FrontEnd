@@ -1,1 +1,119 @@
-<p>tickets-user works!</p>
+<div class="tickets-user-container">
+
+    <div class="header-section">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+                <h3 class="mb-1">Meus Tickets</h3>
+                <p class="text-muted mb-0">{{ ticketsFiltrados.length }} tickets encontrados</p>
+            </div>
+            <button class="btn btn-primary" (click)="abrirNovoTicket()">
+                <i class="bi bi-plus-lg me-2"></i>
+                Novo Chamado
+            </button>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card stat-card-open">
+                    <div class="stat-icon">
+                        <i class="bi bi-circle-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Abertos</span>
+                        <span class="stat-value">{{ ticketsAbertos }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card stat-card-progress">
+                    <div class="stat-icon">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Em Andamento</span>
+                        <span class="stat-value">{{ ticketsEmAndamento }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card stat-card-resolved">
+                    <div class="stat-icon">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Resolvidos</span>
+                        <span class="stat-value">{{ ticketsResolvidos }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters-section">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <div class="search-input">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="form-control" placeholder="Buscar tickets..."
+                            [(ngModel)]="filtroBusca" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" [(ngModel)]="filtroStatus">
+                        <option value="">Todos os status</option>
+                        <option value="ABERTO">Aberto</option>
+                        <option value="EM_ANDAMENTO">Em Andamento</option>
+                        <option value="RESOLVIDO">Resolvido</option>
+                        <option value="FECHADO">Fechado</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (errorMessage()) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        {{ errorMessage() }}
+        <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+    </div>
+    }
+
+    @if (loading()) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+        <p class="mt-2 text-muted">Carregando seus tickets...</p>
+    </div>
+    }
+
+    @else if (ticketsFiltrados.length === 0 && !loading()) {
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="bi bi-inbox"></i>
+        </div>
+        <h5 class="empty-state-title">Nenhum ticket encontrado</h5>
+        <p class="empty-state-text">
+            @if (filtroBusca || filtroStatus) {
+            Tente ajustar os filtros de busca
+            } @else {
+            Você ainda não criou nenhum ticket. Comece abrindo um novo chamado!
+            }
+        </p>
+        @if (!filtroBusca && !filtroStatus) {
+        <button class="btn btn-primary mt-3" (click)="abrirNovoTicket()">
+            <i class="bi bi-plus-lg me-2"></i>
+            Abrir Primeiro Ticket
+        </button>
+        }
+    </div>
+    }
+
+    @else {
+    <div class="tickets-grid">
+        @for (ticket of ticketsFiltrados; track ticket.cdChamado) {
+        <app-card-chamado [chamado]="ticket" (cardClick)="onTicketClick($event)" />
+        }
+    </div>
+    }
+</div>

@@ -7,6 +7,7 @@ import { Usuario } from '../shared/models/Usuario';
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService {
   private http: HttpClient;
   private router: Router;
