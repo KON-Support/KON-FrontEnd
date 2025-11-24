@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TicketsUser } from '../../components/tickets-user/tickets-user';
+import { TicketsUser } from '../../components/chamados-user/tickets-user';
 
 @Component({
   selector: 'app-user-dashboard',

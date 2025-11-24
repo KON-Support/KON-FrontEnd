@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
-import { CardChamado } from '../../components/card-chamado/card-chamado';
+import { CardChamado } from '../card-chamado/card-chamado';
 import { Status } from '../../shared/models/Status';
 
 @Component({
