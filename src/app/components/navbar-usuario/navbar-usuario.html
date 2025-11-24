@@ -1,0 +1,55 @@
+<aside class="sidebar d-flex flex-column">
+  <div class="sidebar-header">
+    <div class="d-flex align-items-center">
+      <div class="logo-icon me-2">
+        <i class="bi bi-grid-3x3-gap-fill"></i>
+      </div>
+      <div>
+        <h5 class="mb-0 fw-bold">KON Support</h5>
+        <small class="text-muted">Portal do Cliente</small>
+      </div>
+    </div>
+    <button class="btn btn-sm btn-light refresh-btn">
+      <i class="bi bi-arrow-clockwise"></i>
+    </button>
+  </div>
+
+  <div class="px-3 mb-3">
+    <a
+      routerLink="/novo-chamado"
+      class="btn btn-primary w-100 d-flex align-items-center justify-content-center"
+    >
+      <i class="bi bi-plus-lg me-2"></i>
+      Novo Chamado
+    </a>
+  </div>
+
+  <nav class="sidebar-nav flex-grow-1">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+      </li>
+      <li class="nav-item">
+        <a routerLink="/meus-chamados" routerLinkActive="active" class="nav-link">
+          <i class="bi bi-bar-chart-fill me-2"></i>
+          Meus Chamados
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info d-flex align-items-center">
+      <div class="user-avatar me-2">
+        {{ user.initials }}
+      </div>
+      <div class="user-details">
+        <span class="user-name">{{ user.name }}</span>
+        <small class="user-email">{{ user.email }}</small>
+      </div>
+    </div>
+    <button class="btn btn-outline-secondary btn-sm w-100 mt-3" (click)="logout()">
+      <i class="bi bi-box-arrow-right me-2"></i>
+      Sair
+    </button>
+  </div>
+</aside>
