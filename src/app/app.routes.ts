@@ -5,6 +5,7 @@ import { Login } from './views/login/login';
 import { Cadastro } from './views/cadastro/cadastro';
 
 import { NovoTicket } from './components/novo-ticket/novo-ticket';
+import { Relatorios } from './views/relatorios/relatorios';
 
 export const routes: Routes = [
   // { Quando estiver funcionando o AuthGuard descomentar essa parte, pq é para quando abrir o site ja ir direto para o login
@@ -40,5 +41,9 @@ export const routes: Routes = [
   {
     path: 'novo-ticket',
     component: NovoTicket,
+  },
+  {
+    path: 'relatorios',
+    component: Relatorios,
   },
 ];
