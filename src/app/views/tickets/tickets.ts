@@ -6,10 +6,11 @@ import { ChamadoService } from '../../services/chamado-service';
 import { FormsModule } from '@angular/forms';
 import { CategoriaService } from '../../services/categoria-service';
 import { Categoria } from '../../shared/models/Categoria';
+import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
   selector: 'app-tickets',
-  imports: [ListaTickets, RouterLink, FormsModule],
+  imports: [ListaTickets, RouterLink, FormsModule, Navbar],
   templateUrl: './tickets.html',
   styleUrl: './tickets.scss',
 })

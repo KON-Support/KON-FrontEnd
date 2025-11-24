@@ -6,11 +6,12 @@ import { ChamadoService } from '../../services/chamado-service';
 import { CategoriaService } from '../../services/categoria-service';
 import { Categoria } from '../../shared/models/Categoria';
 import { Status } from '../../shared/models/Status';
+import { Navbar } from '../navbar/navbar';
 
 @Component({
   selector: 'app-novo-ticket',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, Navbar],
   templateUrl: './novo-ticket.html',
   styleUrl: './novo-ticket.scss',
 })
