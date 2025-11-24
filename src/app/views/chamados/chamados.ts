@@ -21,9 +21,9 @@ export class Chamados implements OnInit {
   private categoriaService = inject(CategoriaService);
   private cdr = inject(ChangeDetectorRef);
 
-  protected tickets = signal<Chamado[]>([]);
+  protected chamados = signal<Chamado[]>([]);
   protected categorias = signal<Categoria[]>([]);
-  protected qtdTickets = signal(0);
+  protected qtdChamados = signal(0);
   protected loading = signal(true);
 
   protected filtroBusca: string = '';
@@ -41,16 +41,16 @@ export class Chamados implements OnInit {
     this.chamadoService.buscarChamados().subscribe({
       next: (response) => {
         console.log('✅ Tickets carregados:', response.length);
-        this.tickets.set(response);
-        this.qtdTickets.set(response.length);
+        this.chamados.set(response);
+        this.qtdChamados.set(response.length);
         this.loading.set(false);
 
         this.cdr.markForCheck();
 
-        console.log('💾 Estado atualizado - Tickets:', this.tickets().length);
+        console.log('💾 Estado atualizado - Chamados:', this.chamados().length);
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar tickets:', err);
+        console.error('❌ Erro ao carregar chamados:', err);
         this.loading.set(false);
         this.cdr.markForCheck();
       },
@@ -68,31 +68,31 @@ export class Chamados implements OnInit {
     });
   }
 
-  get ticketsFiltrados(): Chamado[] {
-    let ticketsFiltrados = this.tickets();
+  get chamadosFiltrados(): Chamado[] {
+    let chamadosFiltrados = this.chamados();
 
     if (this.filtroBusca) {
       const busca = this.filtroBusca.toLowerCase();
-      ticketsFiltrados = ticketsFiltrados.filter((ticket) =>
-        ticket.dsTitulo.toLowerCase().includes(busca)
+      chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
+        chamado.dsTitulo.toLowerCase().includes(busca)
       );
     }
 
     if (this.filtroStatus) {
       const status = this.filtroStatus.toLowerCase();
-      ticketsFiltrados = ticketsFiltrados.filter((ticket) =>
-        ticket.status.toLowerCase().includes(status)
+      chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
+        chamado.status.toLowerCase().includes(status)
       );
     }
 
     if (this.filtroCategoria) {
       const categoria = this.filtroCategoria.toLowerCase();
-      ticketsFiltrados = ticketsFiltrados.filter((ticket) =>
-        ticket.categoria.nmCategoria.toLowerCase().includes(categoria)
+      chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
+        chamado.categoria.nmCategoria.toLowerCase().includes(categoria)
       );
     }
 
-    console.log('🔍 Tickets filtrados:', ticketsFiltrados.length);
-    return ticketsFiltrados;
+    console.log('🔍 Chamados filtrados:', chamadosFiltrados.length);
+    return chamadosFiltrados;
   }
 }
