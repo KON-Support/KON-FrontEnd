@@ -1,14 +1,15 @@
 <app-navbar-usuario></app-navbar-usuario>
-<div class="px-5 py-5">
+
+<div class="dashboard-container">
+  <div class="header-section mb-5">
+    <h3>Dashboard</h3>
+    <h5 class="text-muted">Visão geral do sistema</h5>
+  </div>
+
   <div class="row">
-    <div class="col-md-12 mt-3 d-flex justify-content-between align-items-center">
-      <div class="col-md-9">
-        <h3>Dashboard</h3>
-        <h5 class="text-muted">Visão geral do sistema</h5>
-      </div>
+    <div class="col-md-12">
+      <app-chamados-user></app-chamados-user>
     </div>
-
-    <app-chamados-user></app-chamados-user>
-
   </div>
 </div>
+

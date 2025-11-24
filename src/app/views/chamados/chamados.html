@@ -1,47 +1,39 @@
 <app-navbar></app-navbar>
-<div class="px-5 py-5">
-  <div class="row">
-    <div class="col-md-12 mt-5 d-flex justify-content-between align-items-center">
-      <div class="col-md-9">
-        <h3>Chamados</h3>
-        <h5 class="text-muted">{{ chamadosFiltrados.length }} chamados encontrados</h5>
+
+<div class="chamados-container">
+  <div class="header-section">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <h3 class="mb-1">Chamados</h3>
+        <p class="text-muted mb-0">{{ chamadosFiltrados.length }} chamados encontrados</p>
       </div>
-      <div class="col-md-3 d-flex justify-content-end">
-        <a
-          routerLink="/novo-chamado"
-          class="btn bg-dark text-white align-self-center text-decoration-none"
-        >
-          <i class="bi bi-plus-circle"></i> Novo chamado
-        </a>
-      </div>
+      <a
+        routerLink="/novo-chamado"
+        class="btn btn-primary"
+      >
+        <i class="bi bi-plus-lg me-2"></i>
+        Novo Chamado
+      </a>
     </div>
-  </div>
 
-  <div class="mt-4">
-    <div class="row border opacity-100 py-3 rounded m-0">
-      <div class="col-md-4">
-        <div class="input-group">
-          <span class="input-group-text text-white input-bg">
-            <i class="bi bi-search text-muted"></i>
-          </span>
-          <input
-            type="text"
-            class="form-control input-bg"
-            placeholder="Buscar chamado..."
-            [(ngModel)]="filtroBusca"
-          />
+    <div class="filters-section">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="search-input">
+            <i class="bi bi-search"></i>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar chamado..."
+              [(ngModel)]="filtroBusca"
+            />
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-4">
-        <div class="input-group">
-          <span class="input-group-text text-white input-bg">
-            <i class="bi bi-file-earmark-text text-muted"></i>
-          </span>
+        <div class="col-md-4">
           <select
             name="status"
-            id="todosStatus"
-            class="form-select input-bg"
+            class="form-select"
             [(ngModel)]="filtroStatus"
           >
             <option value="">Todos os status</option>
@@ -50,17 +42,11 @@
             <option value="fechado">Fechado</option>
           </select>
         </div>
-      </div>
 
-      <div class="col-md-4">
-        <div class="input-group">
-          <span class="input-group-text text-white input-bg">
-            <i class="bi bi-flag text-muted"></i>
-          </span>
+        <div class="col-md-4">
           <select
-            name="prioridade"
-            id="todasPrioridades"
-            class="form-select input-bg"
+            name="categoria"
+            class="form-select"
             [(ngModel)]="filtroCategoria"
           >
             <option value="">Todas as categorias</option>
@@ -72,15 +58,15 @@
       </div>
     </div>
   </div>
-</div>
 
-@if (loading()) {
-<div class="text-center py-5">
-  <div class="spinner-border text-primary" role="status">
-    <span class="visually-hidden">Carregando...</span>
+  @if (loading()) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-2 text-muted">Carregando tickets...</p>
   </div>
-  <p class="mt-2 text-muted">Carregando tickets...</p>
+  } @else {
+  <app-lista-chamados [tickets]="chamadosFiltrados"></app-lista-chamados>
+  }
 </div>
-} @else {
-<app-lista-chamados [tickets]="chamadosFiltrados"></app-lista-chamados>
-}
