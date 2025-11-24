@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { TicketsUser } from '../../components/tickets-user/tickets-user';
+import { ChamadosUser } from '../../components/chamados-user/chamados-user';
 
 @Component({
   selector: 'app-user-dashboard',
-  imports: [TicketsUser],
+  imports: [ChamadosUser],
   templateUrl: './user-dashboard.html',
   styleUrl: './user-dashboard.scss',
 })

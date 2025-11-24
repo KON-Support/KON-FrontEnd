@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ListaTickets } from '../../components/lista-tickets/lista-tickets';
+import {ListaChamados} from '../../components/lista-chamados/lista-chamados';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
 import { FormsModule } from '@angular/forms';
@@ -9,14 +9,14 @@ import { Categoria } from '../../shared/models/Categoria';
 import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
-  selector: 'app-tickets',
-  imports: [ListaTickets, RouterLink, FormsModule, Navbar],
-  templateUrl: './tickets.html',
-  styleUrl: './tickets.scss',
+  selector: 'app-chamados',
+  imports: [ListaChamados, RouterLink, FormsModule, Navbar],
+  templateUrl: './chamados.html',
+  styleUrl: './chamados.scss',
 })
 
-export class Tickets implements OnInit {
-  
+export class Chamados implements OnInit {
+
   private chamadoService = inject(ChamadoService);
   private categoriaService = inject(CategoriaService);
   private cdr = inject(ChangeDetectorRef);
@@ -37,16 +37,16 @@ export class Tickets implements OnInit {
 
   private carregarDados(): void {
     this.loading.set(true);
-    
+
     this.chamadoService.buscarChamados().subscribe({
       next: (response) => {
         console.log('✅ Tickets carregados:', response.length);
         this.tickets.set(response);
         this.qtdTickets.set(response.length);
         this.loading.set(false);
-        
+
         this.cdr.markForCheck();
-        
+
         console.log('💾 Estado atualizado - Tickets:', this.tickets().length);
       },
       error: (err) => {

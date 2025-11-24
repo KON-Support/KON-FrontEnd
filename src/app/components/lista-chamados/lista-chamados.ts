@@ -6,15 +6,15 @@ import { CardChamado } from '../card-chamado/card-chamado';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-lista-tickets',
+  selector: 'app-lista-chamados',
   standalone: true,
   imports: [CommonModule, CardChamado],
-  templateUrl: './lista-tickets.html',
-  styleUrl: './lista-tickets.scss',
+  templateUrl: './lista-chamados.html',
+  styleUrl: './lista-chamados.scss',
 })
 
-export class ListaTickets implements OnInit {
-  
+export class ListaChamados implements OnInit {
+
   private chamadoService = inject(ChamadoService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
@@ -30,17 +30,17 @@ export class ListaTickets implements OnInit {
   private carregarTickets(): void {
     console.log('🔄 Iniciando carregamento de tickets...');
     this.loading = true;
-    
+
     this.chamadoService.buscarChamados().subscribe({
       next: (response) => {
         console.log('✅ Tickets recebidos:', response);
         console.log('📊 Quantidade:', response.length);
-        
+
         this.tickets = response;
         this.loading = false;
 
         this.cdr.detectChanges();
-        
+
         console.log('💾 Tickets armazenados e view atualizada');
       },
       error: (err) => {
