@@ -44,21 +44,41 @@ export class NovoTicket implements OnInit {
   }
 
   private carregarCategorias(): void {
+    console.log('🔍 Iniciando carregamento de categorias...');
+    this.loadingCategorias.set(true);
+    
     this.categoriaService.listarCategoriasAtivas().subscribe({
       next: (response) => {
-        this.categorias.set(response);
+        console.log('✅ Categorias recebidas:', response);
+        console.log('📊 Total de categorias:', response.length);
+        
+        if (response && response.length > 0) {
+          this.categorias.set(response);
+          console.log('💾 Categorias armazenadas no signal:', this.categorias());
+        } else {
+          console.warn('⚠️ Nenhuma categoria ativa encontrada');
+          this.errorMessage.set('Nenhuma categoria ativa encontrada. Por favor, cadastre categorias primeiro.');
+        }
+        
         this.loadingCategorias.set(false);
       },
       error: (err) => {
-        console.error('Erro ao carregar categorias:', err);
+        console.error('❌ Erro ao carregar categorias:', err);
+        console.error('Detalhes do erro:', JSON.stringify(err, null, 2));
+        this.errorMessage.set('Erro ao carregar categorias. Verifique se o backend está rodando.');
         this.loadingCategorias.set(false);
       },
     });
   }
 
   onSubmit(): void {
+    console.log('📝 Formulário submetido');
+    console.log('Valores do formulário:', this.form.value);
+    console.log('Formulário válido?', this.form.valid);
+    
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      console.warn('⚠️ Formulário inválido');
       return;
     }
 
@@ -70,8 +90,11 @@ export class NovoTicket implements OnInit {
       status: Status.ABERTO,
     };
 
+    console.log('📤 Enviando payload:', payload);
+
     this.chamadoService.abrirChamado(payload).subscribe({
       next: (response) => {
+        console.log('✅ Ticket criado com sucesso:', response);
         this.loading.set(false);
         this.successMessage.set('Ticket criado com sucesso!');
         setTimeout(() => {
@@ -79,9 +102,9 @@ export class NovoTicket implements OnInit {
         }, 1500);
       },
       error: (err) => {
+        console.error('❌ Erro ao criar ticket:', err);
         this.loading.set(false);
         this.errorMessage.set(err.error?.message || 'Erro ao criar ticket. Tente novamente.');
-        console.error('Erro ao criar ticket:', err);
       },
     });
   }
