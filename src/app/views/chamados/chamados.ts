@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ListaTickets } from '../../components/lista-tickets/lista-tickets';
+import {ListaChamados} from '../../components/lista-chamados/lista-chamados';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
 import { FormsModule } from '@angular/forms';
@@ -9,21 +9,21 @@ import { Categoria } from '../../shared/models/Categoria';
 import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
-  selector: 'app-tickets',
-  imports: [ListaTickets, RouterLink, FormsModule, Navbar],
-  templateUrl: './tickets.html',
-  styleUrl: './tickets.scss',
+  selector: 'app-chamados',
+  imports: [ListaChamados, RouterLink, FormsModule, Navbar],
+  templateUrl: './chamados.html',
+  styleUrl: './chamados.scss',
 })
 
-export class Tickets implements OnInit {
-  
+export class Chamados implements OnInit {
+
   private chamadoService = inject(ChamadoService);
   private categoriaService = inject(CategoriaService);
   private cdr = inject(ChangeDetectorRef);
 
-  protected tickets = signal<Chamado[]>([]);
+  protected chamados = signal<Chamado[]>([]);
   protected categorias = signal<Categoria[]>([]);
-  protected qtdTickets = signal(0);
+  protected qtdChamados = signal(0);
   protected loading = signal(true);
 
   protected filtroBusca: string = '';
@@ -37,20 +37,20 @@ export class Tickets implements OnInit {
 
   private carregarDados(): void {
     this.loading.set(true);
-    
+
     this.chamadoService.buscarChamados().subscribe({
       next: (response) => {
         console.log('✅ Tickets carregados:', response.length);
-        this.tickets.set(response);
-        this.qtdTickets.set(response.length);
+        this.chamados.set(response);
+        this.qtdChamados.set(response.length);
         this.loading.set(false);
-        
+
         this.cdr.markForCheck();
-        
-        console.log('💾 Estado atualizado - Tickets:', this.tickets().length);
+
+        console.log('💾 Estado atualizado - Chamados:', this.chamados().length);
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar tickets:', err);
+        console.error('❌ Erro ao carregar chamados:', err);
         this.loading.set(false);
         this.cdr.markForCheck();
       },
@@ -68,31 +68,31 @@ export class Tickets implements OnInit {
     });
   }
 
-  get ticketsFiltrados(): Chamado[] {
-    let ticketsFiltrados = this.tickets();
+  get chamadosFiltrados(): Chamado[] {
+    let chamadosFiltrados = this.chamados();
 
     if (this.filtroBusca) {
       const busca = this.filtroBusca.toLowerCase();
-      ticketsFiltrados = ticketsFiltrados.filter((ticket) =>
-        ticket.dsTitulo.toLowerCase().includes(busca)
+      chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
+        chamado.dsTitulo.toLowerCase().includes(busca)
       );
     }
 
     if (this.filtroStatus) {
       const status = this.filtroStatus.toLowerCase();
-      ticketsFiltrados = ticketsFiltrados.filter((ticket) =>
-        ticket.status.toLowerCase().includes(status)
+      chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
+        chamado.status.toLowerCase().includes(status)
       );
     }
 
     if (this.filtroCategoria) {
       const categoria = this.filtroCategoria.toLowerCase();
-      ticketsFiltrados = ticketsFiltrados.filter((ticket) =>
-        ticket.categoria.nmCategoria.toLowerCase().includes(categoria)
+      chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
+        chamado.categoria.nmCategoria.toLowerCase().includes(categoria)
       );
     }
 
-    console.log('🔍 Tickets filtrados:', ticketsFiltrados.length);
-    return ticketsFiltrados;
+    console.log('🔍 Chamados filtrados:', chamadosFiltrados.length);
+    return chamadosFiltrados;
   }
 }

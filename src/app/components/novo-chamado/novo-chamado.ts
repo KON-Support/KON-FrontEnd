@@ -9,14 +9,14 @@ import { Status } from '../../shared/models/Status';
 import { Navbar } from '../navbar/navbar';
 
 @Component({
-  selector: 'app-novo-ticket',
+  selector: 'app-novo-chamado',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink, Navbar],
-  templateUrl: './novo-ticket.html',
-  styleUrl: './novo-ticket.scss',
+  templateUrl: './novo-chamado.html',
+  styleUrl: './novo-chamado.scss',
 })
 
-export class NovoTicket implements OnInit {
+export class NovoChamado implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private chamadoService = inject(ChamadoService);
@@ -99,7 +99,7 @@ export class NovoTicket implements OnInit {
         this.loading.set(false);
         this.successMessage.set('Ticket criado com sucesso!');
         setTimeout(() => {
-          this.router.navigate(['/tickets']);
+          this.router.navigate(['/chamados']);
         }, 1500);
       },
       error: (err) => {

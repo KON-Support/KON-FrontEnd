@@ -1,44 +1,49 @@
 import { Routes } from '@angular/router';
 import { AgenteDashboard } from './views/agente-dashboard/agente-dashboard';
-import { Tickets } from './views/tickets/tickets';
 import { Login } from './views/login/login';
 import { Cadastro } from './views/cadastro/cadastro';
-
-import { NovoTicket } from './components/novo-ticket/novo-ticket';
+import { Chamados } from './views/chamados/chamados';
+import { UserDashboard } from './views/user-dashboard/user-dashboard';
+import { NovoChamado } from './components/novo-chamado/novo-chamado';
+import { ChamadosUser } from './components/chamados-user/chamados-user';
+import { Relatorios } from './views/relatorios/relatorios';
 
 export const routes: Routes = [
-  // { Quando estiver funcionando o AuthGuard descomentar essa parte, pq é para quando abrir o site ja ir direto para o login
-  //   path: '',
-  //   redirectTo: '/login',
-  //   pathMatch: 'full'
-  // },
-
+  { 
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
+  },
   {
     path: 'login',
     component: Login
   },
-
   {
-    path: '',
-    redirectTo: 'agente/dashboard',
-    pathMatch: 'full',
+    path: 'cadastro',
+    component: Cadastro,
   },
   {
     path: 'agente/dashboard',
     component: AgenteDashboard,
   },
   {
-    path: 'tickets',
-    component: Tickets,
+    path: 'user/dashboard',
+    component: UserDashboard,
   },
-
   {
-    path: 'cadastro',
-    component: Cadastro,
+    path: 'chamados',
+    component: Chamados,
   },
-
   {
-    path: 'novo-ticket',
-    component: NovoTicket,
+    path: 'novo-chamado',
+    component: NovoChamado,
   },
+  {
+    path: 'user/meus-chamados',
+    component: ChamadosUser,
+  },
+  {
+    path: 'relatorios',
+    component: Relatorios,
+  }
 ];

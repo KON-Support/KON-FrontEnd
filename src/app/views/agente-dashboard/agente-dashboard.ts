@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { CardEstatistica } from '../../components/card-estatistica/card-estatistica';
-import { TicketsUrgentes } from '../../components/tickets-urgentes/tickets-urgentes';
 import { Navbar } from '../../components/navbar/navbar';
+import { ChamadosNaoAtribuidos } from '../../components/chamados-nao-atribuidos/chamados-nao-atribuidos';
 
 @Component({
   selector: 'app-agente-dashboard',
   standalone: true,
-  imports: [CardEstatistica, TicketsUrgentes, Navbar],
+  imports: [CardEstatistica, Navbar, ChamadosNaoAtribuidos],
   templateUrl: './agente-dashboard.html',
   styleUrl: './agente-dashboard.scss',
 })
 
 export class AgenteDashboard {
-  
+
 }
