@@ -5,12 +5,12 @@ import { Cadastro } from './views/cadastro/cadastro';
 import { Chamados } from './views/chamados/chamados';
 import { UserDashboard } from './views/user-dashboard/user-dashboard';
 import { NovoChamado } from './components/novo-chamado/novo-chamado';
-import { ChamadosUser } from './components/chamados-user/chamados-user';
 import { Relatorios } from './views/relatorios/relatorios';
 import { ChamadosAdmin } from './views/chamados-admin/chamados-admin';
 import { RoleGuard } from './services/role-guard';
 import { GerenciarAgentes } from './views/gerenciar-agentes/gerenciar-agentes';
 import { AdminDashboard } from './views/admin-dashboard/admin-dashboard';
+import { MeusChamadosView } from './views/meus-chamados-view/meus-chamados-view';
 
 export const routes: Routes = [
   {
@@ -58,7 +58,7 @@ export const routes: Routes = [
   },
   {
     path: 'user/meus-chamados',
-    component: ChamadosUser,
+    component: MeusChamadosView,
     canActivate: [RoleGuard],
     data: { roles: ['ROLE_USER'] }
   },

@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
 import { CardChamado } from '../card-chamado/card-chamado';
 import { Status } from '../../shared/models/Status';
 import { NavbarUsuario } from "../navbar-usuario/navbar-usuario";
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-chamados-user',
@@ -19,6 +20,7 @@ import { NavbarUsuario } from "../navbar-usuario/navbar-usuario";
 export class ChamadosUser implements OnInit {
 
   private chamadoService = inject(ChamadoService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
@@ -29,28 +31,46 @@ export class ChamadosUser implements OnInit {
   protected filtroBusca: string = '';
   protected filtroStatus: string = '';
 
-  private usuarioLogadoId: number = 1;
+  private usuarioLogadoId: number = 0;
 
   ngOnInit(): void {
+    this.obterUsuarioLogado();
     this.carregarChamadosDoUsuario();
   }
 
+  private obterUsuarioLogado(): void {
+    const user = this.authService.currentUser();
+    if (user) {
+      this.usuarioLogadoId = user.cdUsuario;
+      console.log('👤 Usuário logado ID:', this.usuarioLogadoId);
+    } else {
+      console.error('❌ Usuário não encontrado no AuthService');
+      this.errorMessage.set('Erro ao identificar usuário. Faça login novamente.');
+    }
+  }
+
   private carregarChamadosDoUsuario(): void {
+    if (!this.usuarioLogadoId) {
+      this.errorMessage.set('Usuário não identificado.');
+      this.loading.set(false);
+      return;
+    }
+
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    this.chamadoService.buscarChamados().subscribe({
-      next: (response) => {
-        const chamadosDoUsuario = response.filter(
-          (chamado) => chamado.solicitante?.cdUsuario === this.usuarioLogadoId
-        );
+    console.log('🔍 Buscando chamados do usuário:', this.usuarioLogadoId);
 
-        this.chamados.set(chamadosDoUsuario);
+    this.chamadoService.buscarPorSolicitante(this.usuarioLogadoId).subscribe({
+      next: (response) => {
+        console.log('✅ Chamados recebidos:', response.length);
+        this.chamados.set(response);
         this.loading.set(false);
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.errorMessage.set('Erro ao carregar seus tchamados. Tente novamente!');
+        console.error('❌ Erro ao carregar chamados:', err);
+        this.errorMessage.set('Erro ao carregar seus chamados. Tente novamente!');
         this.loading.set(false);
         this.cdr.detectChanges();
       },
@@ -92,7 +112,9 @@ export class ChamadosUser implements OnInit {
   }
 
   onTicketClick(chamado: Chamado): void {
-    this.router.navigate(['/chamados', chamado.cdChamado]);
+    console.log('🎯 Chamado clicado:', chamado.cdChamado);
+    // Navegação para detalhes do chamado (implementar rota se necessário)
+    // this.router.navigate(['/chamado', chamado.cdChamado]);
   }
 
   abrirNovoChamado(): void {
