@@ -10,7 +10,4 @@ import { ChamadosNaoAtribuidos } from '../../components/chamados-nao-atribuidos/
   templateUrl: './agente-dashboard.html',
   styleUrl: './agente-dashboard.scss',
 })
-
-export class AgenteDashboard {
-
-}
+export class AgenteDashboard {}
