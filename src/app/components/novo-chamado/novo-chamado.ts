@@ -17,7 +17,6 @@ import { NavbarAgente } from "../navbar-agente/navbar-agente";
 })
 
 export class NovoChamado implements OnInit {
-
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private chamadoService = inject(ChamadoService);
@@ -29,6 +28,8 @@ export class NovoChamado implements OnInit {
   protected loadingCategorias = signal(true);
   protected errorMessage = signal<string | null>(null);
   protected successMessage = signal<string | null>(null);
+
+  protected arquivoSelecionado: File | null = null;
 
   ngOnInit(): void {
     this.initForm();
@@ -42,7 +43,6 @@ export class NovoChamado implements OnInit {
       cdCategoria: [null, [Validators.required]],
       solicitante: [null, [Validators.required]],
       responsavel: [null],
-      anexo: [null],
     });
   }
 
@@ -74,6 +74,14 @@ export class NovoChamado implements OnInit {
     });
   }
 
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.arquivoSelecionado = input.files[0];
+      console.log('📎 Arquivo selecionado:', this.arquivoSelecionado.name);
+    }
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -83,16 +91,18 @@ export class NovoChamado implements OnInit {
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    const solicitanteId = this.form.value.solicitante;
-
     const payload = {
       ...this.form.value,
       status: Status.ABERTO,
       cdPlano: 1,
+      anexo: this.arquivoSelecionado,
     };
+
+    console.log('📤 Enviando chamado:', payload);
 
     this.chamadoService.abrirChamado(payload).subscribe({
       next: (response) => {
+        console.log('✅ Chamado criado com sucesso:', response);
         this.loading.set(false);
         this.successMessage.set('Chamado criado com sucesso!');
         setTimeout(() => {
@@ -100,6 +110,7 @@ export class NovoChamado implements OnInit {
         }, 1500);
       },
       error: (err) => {
+        console.error('❌ Erro ao criar chamado:', err);
         this.loading.set(false);
         this.errorMessage.set(err.error?.message || 'Erro ao criar chamado. Tente novamente.');
       },
@@ -129,5 +140,13 @@ export class NovoChamado implements OnInit {
 
   get caracteresRestantesDescricao(): number {
     return 300 - (this.form.get('dsDescricao')?.value?.length || 0);
+  }
+  
+  protected formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   }
 }
