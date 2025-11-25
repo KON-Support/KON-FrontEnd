@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavbarAgente } from '../../components/navbar-agente/navbar-agente';
+import { Navbar } from '../../components/navbar/navbar';
 import { ChamadoService } from '../../services/chamado-service';
 import { Chamado } from '../../shared/models/Chamado';
 import { Status } from '../../shared/models/Status';
-import { NavbarAdmin } from "../../components/navbar-admin/navbar-admin";
 
 interface Estatisticas {
   totalTickets: number;
@@ -44,7 +43,7 @@ interface PerformanceAtendente {
 @Component({
   selector: 'app-relatorios',
   standalone: true,
-  imports: [CommonModule, NavbarAdmin],
+  imports: [CommonModule, Navbar],
   templateUrl: './relatorios.html',
   styleUrl: './relatorios.scss',
 })

@@ -6,13 +6,13 @@ import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
 import { CardChamado } from '../card-chamado/card-chamado';
 import { Status } from '../../shared/models/Status';
-import { NavbarUsuario } from "../navbar-usuario/navbar-usuario";
+import { Navbar } from "../navbar/navbar";
 import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-chamados-user',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardChamado, NavbarUsuario],
+  imports: [CommonModule, FormsModule, CardChamado, Navbar],
   templateUrl: './chamados-user.html',
   styleUrl: './chamados-user.scss',
 })

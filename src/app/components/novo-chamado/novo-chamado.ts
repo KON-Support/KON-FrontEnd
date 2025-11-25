@@ -6,12 +6,12 @@ import { ChamadoService } from '../../services/chamado-service';
 import { CategoriaService } from '../../services/categoria-service';
 import { Categoria } from '../../shared/models/Categoria';
 import { Status } from '../../shared/models/Status';
-import { NavbarAgente } from "../navbar-agente/navbar-agente";
+import { Navbar } from "../navbar/navbar";
 
 @Component({
   selector: 'app-novo-chamado',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, NavbarAgente],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, Navbar],
   templateUrl: './novo-chamado.html',
   styleUrl: './novo-chamado.scss',
 })

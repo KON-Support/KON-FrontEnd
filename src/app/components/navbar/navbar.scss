@@ -102,41 +102,30 @@
         align-items: center;
         justify-content: center;
         color: white;
-        font-weight: 600;
-        font-size: 0.875rem;
+        font-weight: bold;
+        font-size: 0.9rem;
     }
 
     .user-details {
         display: flex;
         flex-direction: column;
         overflow: hidden;
-
-        .user-name {
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: #333;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-email {
-            font-size: 0.75rem;
-            color: #6c757d;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
     }
 
-    .btn-outline-secondary {
-        border-color: #dee2e6;
-        color: #6c757d;
+    .user-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-        &:hover {
-            background-color: #f8f9fa;
-            border-color: #dee2e6;
-            color: #333;
-        }
+    .user-email {
+        font-size: 0.75rem;
+        color: #6c757d;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
