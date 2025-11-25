@@ -7,10 +7,7 @@
         <h5 class="text-muted">{{ chamadosFiltrados.length }} chamados encontrados</h5>
       </div>
       <div class="col-md-3 d-flex justify-content-end">
-        <a
-          routerLink="/novo-chamado"
-          class="btn bg-primary text-white align-self-center text-decoration-none"
-        >
+        <a routerLink="/novo-chamado" class="btn bg-primary text-white align-self-center text-decoration-none">
           <i class="bi bi-plus-circle"></i> Novo chamado
         </a>
       </div>
@@ -24,12 +21,7 @@
           <span class="input-group-text text-white input-bg">
             <i class="bi bi-search text-muted"></i>
           </span>
-          <input
-            type="text"
-            class="form-control input-bg"
-            placeholder="Buscar chamado..."
-            [(ngModel)]="filtroBusca"
-          />
+          <input type="text" class="form-control input-bg" placeholder="Buscar chamado..." [(ngModel)]="filtroBusca" />
         </div>
       </div>
 
@@ -38,17 +30,12 @@
           <span class="input-group-text text-white input-bg">
             <i class="bi bi-file-earmark-text text-muted"></i>
           </span>
-          <select
-            name="status"
-            id="todosStatus"
-            class="form-select input-bg"
-            [(ngModel)]="filtroStatus"
-          >
+          <select name="status" id="todosStatus" class="form-select input-bg" [(ngModel)]="filtroStatus">
             <option value="">Todos os status</option>
-            <option value="aberto">Aberto</option>
-            <option value="em_andamento">Em Andamento</option>
-            <option value="resolvido">Resolvido</option>
-            <option value="fechado">Fechado</option>
+            <option value="ABERTO">Aberto</option>
+            <option value="EM_ANDAMENTO">Em Andamento</option>
+            <option value="RESOLVIDO">Resolvido</option>
+            <option value="FECHADO">Fechado</option>
           </select>
         </div>
       </div>
@@ -57,12 +44,7 @@
           <span class="input-group-text text-white input-bg">
             <i class="bi bi-flag text-muted"></i>
           </span>
-          <select
-            name="prioridade"
-            id="todasPrioridades"
-            class="form-select input-bg"
-            [(ngModel)]="filtroCategoria"
-          >
+          <select name="prioridade" id="todasPrioridades" class="form-select input-bg" [(ngModel)]="filtroCategoria">
             <option value="">Todas as categorias</option>
             @for (cat of categorias; track $index) {
             <option value="{{ cat.nmCategoria }}">{{ cat.nmCategoria }}</option>

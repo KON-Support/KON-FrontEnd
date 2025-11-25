@@ -1,3 +1,15 @@
+:root {
+  --primary-color: #667eea;
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --light-bg: #f8f9fa;
+  --border-color: #e9ecef;
+  --text-muted: #6c757d;
+}
+
 * {
   font-family: 'Inter', sans-serif;
 }
@@ -5,7 +17,12 @@
 .main-content {
   margin-left: 256px;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: var(--light-bg);
+}
+
+.btn-primary {
+  background: var(--primary-gradient) !important;
+  border: none !important;
 }
 
 @media (max-width: 768px) {

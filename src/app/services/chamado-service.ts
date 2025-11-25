@@ -70,4 +70,17 @@ export class ChamadoService {
       cdAnexo
     );
   }
+
+  buscarPorSolicitante(cdUsuario: number): Observable<Chamado[]> {
+    return this.http.get<Chamado[]>(`${this.baseUrl}/listar/solicitante/${cdUsuario}`);
+  }
+
+  buscarPorResponsavel(cdUsuario: number): Observable<Chamado[]> {
+    return this.http.get<Chamado[]>(`${this.baseUrl}/listar/responsavel/${cdUsuario}`);
+  }
+
+  buscarNaoAtribuidos(): Observable<Chamado[]> {
+    return this.http.get<Chamado[]>(`${this.baseUrl}/listar/nao-atribuidos`);
+  }
+
 }
