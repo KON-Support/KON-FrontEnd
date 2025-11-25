@@ -4,10 +4,10 @@
     <div class="header-section">
         <div class="d-flex justify-content-between align-items-start mb-4">
             <div>
-                <h3 class="mb-1">Meus Tickets</h3>
-                <p class="text-muted mb-0">{{ ticketsFiltrados.length }} tickets encontrados</p>
+                <h3 class="mb-1">Meus Chamados</h3>
+                <p class="text-muted mb-0">{{ chamadosFiltrados.length }} chamados encontrados</p>
             </div>
-            <button class="btn btn-primary" (click)="abrirNovoTicket()">
+            <button class="btn btn-primary" (click)="abrirNovoChamado()">
                 <i class="bi bi-plus-lg me-2"></i>
                 Novo Chamado
             </button>
@@ -21,7 +21,7 @@
                     </div>
                     <div class="stat-content">
                         <span class="stat-label">Abertos</span>
-                        <span class="stat-value">{{ ticketsAbertos }}</span>
+                        <span class="stat-value">{{ chamadosAbertos }}</span>
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                     </div>
                     <div class="stat-content">
                         <span class="stat-label">Em Andamento</span>
-                        <span class="stat-value">{{ ticketsEmAndamento }}</span>
+                        <span class="stat-value">{{ chamadosEmAndamento }}</span>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                     </div>
                     <div class="stat-content">
                         <span class="stat-label">Resolvidos</span>
-                        <span class="stat-value">{{ ticketsResolvidos }}</span>
+                        <span class="stat-value">{{ chamadosResolvidos }}</span>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <div class="col-md-8">
                     <div class="search-input">
                         <i class="bi bi-search"></i>
-                        <input type="text" class="form-control" placeholder="Buscar tickets..."
+                        <input type="text" class="form-control" placeholder="Buscar chamados..."
                             [(ngModel)]="filtroBusca" />
                     </div>
                 </div>
@@ -84,27 +84,27 @@
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Carregando...</span>
         </div>
-        <p class="mt-2 text-muted">Carregando seus tickets...</p>
+        <p class="mt-2 text-muted">Carregando seus chamados...</p>
     </div>
     }
 
-    @else if (ticketsFiltrados.length === 0 && !loading()) {
+    @else if (chamadosFiltrados.length === 0 && !loading()) {
     <div class="empty-state">
         <div class="empty-state-icon">
             <i class="bi bi-inbox"></i>
         </div>
-        <h5 class="empty-state-title">Nenhum ticket encontrado</h5>
+        <h5 class="empty-state-title">Nenhum chamado encontrado</h5>
         <p class="empty-state-text">
             @if (filtroBusca || filtroStatus) {
             Tente ajustar os filtros de busca
             } @else {
-            Você ainda não criou nenhum ticket. Comece abrindo um novo chamado!
+            Você ainda não criou nenhum chamado. Comece abrindo um novo chamado!
             }
         </p>
         @if (!filtroBusca && !filtroStatus) {
-        <button class="btn btn-primary mt-3" (click)="abrirNovoTicket()">
+        <button class="btn btn-primary mt-3" (click)="abrirNovoChamado()">
             <i class="bi bi-plus-lg me-2"></i>
-            Abrir Primeiro Ticket
+            Abrir Primeiro Chamado
         </button>
         }
     </div>
@@ -112,8 +112,8 @@
 
     @else {
     <div class="tickets-grid">
-        @for (ticket of ticketsFiltrados; track ticket.cdChamado) {
-        <app-card-chamado [chamado]="ticket" (cardClick)="onTicketClick($event)" />
+        @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
+        <app-card-chamado [chamado]="chamado" (cardClick)="onTicketClick($event)" />
         }
     </div>
     }

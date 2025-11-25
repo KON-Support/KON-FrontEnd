@@ -22,7 +22,7 @@ export class ChamadosUser implements OnInit {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
-  protected tickets = signal<Chamado[]>([]);
+  protected chamados = signal<Chamado[]>([]);
   protected loading = signal(true);
   protected errorMessage = signal<string | null>(null);
 
@@ -32,75 +32,70 @@ export class ChamadosUser implements OnInit {
   private usuarioLogadoId: number = 1;
 
   ngOnInit(): void {
-    console.log('TicketsUser - Componente inicializado');
-    this.carregarTicketsDoUsuario();
+    this.carregarChamadosDoUsuario();
   }
 
-  private carregarTicketsDoUsuario(): void {
-    console.log('Carregando tickets do usuário:', this.usuarioLogadoId);
+  private carregarChamadosDoUsuario(): void {
     this.loading.set(true);
     this.errorMessage.set(null);
 
     this.chamadoService.buscarChamados().subscribe({
       next: (response) => {
-        const ticketsDoUsuario = response.filter(
-          (ticket) => ticket.solicitante?.cdUsuario === this.usuarioLogadoId
+        const chamadosDoUsuario = response.filter(
+          (chamado) => chamado.solicitante?.cdUsuario === this.usuarioLogadoId
         );
 
-        console.log('Tickets do usuário carregados:', ticketsDoUsuario.length);
-        this.tickets.set(ticketsDoUsuario);
+        this.chamados.set(chamadosDoUsuario);
         this.loading.set(false);
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erro ao carregar tickets:', err);
-        this.errorMessage.set('Erro ao carregar seus tickets. Tente novamente.');
+        this.errorMessage.set('Erro ao carregar seus tchamados. Tente novamente!');
         this.loading.set(false);
         this.cdr.detectChanges();
       },
     });
   }
 
-  get ticketsFiltrados(): Chamado[] {
-    let ticketsFiltrados = this.tickets();
+  get chamadosFiltrados(): Chamado[] {
+    let chamadosFiltrados = this.chamados();
 
     if (this.filtroBusca) {
       const busca = this.filtroBusca.toLowerCase();
-      ticketsFiltrados = ticketsFiltrados.filter(
-        (ticket) =>
-          ticket.dsTitulo.toLowerCase().includes(busca) ||
-          ticket.dsDescricao.toLowerCase().includes(busca) ||
-          ticket.cdChamado.toString().includes(busca)
+      chamadosFiltrados = chamadosFiltrados.filter(
+        (chamado) =>
+          chamado.dsTitulo.toLowerCase().includes(busca) ||
+          chamado.dsDescricao.toLowerCase().includes(busca) ||
+          chamado.cdChamado.toString().includes(busca)
       );
     }
 
     if (this.filtroStatus) {
-      ticketsFiltrados = ticketsFiltrados.filter(
-        (ticket) => ticket.status === this.filtroStatus
+      chamadosFiltrados = chamadosFiltrados.filter(
+        (chamado) => chamado.status === this.filtroStatus
       );
     }
 
-    return ticketsFiltrados;
+    return chamadosFiltrados;
   }
 
-  get ticketsAbertos(): number {
-    return this.tickets().filter((t) => t.status === Status.ABERTO).length;
+  get chamadosAbertos(): number {
+    return this.chamados().filter((t) => t.status === Status.ABERTO).length;
   }
 
-  get ticketsEmAndamento(): number {
-    return this.tickets().filter((t) => t.status === Status.EM_ANDAMENTO).length;
+  get chamadosEmAndamento(): number {
+    return this.chamados().filter((t) => t.status === Status.EM_ANDAMENTO).length;
   }
 
-  get ticketsResolvidos(): number {
-    return this.tickets().filter((t) => t.status === Status.RESOLVIDO).length;
+  get chamadosResolvidos(): number {
+    return this.chamados().filter((t) => t.status === Status.RESOLVIDO).length;
   }
 
   onTicketClick(chamado: Chamado): void {
-    console.log('Ticket clicado:', chamado.cdChamado);
     this.router.navigate(['/chamados', chamado.cdChamado]);
   }
 
-  abrirNovoTicket(): void {
+  abrirNovoChamado(): void {
     this.router.navigate(['/novo-ticket']);
   }
 }
