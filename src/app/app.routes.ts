@@ -8,9 +8,10 @@ import { NovoChamado } from './components/novo-chamado/novo-chamado';
 import { ChamadosUser } from './components/chamados-user/chamados-user';
 import { Relatorios } from './views/relatorios/relatorios';
 import { ChamadosAdmin } from './views/chamados-admin/chamados-admin';
+import { AdminDashboard } from './views/admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
-  { 
+  {
     path: '',
     redirectTo: '/login',
     pathMatch: 'full'
@@ -37,7 +38,7 @@ export const routes: Routes = [
     component: Chamados,
   },
 
-   {
+  {
     path: 'admin/chamados',
     component: ChamadosAdmin,
   },
@@ -52,5 +53,9 @@ export const routes: Routes = [
   {
     path: 'relatorios',
     component: Relatorios,
+  },
+  {
+    path: 'admin/dashboard',
+    component: AdminDashboard,
   }
 ];
