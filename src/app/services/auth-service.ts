@@ -24,24 +24,24 @@ export class AuthService {
   }
 
   login(email: string, senha: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login`, {
-      dsEmail: email,
-      dsSenha: senha,
-    }).pipe(
-      tap((response) => {
-        if (response.token) {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('user', JSON.stringify(response.usuario));
-          this.isAuthenticated.set(true);
-          this.currentUser.set(response.usuario);
-        }
-      }),
-      catchError((error) => {
-        console.error('Erro no login:', error);
-        return throwError(() => error);
-      })
-    );
-  }
+  return this.http.post<any>('http://localhost:8089/api/auth/login', {
+    dsEmail: email,
+    dsSenha: senha,
+  }).pipe(
+    tap((response) => {
+      if (response.token) {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.usuario));
+        this.isAuthenticated.set(true);
+        this.currentUser.set(response.usuario);
+      }
+    }),
+    catchError((error) => {
+      console.error('Erro no login:', error);
+      throw error;
+    })
+  );
+}
 
   logout(): void {
     localStorage.removeItem('token');

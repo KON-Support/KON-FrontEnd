@@ -18,7 +18,6 @@ export class Cadastro {
 
   private router = inject(Router);
 
-
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
       nome: ['', Validators.required],
@@ -49,16 +48,49 @@ export class Cadastro {
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      this.loading = true;
-      this.error = '';
-      
-      setTimeout(() => {
-        this.loading = false;
-        // Lógica de cadastro aqui
-        console.log('Formulário enviado:', this.registerForm.value);
-      }, 2000);
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
     }
+
+    this.loading = true;
+    this.error = '';
+
+    const dto = {
+      nmUsuario: this.registerForm.value.nome,
+      dsEmail: this.registerForm.value.email,
+      dsSenha: this.registerForm.value.senha,
+      nuFuncionario: this.registerForm.value.funcionarios,
+      flAtivo: true,
+      roles: []  
+    };
+
+    console.log('Enviando DTO:', dto);
+
+    fetch('http://localhost:8089/api/usuario/cadastro', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dto)
+    })
+    .then(async res => {
+      this.loading = false;
+
+      if (!res.ok) {
+        const msg = await res.json().catch(() => ({ message: 'Erro desconhecido' }));
+        this.error = msg.message || 'Erro ao cadastrar usuário.';
+        return;
+      }
+
+      alert('Usuário cadastrado com sucesso!');
+      this.router.navigate(['/login']);
+    })
+    .catch(err => {
+      this.loading = false;
+      this.error = 'Erro ao conectar ao servidor.';
+      console.error(err);
+    });
   }
 
   irParaLogin() {
@@ -70,5 +102,4 @@ export class Cadastro {
   get funcionarios() { return this.registerForm.get('funcionarios'); }
   get senha() { return this.registerForm.get('senha'); }
   get confirmarSenha() { return this.registerForm.get('confirmarSenha'); }
-
 }

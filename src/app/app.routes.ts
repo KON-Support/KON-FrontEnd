@@ -8,7 +8,9 @@ import { NovoChamado } from './components/novo-chamado/novo-chamado';
 import { ChamadosUser } from './components/chamados-user/chamados-user';
 import { Relatorios } from './views/relatorios/relatorios';
 import { ChamadosAdmin } from './views/chamados-admin/chamados-admin';
-import { AdminDashboard } from './views/admin-dashboard/admin-dashboard';
+import { AuthGuard } from './services/auth-guard';
+import { GerenciarAgentes } from './views/gerenciar-agentes/gerenciar-agentes';
+import { Role } from './shared/models/Role';
 
 export const routes: Routes = [
   {
@@ -27,35 +29,47 @@ export const routes: Routes = [
   {
     path: 'agente/dashboard',
     component: AgenteDashboard,
+    canActivate: [AuthGuard]
   },
-
   {
     path: 'user/dashboard',
     component: UserDashboard,
+    canActivate: [AuthGuard]
   },
   {
     path: 'chamados',
     component: Chamados,
+    canActivate: [AuthGuard]
   },
-
   {
     path: 'admin/chamados',
     component: ChamadosAdmin,
+    canActivate: [AuthGuard]
   },
   {
     path: 'novo-chamado',
     component: NovoChamado,
+    canActivate: [AuthGuard]
   },
   {
     path: 'user/meus-chamados',
     component: ChamadosUser,
+    canActivate: [AuthGuard]
   },
   {
     path: 'relatorios',
     component: Relatorios,
+    canActivate: [AuthGuard]
   },
   {
     path: 'admin/dashboard',
-    component: AdminDashboard,
+    component: AgenteDashboard,
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: 'admin/gerenciar-agentes',
+    component: GerenciarAgentes,
+    canActivate: [AuthGuard],
   }
 ];
