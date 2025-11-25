@@ -12,6 +12,7 @@ export interface ChamadoRequest {
   solicitante: number;
   responsavel?: number | null;
   cdPlano?: number | null;
+  anexo?: File | null;
 }
 
 @Injectable({
@@ -19,7 +20,6 @@ export interface ChamadoRequest {
 })
 
 export class ChamadoService {
-
   private http = inject(HttpClient);
   private baseUrl = 'http://localhost:8089/api/v1/chamado';
 
@@ -36,7 +36,28 @@ export class ChamadoService {
   }
 
   abrirChamado(chamado: ChamadoRequest): Observable<Chamado> {
-    return this.http.post<Chamado>(`${this.baseUrl}/abrir`, chamado);
+
+    const formData = new FormData();
+    
+    formData.append('dsTitulo', chamado.dsTitulo);
+    formData.append('dsDescricao', chamado.dsDescricao);
+    formData.append('status', chamado.status);
+    formData.append('cdCategoria', chamado.cdCategoria.toString());
+    formData.append('solicitante', chamado.solicitante.toString());
+    
+    if (chamado.responsavel) {
+      formData.append('responsavel', chamado.responsavel.toString());
+    }
+    
+    if (chamado.cdPlano) {
+      formData.append('cdPlano', chamado.cdPlano.toString());
+    }
+    
+    if (chamado.anexo) {
+      formData.append('anexo', chamado.anexo);
+    }
+
+    return this.http.post<Chamado>(`${this.baseUrl}/abrir`, formData);
   }
 
   atualizarStatus(cdChamado: number, status: Status): Observable<Chamado> {

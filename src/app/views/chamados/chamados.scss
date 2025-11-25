@@ -1,3 +1,130 @@
-.input-bg {
-  background-color: #d1d1d1;
+.chamados-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
+
+.header-section {
+    margin-bottom: 2rem;
+
+    h3 {
+        font-weight: 700;
+        color: #1a1a1a;
+        font-size: 1.75rem;
+    }
+
+    .text-muted {
+        font-size: 0.95rem;
+    }
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    i {
+        font-size: 0.875rem;
+    }
+}
+
+.filters-section {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    margin-bottom: 2rem;
+}
+
+.search-input {
+    position: relative;
+
+    i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        font-size: 1rem;
+        z-index: 10;
+    }
+
+    .form-control {
+        padding-left: 2.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        height: 44px;
+        font-size: 0.95rem;
+
+        &:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+        }
+
+        &::placeholder {
+            color: #9ca3af;
+        }
+    }
+}
+
+.form-select {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    height: 44px;
+    font-size: 0.95rem;
+    color: #4b5563;
+
+    &:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    }
+}
+
+@media (max-width: 768px) {
+    .chamados-container {
+        padding: 1rem;
+    }
+
+    .header-section {
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        .d-flex {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch !important;
+
+            .btn-primary {
+                width: 100%;
+            }
+        }
+    }
+
+    .filters-section {
+        .row {
+            gap: 0.75rem;
+        }
+
+        .col-md-4 {
+            flex: 0 0 100%;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .filters-section {
+        .row {
+            gap: 0.75rem;
+        }
+    }
+}
+
