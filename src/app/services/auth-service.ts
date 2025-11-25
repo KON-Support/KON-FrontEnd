@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { Usuario } from '../shared/models/Usuario';
 
 @Injectable({
@@ -9,11 +9,14 @@ import { Usuario } from '../shared/models/Usuario';
 })
 
 export class AuthService {
+
   private http: HttpClient;
   private router: Router;
-  
+
   isAuthenticated = signal<boolean>(this.hasToken());
   currentUser = signal<Usuario | null>(this.getStoredUser());
+
+  private baseUrl = 'http://localhost:8089/api/usuario';
 
   constructor(http: HttpClient, router: Router) {
     this.http = http;
@@ -21,9 +24,9 @@ export class AuthService {
   }
 
   login(email: string, senha: string): Observable<any> {
-    return this.http.post<any>('http://localhost:8089/', {
-      email,
-      senha,
+    return this.http.post<any>(`${this.baseUrl}/login`, {
+      dsEmail: email,
+      dsSenha: senha,
     }).pipe(
       tap((response) => {
         if (response.token) {
@@ -35,7 +38,7 @@ export class AuthService {
       }),
       catchError((error) => {
         console.error('Erro no login:', error);
-        throw error;
+        return throwError(() => error);
       })
     );
   }

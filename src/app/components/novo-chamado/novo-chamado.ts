@@ -17,6 +17,7 @@ import { Navbar } from '../navbar/navbar';
 })
 
 export class NovoChamado implements OnInit {
+
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private chamadoService = inject(ChamadoService);
@@ -47,12 +48,12 @@ export class NovoChamado implements OnInit {
   private carregarCategorias(): void {
     console.log('🔍 Iniciando carregamento de categorias...');
     this.loadingCategorias.set(true);
-    
+
     this.categoriaService.listarCategoriasAtivas().subscribe({
       next: (response) => {
         console.log('✅ Categorias recebidas:', response);
         console.log('📊 Total de categorias:', response.length);
-        
+
         if (response && response.length > 0) {
           this.categorias.set(response);
           console.log('💾 Categorias armazenadas no signal:', this.categorias());
@@ -60,7 +61,7 @@ export class NovoChamado implements OnInit {
           console.warn('⚠️ Nenhuma categoria ativa encontrada');
           this.errorMessage.set('Nenhuma categoria ativa encontrada. Por favor, cadastre categorias primeiro.');
         }
-        
+
         this.loadingCategorias.set(false);
       },
       error: (err) => {
@@ -73,39 +74,33 @@ export class NovoChamado implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('📝 Formulário submetido');
-    console.log('Valores do formulário:', this.form.value);
-    console.log('Formulário válido?', this.form.valid);
-    
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      console.warn('⚠️ Formulário inválido');
       return;
     }
 
     this.loading.set(true);
     this.errorMessage.set(null);
 
+    const solicitanteId = this.form.value.solicitante;
+
     const payload = {
       ...this.form.value,
       status: Status.ABERTO,
+      cdPlano: 1,
     };
-
-    console.log('📤 Enviando payload:', payload);
 
     this.chamadoService.abrirChamado(payload).subscribe({
       next: (response) => {
-        console.log('✅ Ticket criado com sucesso:', response);
         this.loading.set(false);
-        this.successMessage.set('Ticket criado com sucesso!');
+        this.successMessage.set('Chamado criado com sucesso!');
         setTimeout(() => {
           this.router.navigate(['/chamados']);
         }, 1500);
       },
       error: (err) => {
-        console.error('❌ Erro ao criar ticket:', err);
         this.loading.set(false);
-        this.errorMessage.set(err.error?.message || 'Erro ao criar ticket. Tente novamente.');
+        this.errorMessage.set(err.error?.message || 'Erro ao criar chamado. Tente novamente.');
       },
     });
   }
