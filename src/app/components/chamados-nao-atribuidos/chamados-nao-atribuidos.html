@@ -1,33 +1,14 @@
-<div class="tickets-container">
-  <div class="header-section">
-    <div class="d-flex justify-content-between align-items-start mb-4">
-      <div>
-        <h3 class="mb-1">Chamados Não Atribuídos</h3>
-        <p class="text-muted mb-0">{{ chamadosNaoAtribuidos().length }} chamados para atribuir</p>
-      </div>
-    </div>
-
-    <div class="filters-section">
-      <div class="row g-3">
-        <div class="col-md-8">
-          <div class="search-input">
-            <i class="bi bi-search"></i>
-            <input type="text" class="form-control" placeholder="Buscar chamados..."
-              [(ngModel)]="filtroBusca" />
-          </div>
-        </div>
-        <div class="col-md-4">
-          <select class="form-select" [(ngModel)]="filtroStatus">
-            <option value="">Todos os status</option>
-            <option value="ABERTO">Aberto</option>
-            <option value="EM_ANDAMENTO">Em Andamento</option>
-            <option value="RESOLVIDO">Resolvido</option>
-          </select>
-        </div>
-      </div>
+<div class="row">
+  <div class="col-md-12 mt-5 d-flex justify-content-between align-items-center">
+    <div class="col-md-9">
+      <h3>Chamados Não Atribuídos</h3>
+      <h5 class="text-muted">
+        {{ chamadosNaoAtribuidos().length }} chamados para serem atribuídos
+      </h5>
     </div>
   </div>
-
+</div>
+<div class="mt-4">
   @if (loading()) {
   <div class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
@@ -35,28 +16,21 @@
     </div>
     <p class="mt-2 text-muted">Carregando chamados...</p>
   </div>
-  }
-
-  @else if (chamadosFiltrados.length === 0) {
-  <div class="empty-state">
-    <div class="empty-state-icon">
-      <i class="bi bi-inbox"></i>
-    </div>
-    <h5 class="empty-state-title">Nenhum chamado não atribuído</h5>
-    <p class="empty-state-text">
-      @if (filtroBusca || filtroStatus) {
-      Tente ajustar os filtros de busca
-      } @else {
-      Todos os chamados foram atribuídos. Parabéns!
-      }
+  } @else if (chamadosFiltrados.length === 0) {
+  <div class="text-center py-5">
+    <i class="bi bi-inbox text-muted" style="font-size: 3rem"></i>
+    <h5 class="mt-3">Nenhum chamado não atribuído</h5>
+    <p class="text-muted">
+      @if (filtroBusca || filtroStatus) { Tente ajustar os filtros de busca } @else { Todos os
+      chamados foram atribuídos. }
     </p>
   </div>
-  }
-
-  @else {
-  <div class="tickets-grid">
+  } @else {
+  <div class="row g-4">
     @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
-    <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick($event)" />
+    <div class="col-md-6 col-lg-4">
+      <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick($event)" />
+    </div>
     }
   </div>
   }

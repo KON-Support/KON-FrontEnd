@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {ListaChamados} from '../../components/lista-chamados/lista-chamados';
+import { ListaChamados } from '../../components/lista-chamados/lista-chamados';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
 import { FormsModule } from '@angular/forms';
@@ -14,15 +14,13 @@ import { Navbar } from '../../components/navbar/navbar';
   templateUrl: './chamados.html',
   styleUrl: './chamados.scss',
 })
-
 export class Chamados implements OnInit {
-
   private chamadoService = inject(ChamadoService);
   private categoriaService = inject(CategoriaService);
   private cdr = inject(ChangeDetectorRef);
 
   protected chamados = signal<Chamado[]>([]);
-  protected categorias = signal<Categoria[]>([]);
+  protected categorias: Categoria[] = [];
   protected qtdChamados = signal(0);
   protected loading = signal(true);
 
@@ -31,7 +29,6 @@ export class Chamados implements OnInit {
   protected filtroCategoria: string = '';
 
   ngOnInit(): void {
-    console.log('🎬 Tickets - Componente inicializado');
     this.carregarDados();
   }
 
@@ -40,7 +37,6 @@ export class Chamados implements OnInit {
 
     this.chamadoService.buscarChamados().subscribe({
       next: (response) => {
-        console.log('✅ Tickets carregados:', response.length);
         this.chamados.set(response);
         this.qtdChamados.set(response.length);
         this.loading.set(false);
@@ -50,7 +46,6 @@ export class Chamados implements OnInit {
         console.log('💾 Estado atualizado - Chamados:', this.chamados().length);
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar chamados:', err);
         this.loading.set(false);
         this.cdr.markForCheck();
       },
@@ -59,7 +54,7 @@ export class Chamados implements OnInit {
     this.categoriaService.listarCategoriasAtivas().subscribe({
       next: (response) => {
         console.log('✅ Categorias carregadas:', response.length);
-        this.categorias.set(response);
+        this.categorias = response;
         this.cdr.markForCheck();
       },
       error: (err) => {
