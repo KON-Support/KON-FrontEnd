@@ -4,14 +4,14 @@ import { CategoriaService } from '../../services/categoria-service';
 import { Chamado } from '../../shared/models/Chamado';
 import { Categoria } from '../../shared/models/Categoria';
 import { ListaChamados } from "../../components/lista-chamados/lista-chamados";
-import { NavbarAdmin } from '../../components/navbar-admin/navbar-admin';
+import { Navbar } from '../../components/navbar/navbar';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chamados-admin',
-  imports: [ListaChamados, NavbarAdmin, FormsModule, RouterLink, CommonModule],
+  imports: [ListaChamados, Navbar, FormsModule, RouterLink, CommonModule],
   templateUrl: './chamados-admin.html',
   styleUrl: './chamados-admin.scss',
 })

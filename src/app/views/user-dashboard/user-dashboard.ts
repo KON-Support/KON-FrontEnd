@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { ChamadosUser } from '../../components/chamados-user/chamados-user';
-import { NavbarUsuario } from "../../components/navbar-usuario/navbar-usuario";
+import { Navbar } from "../../components/navbar/navbar";
 
 @Component({
   selector: 'app-user-dashboard',
-  imports: [ChamadosUser, NavbarUsuario],
+  imports: [ChamadosUser, Navbar],
   templateUrl: './user-dashboard.html',
   styleUrl: './user-dashboard.scss',
 })

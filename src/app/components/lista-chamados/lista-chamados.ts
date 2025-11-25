@@ -4,11 +4,12 @@ import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
 import { CardChamado } from '../card-chamado/card-chamado';
 import { Router } from '@angular/router';
+import { Navbar } from "../navbar/navbar";
 
 @Component({
   selector: 'app-lista-chamados',
   standalone: true,
-  imports: [CommonModule, CardChamado],
+  imports: [CommonModule, CardChamado, Navbar],
   templateUrl: './lista-chamados.html',
   styleUrl: './lista-chamados.scss',
 })

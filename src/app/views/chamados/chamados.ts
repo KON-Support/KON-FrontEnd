@@ -6,11 +6,11 @@ import { ChamadoService } from '../../services/chamado-service';
 import { FormsModule } from '@angular/forms';
 import { CategoriaService } from '../../services/categoria-service';
 import { Categoria } from '../../shared/models/Categoria';
-import { NavbarAgente } from '../../components/navbar-agente/navbar-agente';
+import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
   selector: 'app-chamados',
-  imports: [ListaChamados, RouterLink, FormsModule, NavbarAgente],
+  imports: [ListaChamados, RouterLink, FormsModule, Navbar],
   templateUrl: './chamados.html',
   styleUrl: './chamados.scss',
 })

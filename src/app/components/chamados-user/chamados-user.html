@@ -1,4 +1,4 @@
-<app-navbar-usuario></app-navbar-usuario>
+<app-navbar></app-navbar>
 <div class="tickets-user-container">
 
     <div class="header-section">
@@ -54,7 +54,7 @@
                 <div class="col-md-8">
                     <div class="search-input">
                         <i class="bi bi-search"></i>
-                        <input type="text" class="form-control" placeholder="Buscar chamados..."
+                        <input type="text" class="form-control" placeholder="Buscar tickets..."
                             [(ngModel)]="filtroBusca" />
                     </div>
                 </div>
@@ -84,7 +84,7 @@
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Carregando...</span>
         </div>
-        <p class="mt-2 text-muted">Carregando seus chamados...</p>
+        <p class="mt-2 text-muted">Carregando seus tickets...</p>
     </div>
     }
 
@@ -93,12 +93,12 @@
         <div class="empty-state-icon">
             <i class="bi bi-inbox"></i>
         </div>
-        <h5 class="empty-state-title">Nenhum chamado encontrado</h5>
+        <h5 class="empty-state-title">Nenhum ticket encontrado</h5>
         <p class="empty-state-text">
             @if (filtroBusca || filtroStatus) {
             Tente ajustar os filtros de busca
             } @else {
-            Você ainda não criou nenhum chamado. Comece abrindo um novo chamado!
+            Você ainda não criou nenhum ticket. Comece abrindo um novo chamado!
             }
         </p>
         @if (!filtroBusca && !filtroStatus) {

@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NavbarAdmin } from "../../components/navbar-admin/navbar-admin";
+import { Navbar } from "../../components/navbar/navbar";
 import { UsuarioRequest, UsuarioResponse, UsuarioService } from '../../services/usuario-service';
 
 @Component({
   selector: 'app-gerenciar-agentes',
-  imports: [FormsModule, NavbarAdmin, CommonModule],
+  imports: [FormsModule, Navbar, CommonModule],
   templateUrl: './gerenciar-agentes.html',
   styleUrl: './gerenciar-agentes.scss',
 })
