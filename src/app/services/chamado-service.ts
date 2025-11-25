@@ -11,6 +11,7 @@ export interface ChamadoRequest {
   cdCategoria: number;
   solicitante: number;
   responsavel?: number | null;
+  cdPlano?: number | null;
 }
 
 @Injectable({
@@ -18,6 +19,7 @@ export interface ChamadoRequest {
 })
 
 export class ChamadoService {
+
   private http = inject(HttpClient);
   private baseUrl = 'http://localhost:8089/api/v1/chamado';
 
@@ -82,5 +84,4 @@ export class ChamadoService {
   buscarNaoAtribuidos(): Observable<Chamado[]> {
     return this.http.get<Chamado[]>(`${this.baseUrl}/listar/nao-atribuidos`);
   }
-
 }
