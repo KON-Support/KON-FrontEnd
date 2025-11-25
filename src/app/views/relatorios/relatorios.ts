@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Navbar } from '../../components/navbar/navbar';
+import { NavbarAgente } from '../../components/navbar-agente/navbar-agente';
 import { ChamadoService } from '../../services/chamado-service';
 import { Chamado } from '../../shared/models/Chamado';
 import { Status } from '../../shared/models/Status';
@@ -44,7 +44,7 @@ interface PerformanceAtendente {
 @Component({
   selector: 'app-relatorios',
   standalone: true,
-  imports: [CommonModule, Navbar, NavbarAdmin],
+  imports: [CommonModule, NavbarAdmin],
   templateUrl: './relatorios.html',
   styleUrl: './relatorios.scss',
 })

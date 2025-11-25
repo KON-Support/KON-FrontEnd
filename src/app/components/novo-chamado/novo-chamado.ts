@@ -6,12 +6,12 @@ import { ChamadoService } from '../../services/chamado-service';
 import { CategoriaService } from '../../services/categoria-service';
 import { Categoria } from '../../shared/models/Categoria';
 import { Status } from '../../shared/models/Status';
-import { Navbar } from '../navbar/navbar';
+import { NavbarAgente } from "../navbar-agente/navbar-agente";
 
 @Component({
   selector: 'app-novo-chamado',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, Navbar],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, NavbarAgente],
   templateUrl: './novo-chamado.html',
   styleUrl: './novo-chamado.scss',
 })
@@ -42,6 +42,7 @@ export class NovoChamado implements OnInit {
       cdCategoria: [null, [Validators.required]],
       solicitante: [null, [Validators.required]],
       responsavel: [null],
+      anexo: [null],
     });
   }
 

@@ -8,9 +8,9 @@ import { NovoChamado } from './components/novo-chamado/novo-chamado';
 import { ChamadosUser } from './components/chamados-user/chamados-user';
 import { Relatorios } from './views/relatorios/relatorios';
 import { ChamadosAdmin } from './views/chamados-admin/chamados-admin';
-import { AuthGuard } from './services/auth-guard';
+import { RoleGuard } from './services/role-guard';
 import { GerenciarAgentes } from './views/gerenciar-agentes/gerenciar-agentes';
-import { Role } from './shared/models/Role';
+import { AdminDashboard } from './views/admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
   {
@@ -29,47 +29,59 @@ export const routes: Routes = [
   {
     path: 'agente/dashboard',
     component: AgenteDashboard,
-    canActivate: [AuthGuard]
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_AGENTE'] }
   },
   {
     path: 'user/dashboard',
     component: UserDashboard,
-    canActivate: [AuthGuard]
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_USER'] }
   },
   {
     path: 'chamados',
     component: Chamados,
-    canActivate: [AuthGuard]
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_AGENTE'] }
   },
   {
     path: 'admin/chamados',
     component: ChamadosAdmin,
-    canActivate: [AuthGuard]
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN'] }
   },
   {
     path: 'novo-chamado',
     component: NovoChamado,
-    canActivate: [AuthGuard]
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_USER'] }
   },
   {
     path: 'user/meus-chamados',
     component: ChamadosUser,
-    canActivate: [AuthGuard]
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_USER'] }
   },
   {
     path: 'relatorios',
     component: Relatorios,
-    canActivate: [AuthGuard]
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_AGENTE'] }
   },
   {
     path: 'admin/dashboard',
-    component: AgenteDashboard,
-    canActivate: [AuthGuard]
+    component: AdminDashboard, 
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN'] }
   },
-
   {
     path: 'admin/gerenciar-agentes',
     component: GerenciarAgentes,
-    canActivate: [AuthGuard],
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN'] }
+  },
+  {
+    path: '**',
+    redirectTo: '/login'
   }
 ];

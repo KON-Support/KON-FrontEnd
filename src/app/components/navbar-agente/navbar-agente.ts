@@ -2,14 +2,15 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-  selector: 'app-navbar-usuario',
+  selector: 'app-navbar-agente',
   imports: [RouterLink, RouterLinkActive],
-  templateUrl: './navbar-usuario.html',
-  styleUrl: './navbar-usuario.scss',
+  templateUrl: './navbar-agente.html',
+  styleUrl: './navbar-agente.scss',
 })
-export class NavbarUsuario {
 
-   protected usuario2 = JSON.parse(localStorage.getItem('user') || '{}');
+export class NavbarAgente {
+
+  protected usuario2 = JSON.parse(localStorage.getItem('user') || '{}');
     
     protected user = {
     name: this.usuario2.nmUsuario ,

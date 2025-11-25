@@ -9,15 +9,27 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class NavbarAdmin {
 
-   protected user = {
-    name: 'Adminstrador',
-    email: 'adminstrador@konsupport.com',
-    initials: 'Ad'
-  };
+    protected usuario2 = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    protected user = {
+    name: this.usuario2.nmUsuario ,
+    email: this.usuario2.dsEmail,
+    initials: this.getIniciais(this.usuario2.nmUsuario)
+  }
+ 
+  getIniciais(nome: string): string {
+    if (!nome) return '';
+    return nome
+      .split(' ')
+      .map(palavra => palavra.charAt(0))
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  }
 
   logout(): void {
-    console.log('Logout');
-    // Implementar lógica de logout aqui, falar com equipe...
+    localStorage.clear();
+    window.location.reload();
   }
 
 }

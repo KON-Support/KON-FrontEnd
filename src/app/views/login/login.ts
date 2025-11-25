@@ -41,33 +41,30 @@ export class Login {
   }
 
   onSubmit(): void {
-  if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) return;
 
-  this.loading = true;
-  this.error = null;
+    this.loading = true;
+    this.error = null;
 
-  const { email, senha } = this.loginForm.value;
+    const { email, senha } = this.loginForm.value;
 
-  this.authService.login(email, senha).subscribe({
-    next: () => {
-      this.router.navigate(['/agente/dashboard']);
-      this.loading = false;
-    },
-    error: (err) => {
-      this.error = err.error?.message || 'Credenciais inválidas.';
-      this.loading = false;
-    },
-  });
-}
-
+    this.authService.login(email, senha).subscribe({
+      next: (response) => {
+        this.loading = false;
+        console.log('Login realizado com sucesso');
+      },
+      error: (err) => {
+        this.error = err.message || err.error?.message || 'Credenciais inválidas.';
+        this.loading = false;
+        console.error('Erro no login:', err);
+      },
+    });
+  }
 
   loginWithGoogle(): void {
     console.log('Login com Google');
   }
 
-  loginWithGithub(): void {
-    console.log('Login com GitHub');
-  }
 
   irParaCadastro(): void {
     this.router.navigate(['/cadastro']);

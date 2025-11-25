@@ -96,6 +96,6 @@ export class ChamadosUser implements OnInit {
   }
 
   abrirNovoChamado(): void {
-    this.router.navigate(['/novo-ticket']);
+    this.router.navigate(['/novo-chamado']);
   }
 }
