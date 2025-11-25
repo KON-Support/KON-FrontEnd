@@ -4,6 +4,7 @@ import { Navbar } from '../../components/navbar/navbar';
 import { ChamadoService } from '../../services/chamado-service';
 import { Chamado } from '../../shared/models/Chamado';
 import { Status } from '../../shared/models/Status';
+import { NavbarAdmin } from "../../components/navbar-admin/navbar-admin";
 
 interface Estatisticas {
   totalTickets: number;
@@ -43,7 +44,7 @@ interface PerformanceAtendente {
 @Component({
   selector: 'app-relatorios',
   standalone: true,
-  imports: [CommonModule, Navbar],
+  imports: [CommonModule, Navbar, NavbarAdmin],
   templateUrl: './relatorios.html',
   styleUrl: './relatorios.scss',
 })

@@ -7,6 +7,7 @@ import { UserDashboard } from './views/user-dashboard/user-dashboard';
 import { NovoChamado } from './components/novo-chamado/novo-chamado';
 import { ChamadosUser } from './components/chamados-user/chamados-user';
 import { Relatorios } from './views/relatorios/relatorios';
+import { ChamadosAdmin } from './views/chamados-admin/chamados-admin';
 
 export const routes: Routes = [
   { 
@@ -26,6 +27,7 @@ export const routes: Routes = [
     path: 'agente/dashboard',
     component: AgenteDashboard,
   },
+
   {
     path: 'user/dashboard',
     component: UserDashboard,
@@ -33,6 +35,11 @@ export const routes: Routes = [
   {
     path: 'chamados',
     component: Chamados,
+  },
+
+   {
+    path: 'admin/chamados',
+    component: ChamadosAdmin,
   },
   {
     path: 'novo-chamado',
