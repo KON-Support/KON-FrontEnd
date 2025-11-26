@@ -1,24 +1,26 @@
-import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, signal, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ChamadoService } from '../../services/chamado-service';
 import { CategoriaService } from '../../services/categoria-service';
 import { Chamado } from '../../shared/models/Chamado';
 import { Categoria } from '../../shared/models/Categoria';
-import { ListaChamados } from "../../components/lista-chamados/lista-chamados";
+import { CardChamado } from "../../components/card-chamado/card-chamado";
 import { Navbar } from '../../components/navbar/navbar';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chamados-admin',
-  imports: [ListaChamados, Navbar, FormsModule, RouterLink, CommonModule],
+  imports: [CardChamado, Navbar, FormsModule, CommonModule],
   templateUrl: './chamados-admin.html',
   styleUrl: './chamados-admin.scss',
 })
-export class ChamadosAdmin {
+
+export class ChamadosAdmin implements OnInit {
 
   private chamadoService = inject(ChamadoService);
   private categoriaService = inject(CategoriaService);
+  private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   protected chamados = signal<Chamado[]>([]);
@@ -31,7 +33,7 @@ export class ChamadosAdmin {
   protected filtroCategoria: string = '';
 
   ngOnInit(): void {
-    console.log('🎬 Tickets - Componente inicializado');
+    console.log('ChamadosAdmin - Componente inicializado');
     this.carregarDados();
   }
 
@@ -40,17 +42,14 @@ export class ChamadosAdmin {
 
     this.chamadoService.buscarChamados().subscribe({
       next: (response) => {
-        console.log('✅ Tickets carregados:', response.length);
+        console.log('Chamados carregados:', response.length);
         this.chamados.set(response);
         this.qtdChamados.set(response.length);
         this.loading.set(false);
-
         this.cdr.markForCheck();
-
-        console.log('💾 Estado atualizado - Chamados:', this.chamados().length);
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar chamados:', err);
+        console.error('Erro ao carregar chamados:', err);
         this.loading.set(false);
         this.cdr.markForCheck();
       },
@@ -58,12 +57,12 @@ export class ChamadosAdmin {
 
     this.categoriaService.listarCategoriasAtivas().subscribe({
       next: (response) => {
-        console.log('✅ Categorias carregadas:', response.length);
+        console.log('Categorias carregadas:', response.length);
         this.categorias.set(response);
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar categorias:', err);
+        console.error('Erro ao carregar categorias:', err);
       },
     });
   }
@@ -74,26 +73,34 @@ export class ChamadosAdmin {
     if (this.filtroBusca) {
       const busca = this.filtroBusca.toLowerCase();
       chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
-        chamado.dsTitulo.toLowerCase().includes(busca)
+        chamado.dsTitulo.toLowerCase().includes(busca) ||
+        chamado.dsDescricao.toLowerCase().includes(busca) ||
+        chamado.cdChamado.toString().includes(busca)
       );
     }
 
     if (this.filtroStatus) {
-      const status = this.filtroStatus.toLowerCase();
       chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
-        chamado.status.toLowerCase().includes(status)
+        chamado.status === this.filtroStatus
       );
     }
 
     if (this.filtroCategoria) {
-      const categoria = this.filtroCategoria.toLowerCase();
       chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
-        chamado.categoria.nmCategoria.toLowerCase().includes(categoria)
+        chamado.categoria?.nmCategoria === this.filtroCategoria
       );
     }
 
-    console.log('🔍 Chamados filtrados:', chamadosFiltrados.length);
+    console.log('Chamados filtrados:', chamadosFiltrados.length);
     return chamadosFiltrados;
   }
 
+  onChamadoClick(chamado: Chamado): void {
+    console.log('Chamado clicado:', chamado.cdChamado);
+    // Implementar navegação para detalhes se necessário
+  }
+
+  abrirNovoChamado(): void {
+    this.router.navigate(['/novo-chamado']);
+  }
 }

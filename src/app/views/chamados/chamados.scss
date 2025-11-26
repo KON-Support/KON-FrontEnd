@@ -88,6 +88,54 @@
     }
 }
 
+.chamados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: #f8f9fa;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+            font-size: 2.5rem;
+            color: #9ca3af;
+        }
+    }
+
+    .empty-state-title {
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+        color: #6c757d;
+        margin-bottom: 0;
+        font-size: 0.95rem;
+    }
+}
+
+.alert {
+    border-radius: 8px;
+    border: none;
+    font-size: 0.95rem;
+}
+
 @media (max-width: 768px) {
     .chamados-container {
         padding: 1rem;
@@ -109,13 +157,14 @@
         }
     }
 
+    .chamados-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
     .filters-section {
         .row {
             gap: 0.75rem;
-        }
-
-        .col-md-4 {
-            flex: 0 0 100%;
         }
     }
 }
@@ -127,4 +176,3 @@
         }
     }
 }
-
