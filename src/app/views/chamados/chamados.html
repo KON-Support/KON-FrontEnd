@@ -1,37 +1,29 @@
 <app-navbar></app-navbar>
 
-<div class="px-5 py-5">
-  <div class="row">
-    <div class="col-md-12 mt-5 d-flex justify-content-between align-items-center">
-      <div class="col-md-9">
+<div class="chamados-container px-5 py-5">
+  <div class="header-section">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
         <h3>Chamados</h3>
-        <h5 class="text-muted">{{ chamadosFiltrados.length }} chamados encontrados</h5>
+        <p class="text-muted mb-0">{{ chamadosFiltrados.length }} chamados encontrados</p>
       </div>
-      <div class="col-md-3 d-flex justify-content-end">
-        <a routerLink="/novo-chamado" class="btn bg-primary text-white align-self-center text-decoration-none">
-          <i class="bi bi-plus-circle"></i> Novo chamado
-        </a>
-      </div>
+      <button class="btn btn-primary" (click)="abrirNovoChamado()">
+        <i class="bi bi-plus-lg me-2"></i>
+        Novo Chamado
+      </button>
     </div>
-  </div>
 
-  <div class="mt-4">
-    <div class="row border opacity-100 py-3 rounded m-0">
-      <div class="col-md-4">
-        <div class="input-group">
-          <span class="input-group-text text-white input-bg">
-            <i class="bi bi-search text-muted"></i>
-          </span>
-          <input type="text" class="form-control input-bg" placeholder="Buscar chamado..." [(ngModel)]="filtroBusca" />
+    <div class="filters-section">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="search-input">
+            <i class="bi bi-search"></i>
+            <input type="text" class="form-control" placeholder="Buscar chamado..." [(ngModel)]="filtroBusca" />
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-4">
-        <div class="input-group">
-          <span class="input-group-text text-white input-bg">
-            <i class="bi bi-file-earmark-text text-muted"></i>
-          </span>
-          <select name="status" id="todosStatus" class="form-select input-bg" [(ngModel)]="filtroStatus">
+        <div class="col-md-4">
+          <select class="form-select" [(ngModel)]="filtroStatus">
             <option value="">Todos os status</option>
             <option value="ABERTO">Aberto</option>
             <option value="EM_ANDAMENTO">Em Andamento</option>
@@ -39,13 +31,9 @@
             <option value="FECHADO">Fechado</option>
           </select>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="input-group">
-          <span class="input-group-text text-white input-bg">
-            <i class="bi bi-flag text-muted"></i>
-          </span>
-          <select name="prioridade" id="todasPrioridades" class="form-select input-bg" [(ngModel)]="filtroCategoria">
+
+        <div class="col-md-4">
+          <select class="form-select" [(ngModel)]="filtroCategoria">
             <option value="">Todas as categorias</option>
             @for (cat of categorias; track $index) {
             <option value="{{ cat.nmCategoria }}">{{ cat.nmCategoria }}</option>
@@ -55,15 +43,33 @@
       </div>
     </div>
   </div>
-</div>
 
-@if (loading()) {
-<div class="text-center py-5">
-  <div class="spinner-border text-primary" role="status">
-    <span class="visually-hidden">Carregando...</span>
+  @if (loading()) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-2 text-muted">Carregando chamados...</p>
   </div>
-  <p class="mt-2 text-muted">Carregando tickets...</p>
+  } @else if (chamadosFiltrados.length === 0) {
+  <div class="empty-state">
+    <div class="empty-state-icon">
+      <i class="bi bi-inbox"></i>
+    </div>
+    <h5 class="empty-state-title">Nenhum chamado encontrado</h5>
+    <p class="empty-state-text">
+      @if (filtroBusca || filtroStatus || filtroCategoria) {
+      Tente ajustar os filtros de busca
+      } @else {
+      Não há chamados disponíveis no momento
+      }
+    </p>
+  </div>
+  } @else {
+  <div class="chamados-grid">
+    @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
+    <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick($event)" />
+    }
+  </div>
+  }
 </div>
-} @else {
-<app-lista-chamados [tickets]="chamadosFiltrados"></app-lista-chamados>
-}
