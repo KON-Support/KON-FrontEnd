@@ -38,14 +38,9 @@
               placeholder="••••••••"
               formControlName="senha"
             />
-            <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility()">
+            <button type="button" class="btn btn-outline-secondary olho-senha" (click)="togglePasswordVisibility()">
               <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
             </button>
-          </div>
-
-          <div class="invalid-feedback" *ngIf="senha?.invalid && senha?.touched">
-            <span *ngIf="senha?.errors?.['required']">Senha é obrigatória</span>
-            <span *ngIf="senha?.errors?.['minlength']">Mínimo de 6 caracteres</span>
           </div>
         </div>
 

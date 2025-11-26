@@ -39,7 +39,9 @@ export class AuthService {
         }
       }),
       catchError((error) => {
-        console.error('Message:', error.message);
+        if (error.status === 401) {
+          return throwError(() => new Error('Email ou senha inválidos'));
+        }
         return throwError(() => new Error(error.error?.message || 'Erro ao fazer login'));
       })
     );
