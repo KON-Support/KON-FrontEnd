@@ -6,10 +6,6 @@
             <div>
                 <p class="text-muted mb-0">{{ chamadosFiltrados.length }} chamados encontrados</p>
             </div>
-            <button class="btn btn-primary" (click)="abrirNovoChamado()">
-                <i class="bi bi-plus-lg me-2"></i>
-                Novo Chamado
-            </button>
         </div>
 
         <div class="row g-3 mb-4">
@@ -43,6 +39,23 @@
                     <div class="stat-content">
                         <span class="stat-label">Resolvidos</span>
                         <span class="stat-value">{{ chamadosResolvidos }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <i class="bi bi-info-circle-fill"></i>
+                    </div>
+                    <div class="info-card-content">
+                        <h6 class="info-card-title">Como funciona o atendimento</h6>
+                        <p class="info-card-text mb-0">
+                            Após criar um chamado, nossa equipe irá analisá-lo e atribuir a um agente responsável.
+                            <br>Você receberá atualizações conforme o progresso do atendimento.
+                        </p>
                     </div>
                 </div>
             </div>
