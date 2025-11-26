@@ -11,6 +11,8 @@ import { RoleGuard } from './services/role-guard';
 import { GerenciarAgentes } from './views/gerenciar-agentes/gerenciar-agentes';
 import { AdminDashboard } from './views/admin-dashboard/admin-dashboard';
 import { MeusChamadosView } from './views/meus-chamados-view/meus-chamados-view';
+import { ChamadoDetalhes } from './components/chamado-detalhes/chamado-detalhes';
+import { ChamadoComentarios } from './views/chamado-comentarios/chamado-comentarios';
 
 export const routes: Routes = [
   {
@@ -79,6 +81,12 @@ export const routes: Routes = [
     component: GerenciarAgentes,
     canActivate: [RoleGuard],
     data: { roles: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'chamado/detalhes/:cdChamado',
+    component: ChamadoComentarios,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_USER']},
   },
   {
     path: '**',

@@ -29,7 +29,7 @@
   <div class="row g-4">
     @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
     <div class="col-md-6 col-lg-4">
-      <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick($event)" />
+      <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick(chamado)" />
     </div>
     }
   </div>

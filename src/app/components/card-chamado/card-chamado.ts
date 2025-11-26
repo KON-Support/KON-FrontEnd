@@ -1,7 +1,8 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chamado } from '../../shared/models/Chamado';
 import { Status } from '../../shared/models/Status';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-chamado',
@@ -13,10 +14,10 @@ import { Status } from '../../shared/models/Status';
 
 export class CardChamado {
   chamado = input.required<Chamado>();
-  cardClick = output<Chamado>();
+  cardClick = inject(Router);
 
   onCardClick(): void {
-    this.cardClick.emit(this.chamado());
+    this.cardClick.navigate([`chamado/detalhes/${this.chamado().cdChamado}`]);
   }
 
   getStatusClass(): string {
