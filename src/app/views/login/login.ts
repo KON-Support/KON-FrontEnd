@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,7 @@ export class Login {
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   loginForm: FormGroup;
   loading = false;
@@ -49,13 +50,15 @@ export class Login {
     const { email, senha } = this.loginForm.value;
 
     this.authService.login(email, senha).subscribe({
-      next: (response) => {
+      next: () => {
         this.loading = false;
+        this.cdr.detectChanges();
         console.log('Login realizado com sucesso');
       },
       error: (err) => {
-        this.error = err.message || err.error?.message || 'Credenciais inválidas.';
+        this.error = err.message || 'Ocorreu um erro ao fazer login.';
         this.loading = false;
+        this.cdr.detectChanges();
         console.error('Erro no login:', err);
       },
     });

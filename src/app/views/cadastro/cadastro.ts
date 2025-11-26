@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,34 +17,39 @@ export class Cadastro {
   error = '';
 
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
       nome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       funcionarios: ['', [Validators.required, Validators.min(1)]],
-      senha: ['', [Validators.required, Validators.minLength(6)]],
+      senha: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=]).{6,}$/)]],
       confirmarSenha: ['', Validators.required]
-    }, { validators: this.validarSenha });
+    },
+    { validators: this.validarSenha }
+    );
   }
 
-  validarSenha(form: FormGroup) {
+  validarSenha(form: AbstractControl) {
     const password = form.get('senha');
     const confirmPassword = form.get('confirmarSenha');
     
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
+    if (password && confirmPassword) {
+      if (password.value !== confirmPassword.value) {
+        confirmPassword.setErrors({ passwordMismatch: true });
+        return { passwordMismatch: true };
+      } else {
+          confirmPassword.setErrors(null);
+        
+      }
     }
     return null;
   }
 
   senhaVisivel() {
     this.showPassword = !this.showPassword;
-  }
-
-  senhaVisivelConfirmar() {
-    this.showConfirmPassword = !this.showConfirmPassword;
+    this.showConfirmPassword = this.showPassword;
   }
 
   onSubmit() {
@@ -77,18 +82,23 @@ export class Cadastro {
     .then(async res => {
       this.loading = false;
 
+      
+      if(res.status === 500) {
+        this.cdr.detectChanges();
+        this.error = 'E-mail já cadastrado.';
+      }
+
       if (!res.ok) {
         const msg = await res.json().catch(() => ({ message: 'Erro desconhecido' }));
-        this.error = msg.message || 'Erro ao cadastrar usuário.';
+        this.cdr.detectChanges();
         return;
       }
 
-      alert('Usuário cadastrado com sucesso!');
       this.router.navigate(['/login']);
     })
     .catch(err => {
+      this.cdr.detectChanges();
       this.loading = false;
-      this.error = 'Erro ao conectar ao servidor.';
       console.error(err);
     });
   }
