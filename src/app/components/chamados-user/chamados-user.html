@@ -191,7 +191,7 @@
     } @else {
     <div class="chamados-grid">
       @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
-      <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick($event)" />
+      <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick(chamado)" />
       }
     </div>
     }
