@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, inject, signal, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ListaChamados } from '../../components/lista-chamados/lista-chamados';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { CardChamado } from '../../components/card-chamado/card-chamado';
 import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
 import { FormsModule } from '@angular/forms';
@@ -10,13 +11,14 @@ import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
   selector: 'app-chamados',
-  imports: [ListaChamados, RouterLink, FormsModule, Navbar],
+  imports: [CardChamado, FormsModule, Navbar, CommonModule],
   templateUrl: './chamados.html',
   styleUrl: './chamados.scss',
 })
 export class Chamados implements OnInit {
   private chamadoService = inject(ChamadoService);
   private categoriaService = inject(CategoriaService);
+  private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   protected chamados = signal<Chamado[]>([]);
@@ -40,12 +42,10 @@ export class Chamados implements OnInit {
         this.chamados.set(response);
         this.qtdChamados.set(response.length);
         this.loading.set(false);
-
         this.cdr.markForCheck();
-
-        console.log('💾 Estado atualizado - Chamados:', this.chamados().length);
       },
       error: (err) => {
+        console.error('❌ Erro ao carregar chamados:', err);
         this.loading.set(false);
         this.cdr.markForCheck();
       },
@@ -53,7 +53,6 @@ export class Chamados implements OnInit {
 
     this.categoriaService.listarCategoriasAtivas().subscribe({
       next: (response) => {
-        console.log('✅ Categorias carregadas:', response.length);
         this.categorias = response;
         this.cdr.markForCheck();
       },
@@ -69,25 +68,35 @@ export class Chamados implements OnInit {
     if (this.filtroBusca) {
       const busca = this.filtroBusca.toLowerCase();
       chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
-        chamado.dsTitulo.toLowerCase().includes(busca)
+        chamado.dsTitulo.toLowerCase().includes(busca) ||
+        chamado.dsDescricao.toLowerCase().includes(busca) ||
+        chamado.cdChamado.toString().includes(busca)
       );
     }
 
     if (this.filtroStatus) {
-      const status = this.filtroStatus.toLowerCase();
+      const status = this.filtroStatus;
       chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
-        chamado.status.toLowerCase().includes(status)
+        chamado.status === status
       );
     }
 
     if (this.filtroCategoria) {
-      const categoria = this.filtroCategoria.toLowerCase();
+      const categoria = this.filtroCategoria;
       chamadosFiltrados = chamadosFiltrados.filter((chamado) =>
-        chamado.categoria.nmCategoria.toLowerCase().includes(categoria)
+        chamado.categoria?.nmCategoria === categoria
       );
     }
 
-    console.log('🔍 Chamados filtrados:', chamadosFiltrados.length);
     return chamadosFiltrados;
+  }
+
+  onChamadoClick(chamado: Chamado): void {
+    console.log('🎯 Chamado clicado:', chamado.cdChamado);
+    // Implementar navegação para detalhes se necessário
+  }
+
+  abrirNovoChamado(): void {
+    this.router.navigate(['/novo-chamado']);
   }
 }

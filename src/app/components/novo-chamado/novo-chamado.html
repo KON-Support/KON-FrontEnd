@@ -5,7 +5,7 @@
     <div class="row">
         <div class="row mt-5">
             <div class="d-flex align-items-start">
-                <a routerLink="/chamados" class="btn btn-link text-muted p-0 me-3">
+                <a routerLink="/user/dashboard" class="btn btn-link text-muted p-0 me-3">
                     <i class="bi bi-arrow-left fs-5"></i>
                 </a>
                 <div class="ms-4">
@@ -99,35 +99,6 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="solicitante" class="form-label fw-medium">
-                                Código do Solicitante <span class="text-danger">*</span>
-                            </label>
-                            <input type="number" id="solicitante" formControlName="solicitante" class="form-control"
-                                [class.is-invalid]="isFieldInvalid('solicitante')"
-                                placeholder="ID do usuário solicitante" />
-                            @if (isFieldInvalid('solicitante')) {
-                            <small class="text-danger">{{ getFieldError('solicitante') }}</small>
-                            }
-                            <small class="text-muted d-block mt-1">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Informe o código do usuário que está solicitando o chamado
-                            </small>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="responsavel" class="form-label fw-medium">
-                                Código do Responsável
-                                <span class="badge bg-light text-muted ms-2">Opcional</span>
-                            </label>
-                            <input type="number" id="responsavel" formControlName="responsavel" class="form-control"
-                                placeholder="ID do atendente responsável" />
-                            <small class="text-muted d-block mt-1">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Deixe em branco para atribuir posteriormente
-                            </small>
-                        </div>
-
-                        <div class="mb-4">
                             <label for="anexo" class="form-label fw-medium">
                                 Anexar Arquivo
                                 <span class="badge bg-light text-muted ms-2">Opcional</span>
@@ -150,7 +121,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end gap-3 pt-3 border-top">
-                            <a routerLink="/chamados" class="btn btn-outline-secondary">
+                            <a routerLink="/user/dashboard" class="btn btn-outline-secondary">
                                 <i class="bi bi-x-lg me-2"></i>
                                 Cancelar
                             </a>

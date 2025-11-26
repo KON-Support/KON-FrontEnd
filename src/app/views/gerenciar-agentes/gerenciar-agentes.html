@@ -1,186 +1,195 @@
 <app-navbar></app-navbar>
-<div class="container-fluid gerenciar-agentes">
 
-  <div class="d-flex justify-content-between align-items-start mb-4">
-    <div>
-      <h2 class="titulo">Gerenciar Agentes</h2>
-      <p class="subtitulo">{{ agentesFiltrados.length }} agentes cadastrados</p>
+<div class="px-5 py-5">
+  <div class="header-section">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h3>Gerenciar Agentes</h3>
+        <p class="text-muted mb-0">{{ agentesFiltrados.length }} agentes cadastrados</p>
+      </div>
+      <button class="btn btn-primary" (click)="abrirModalAdicionar()" [disabled]="carregando">
+        <i class="bi bi-plus-lg me-2"></i>
+        Adicionar Agente
+      </button>
     </div>
 
-    <button class="btn btn-dark d-flex align-items-center gap-2" (click)="abrirModalAdicionar()" [disabled]="carregando">
-      <i class="bi bi-plus-lg"></i>
-      Adicionar Agente
-    </button>
-  </div>
-
-  <div class="card p-3 mb-4 shadow-sm busca-card">
-    <div class="input-group">
-      <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
-      <input
-        type="text"
-        class="form-control bg-light border-0"
-        placeholder="Buscar agentes por nome, email"
-        [(ngModel)]="busca"
-        [disabled]="carregando"
-      />
+    <div class="filters-section">
+      <div class="search-input">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar agentes por nome, email"
+          [(ngModel)]="busca"
+          [disabled]="carregando"
+        />
+      </div>
     </div>
   </div>
 
-  <div *ngIf="carregando" class="text-center py-5">
+  @if (carregando) {
+  <div class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Carregando...</span>
     </div>
     <p class="mt-2 text-muted">Carregando agentes...</p>
   </div>
-
-  <div class="modal-backdrop fade show" *ngIf="mostrarModalAdicionar"></div>
-  
-  <div class="modal fade show d-block" *ngIf="mostrarModalAdicionar" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  } @else if (agentesFiltrados.length === 0) {
+  <div class="empty-state">
+    <div class="empty-state-icon">
+      <i class="bi bi-people"></i>
+    </div>
+    <h5 class="empty-state-title">
+      {{ busca ? 'Nenhum agente encontrado' : 'Nenhum agente cadastrado' }}
+    </h5>
+    <p class="empty-state-text">
+      {{
+        busca ? 'Tente ajustar os termos da busca.' : 'Clique em "Adicionar Agente" para começar.'
+      }}
+    </p>
+    @if (!busca) {
+    <button class="btn btn-primary mt-3" (click)="abrirModalAdicionar()">
+      <i class="bi bi-plus-lg me-2"></i>
+      Adicionar Primeiro Agente
+    </button>
+    }
+  </div>
+  } @else {
+  <div class="agentes-grid">
+    @for (agente of agentesFiltrados; track agente.cdUsuario) {
+    <div class="agente-card">
+      <div class="agente-card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div class="d-flex align-items-center gap-3 flex-grow-1">
+            <div class="avatar">
+              {{ getIniciais(agente.nmUsuario) }}
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="agente-name mb-1">{{ agente.nmUsuario }}</h6>
+              <p class="agente-email mb-2">{{ agente.dsEmail }}</p>
+              <div class="d-flex gap-2 flex-wrap">
+                <span class="badge bg-info">Agente</span>
+                <span class="badge bg-light text-dark">ID: {{ agente.cdUsuario }}</span>
+                @if (agente.nuFuncionario) {
+                <span class="badge bg-light text-dark">Nº: {{ agente.nuFuncionario }}</span>
+                }
+                <span class="badge" [ngClass]="getStatusClass(agente.flAtivo)">
+                  {{ getStatusText(agente.flAtivo) }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-icon btn-light" (click)="editarAgente(agente)" title="Editar">
+              <i class="bi bi-pencil"></i>
+            </button>
+            @if (agente.flAtivo) {
+            <button
+              class="btn btn-icon btn-light text-warning"
+              (click)="desativarAgente(agente)"
+              title="Desativar"
+            >
+              <i class="bi bi-pause-circle"></i>
+            </button>
+            } @else {
+            <button
+              class="btn btn-icon btn-light text-success"
+              (click)="reativarAgente(agente)"
+              title="Reativar"
+            >
+              <i class="bi bi-play-circle"></i>
+            </button>
+            }
+            <button
+              class="btn btn-icon btn-light text-danger"
+              (click)="excluirAgente(agente)"
+              title="Excluir"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  } @if (mostrarModalAdicionar) {
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5)">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Adicionar Novo Agente</h5>
-          <button type="button" class="btn-close" (click)="fecharModal()" [disabled]="carregando"></button>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="fecharModal()"
+            [disabled]="carregando"
+          ></button>
         </div>
         <div class="modal-body">
           <form>
             <div class="mb-3">
               <label class="form-label">Nome Completo *</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                [(ngModel)]="novoAgente.nmUsuario" 
-                name="nome" 
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="novoAgente.nmUsuario"
+                name="nome"
                 placeholder="Digite o nome do agente"
                 required
                 [disabled]="carregando"
-              >
+              />
             </div>
             <div class="mb-3">
               <label class="form-label">Email *</label>
-              <input 
-                type="email" 
-                class="form-control" 
-                [(ngModel)]="novoAgente.dsEmail" 
-                name="email" 
+              <input
+                type="email"
+                class="form-control"
+                [(ngModel)]="novoAgente.dsEmail"
+                name="email"
                 placeholder="Digite o email"
                 required
                 [disabled]="carregando"
-              >
+              />
             </div>
             <div class="mb-3">
               <label class="form-label">Senha *</label>
-              <input 
-                type="password" 
-                class="form-control" 
-                [(ngModel)]="novoAgente.dsSenha" 
-                name="senha" 
+              <input
+                type="password"
+                class="form-control"
+                [(ngModel)]="novoAgente.dsSenha"
+                name="senha"
                 placeholder="Digite a senha inicial"
                 required
                 [disabled]="carregando"
-              >
-              <div class="form-text">
-                A senha poderá ser alterada pelo agente posteriormente.
-              </div>
-            </div>
-            <div class="mb-3">
+              />
+              <div class="form-text">A senha poderá ser alterada pelo agente posteriormente.</div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="fecharModal()" [disabled]="carregando">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fecharModal()"
+            [disabled]="carregando"
+          >
             Cancelar
           </button>
-          <button type="button" class="btn btn-primary" (click)="adicionarAgente()" [disabled]="carregando">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="adicionarAgente()"
+            [disabled]="carregando"
+          >
             <span *ngIf="carregando" class="spinner-border spinner-border-sm me-2"></span>
-            <i class="bi bi-plus-lg me-1" *ngIf="!carregando"></i>
+            <i class="bi bi-plus-lg me-2" *ngIf="!carregando"></i>
             {{ carregando ? 'Cadastrando...' : 'Adicionar Agente' }}
           </button>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="d-flex flex-column gap-3" *ngIf="!carregando">
-    <div
-      class="card agente-card p-3 shadow-sm"
-      *ngFor="let agente of agentesFiltrados"
-    >
-      <div class="d-flex justify-content-between align-items-center">
-        
-        <div class="d-flex align-items-start gap-3">
-          <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">
-            {{ getIniciais(agente.nmUsuario) }}
-          </div>
-
-          <div>
-            <h5 class="nome mb-1">{{ agente.nmUsuario }}</h5>
-            <p class="email text-muted mb-1">{{ agente.dsEmail }}</p>
-            
-            <div class="d-flex gap-2 align-items-center mt-2 flex-wrap">
-              <span class="badge bg-info">Agente</span>
-              <span class="badge bg-light text-dark">
-                ID: {{ agente.cdUsuario }}
-              </span>
-              <span class="badge bg-light text-dark" *ngIf="agente.nuFuncionario">
-                Nº: {{ agente.nuFuncionario }}
-              </span>
-              <span class="badge" [class]="getStatusClass(agente.flAtivo)">
-                {{ getStatusText(agente.flAtivo) }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="d-flex gap-2 acoes-container">
-          
-          <button class="btn btn-light acao" (click)="editarAgente(agente)" title="Editar">
-            <i class="bi bi-pencil"></i>
-          </button>
-
-          <button 
-            *ngIf="agente.flAtivo"
-            class="btn btn-light acao text-warning" 
-            (click)="desativarAgente(agente)" 
-            title="Desativar"
-          >
-            <i class="bi bi-pause-circle"></i>
-          </button>
-
-          <button 
-            *ngIf="!agente.flAtivo"
-            class="btn btn-light acao text-success" 
-            (click)="reativarAgente(agente)" 
-            title="Reativar"
-          >
-            <i class="bi bi-play-circle"></i>
-          </button>
-
-          <button 
-            class="btn btn-light acao text-danger" 
-            (click)="excluirAgente(agente)" 
-            title="Excluir"
-          >
-            <i class="bi bi-trash"></i>
-          </button>
-        </div>
-
-      </div>
-    </div>
-
-    <div *ngIf="agentesFiltrados.length === 0 && !carregando" class="text-center py-5">
-      <i class="bi bi-people display-1 text-muted"></i>
-      <h4 class="text-muted mt-3">
-        {{ busca ? 'Nenhum agente encontrado' : 'Nenhum agente cadastrado' }}
-      </h4>
-      <p class="text-muted">
-        {{ busca ? 'Tente ajustar os termos da busca.' : 'Clique em "Adicionar Agente" para começar.' }}
-      </p>
-      <button *ngIf="!busca" class="btn btn-dark mt-2" (click)="abrirModalAdicionar()">
-        <i class="bi bi-plus-lg me-1"></i>
-        Adicionar Primeiro Agente
-      </button>
-    </div>
-  </div>
-
+  }
 </div>

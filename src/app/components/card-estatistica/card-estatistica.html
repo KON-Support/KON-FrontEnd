@@ -1,49 +1,52 @@
-<div class="row">
-  <div class="col-12 col-sm-6 col-md-3 mb-3">
-    <div class="card text-bg-light h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <h5 class="card-title ms-2 mb-4 text-truncate">Chamados abertos</h5>
-          <i class="bi bi-clock text-primary"></i>
-        </div>
-        <h3 class="ms-2 mt-5">{{ qtdChamados }}</h3>
-        <p class="card-text ms-2 text-muted">Em atendimento</p>
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="stat-card stat-open">
+      <div class="stat-icon">
+        <i class="bi bi-circle-fill"></i>
+      </div>
+      <div class="stat-content">
+        <h2 class="stat-number">{{ qtdChamados }}</h2>
+        <p class="stat-label">Chamados Abertos</p>
+        <small class="stat-detail text-muted">Em atendimento</small>
       </div>
     </div>
   </div>
-  <div class="col-12 col-sm-6 col-md-3 mb-3">
-    <div class="card text-bg-light h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <h5 class="card-title ms-2 mb-4 text-truncate">Críticos</h5>
-          <i class="bi bi-exclamation-circle text-warning"></i>
-        </div>
-        <h3 class="ms-2 mt-5">0</h3>
-        <p class="card-text ms-2 text-muted">Alta prioridade</p>
+
+  <div class="col-md-3">
+    <div class="stat-card stat-critical">
+      <div class="stat-icon">
+        <i class="bi bi-exclamation-circle-fill"></i>
+      </div>
+      <div class="stat-content">
+        <h2 class="stat-number">0</h2>
+        <p class="stat-label">Críticos</p>
+        <small class="stat-detail text-muted">Alta prioridade</small>
       </div>
     </div>
   </div>
-  <div class="col-12 col-sm-6 col-md-3 mb-3">
-    <div class="card text-bg-light h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <h5 class="card-title ms-2 mb-4 text-truncate">SLA Vencido</h5>
-          <i class="bi bi-exclamation-circle text-danger"></i>
-        </div>
-        <h3 class="ms-2 mt-5">{{ qtdSlaVencido }}</h3>
-        <p class="card-text ms-2 text-muted">Requer atenção</p>
+
+  <div class="col-md-3">
+    <div class="stat-card stat-sla">
+      <div class="stat-icon">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+      <div class="stat-content">
+        <h2 class="stat-number">{{ qtdSlaVencido }}</h2>
+        <p class="stat-label">SLA Vencido</p>
+        <small class="stat-detail text-muted">Requer atenção</small>
       </div>
     </div>
   </div>
-  <div class="col-12 col-sm-6 col-md-3 mb-3">
-    <div class="card text-bg-light h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <h5 class="card-title ms-2 mb-4 text-truncate">Resolvidos Hoje</h5>
-          <i class="bi bi-check-circle text-success"></i>
-        </div>
-        <h3 class="ms-2 mt-5">{{ qtdResolvidosHoje }}</h3>
-        <p class="card-text ms-2 text-muted">Tickets fechados</p>
+
+  <div class="col-md-3">
+    <div class="stat-card stat-resolved">
+      <div class="stat-icon">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <div class="stat-content">
+        <h2 class="stat-number">{{ qtdResolvidosHoje }}</h2>
+        <p class="stat-label">Resolvidos Hoje</p>
+        <small class="stat-detail text-muted">Chamados fechados</small>
       </div>
     </div>
   </div>

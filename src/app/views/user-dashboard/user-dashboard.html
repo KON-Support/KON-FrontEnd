@@ -1,15 +1,208 @@
 <app-navbar></app-navbar>
 
-<div class="dashboard-container">
-  <div class="header-section mb-5">
-    <h3>Dashboard</h3>
-    <h5 class="text-muted">Visão geral do sistema</h5>
+<div class="px-5 py-5">
+  <div class="header-section mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h3>Bem-vindo, {{ nomeUsuario() }}!</h3>
+        <h5 class="text-muted">Aqui está um resumo das suas solicitações</h5>
+      </div>
+      <button class="btn btn-primary" (click)="abrirNovoChamado()">
+        <i class="bi bi-plus-lg me-2"></i>
+        Novo Chamado
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-2 text-muted">Carregando dashboard...</p>
+  </div>
+  } @else {
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="stat-card stat-open">
+        <div class="stat-icon">
+          <i class="bi bi-circle-fill"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-number">{{ estatisticas().abertos }}</h2>
+          <p class="stat-label">Chamados Abertos</p>
+          <small class="stat-detail text-muted">Aguardando atendimento</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="stat-card stat-progress">
+        <div class="stat-icon">
+          <i class="bi bi-arrow-repeat"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-number">{{ estatisticas().emAndamento }}</h2>
+          <p class="stat-label">Em Andamento</p>
+          <small class="stat-detail text-muted">Sendo atendidos</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="stat-card stat-resolved">
+        <div class="stat-icon">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-number">{{ estatisticas().resolvidos }}</h2>
+          <p class="stat-label">Resolvidos</p>
+          <small class="stat-detail text-muted">Últimos 30 dias</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="stat-card stat-total">
+        <div class="stat-icon">
+          <i class="bi bi-ticket-detailed-fill"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-number">{{ estatisticas().total }}</h2>
+          <p class="stat-label">Total de Tickets</p>
+          <small class="stat-detail text-muted">Histórico completo</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 py-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 fw-semibold">
+              <i class="bi bi-clock-history me-2 text-primary"></i>
+              Últimos Chamados
+            </h6>
+            <a routerLink="/user/meus-chamados" class="btn btn-sm btn-outline-primary">
+              Ver Todos
+              <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          @if (ultimosChamados().length > 0) {
+          <div class="list-group list-group-flush">
+            @for (chamado of ultimosChamados(); track chamado.cdChamado) {
+            <div
+              class="list-group-item list-group-item-action px-4 py-3 chamado-item"
+              (click)="verDetalhesChamado(chamado)"
+            >
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge" [ngClass]="getStatusBadgeClass(chamado.status)">
+                      {{ getStatusLabel(chamado.status) }}
+                    </span>
+                    <small class="text-muted">#{{ chamado.cdChamado }}</small>
+                    @if (chamado.flSlaViolado) {
+                    <span class="badge bg-danger">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                      SLA Violado
+                    </span>
+                    }
+                  </div>
+                  <h6 class="mb-1 fw-medium">{{ chamado.dsTitulo }}</h6>
+                  <p class="mb-2 text-muted small">{{ chamado.dsDescricao | slice : 0 : 80 }}...</p>
+                  <div class="d-flex gap-3">
+                    <small class="text-muted">
+                      <i class="bi bi-calendar3 me-1"></i>
+                      {{ formatDate(chamado.dtCriacao) }}
+                    </small>
+                    @if (chamado.categoria) {
+                    <small class="text-muted">
+                      <i class="bi bi-tag me-1"></i>
+                      {{ chamado.categoria.nmCategoria }}
+                    </small>
+                    }
+                  </div>
+                </div>
+                <i class="bi bi-chevron-right text-muted"></i>
+              </div>
+            </div>
+            }
+          </div>
+          } @else {
+          <div class="text-center py-5">
+            <i class="bi bi-inbox display-4 text-muted"></i>
+            <p class="mt-3 text-muted">Você ainda não tem chamados</p>
+            <button class="btn btn-primary btn-sm" (click)="abrirNovoChamado()">
+              <i class="bi bi-plus-lg me-2"></i>
+              Abrir Primeiro Chamado
+            </button>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm bg-info-subtle">
+        <div class="card-body p-3">
+          <h6 class="fw-semibold mb-3">
+            <i class="bi bi-lightbulb-fill me-2 text-info"></i>
+            Dica da KonSupport
+          </h6>
+          <p class="small mb-0 text-dark">
+            Para um atendimento mais rápido, forneça o máximo de detalhes possível ao descrever seu
+            problema, incluindo prints e mensagens de erro.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <app-chamados-user></app-chamados-user>
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 py-3">
+          <h6 class="mb-0 fw-semibold">
+            <i class="bi bi-activity me-2 text-primary"></i>
+            Atividade Recente
+          </h6>
+        </div>
+        <div class="card-body">
+          @if (atividadesRecentes().length > 0) {
+          <div class="timeline">
+            @for (atividade of atividadesRecentes(); track $index) {
+            <div class="timeline-item">
+              <div class="timeline-icon" [ngClass]="getAtividadeIconClass(atividade.tipo)">
+                <i [ngClass]="getAtividadeIcon(atividade.tipo)"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <h6 class="mb-1">{{ atividade.titulo }}</h6>
+                    <p class="mb-1 text-muted small">{{ atividade.descricao }}</p>
+                  </div>
+                  <small class="text-muted">{{ atividade.tempo }}</small>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+          } @else {
+          <div class="text-center py-4">
+            <i class="bi bi-hourglass-split display-4 text-muted"></i>
+            <p class="mt-3 text-muted mb-0">Nenhuma atividade recente</p>
+          </div>
+          }
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
+  }
+</div>
