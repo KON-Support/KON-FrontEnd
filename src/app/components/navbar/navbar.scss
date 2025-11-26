@@ -49,6 +49,18 @@
     }
 }
 
+.btn {
+    border-radius: 8px;
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+}
+
 .sidebar-nav {
     padding: 0.5rem 0;
 
