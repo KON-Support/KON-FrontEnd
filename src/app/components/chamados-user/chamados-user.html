@@ -68,7 +68,7 @@
             <input
               type="text"
               class="form-control"
-              placeholder="Buscar tickets..."
+              placeholder="Buscar chamado..."
               [(ngModel)]="filtroBusca"
             />
           </div>
@@ -97,17 +97,17 @@
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Carregando...</span>
     </div>
-    <p class="mt-2 text-muted">Carregando seus tickets...</p>
+    <p class="mt-2 text-muted">Carregando seus chamados...</p>
   </div>
   } @else if (chamadosFiltrados.length === 0 && !loading()) {
   <div class="empty-state">
     <div class="empty-state-icon">
       <i class="bi bi-inbox"></i>
     </div>
-    <h5 class="empty-state-title">Nenhum ticket encontrado</h5>
+    <h5 class="empty-state-title">Nenhum chamado encontrado</h5>
     <p class="empty-state-text">
       @if (filtroBusca || filtroStatus) { Tente ajustar os filtros de busca } @else { Você ainda não
-      criou nenhum ticket. Comece abrindo um novo chamado! }
+      criou nenhum chamado. Comece abrindo um novo chamado! }
     </p>
     @if (!filtroBusca && !filtroStatus) {
     <button class="btn btn-primary mt-3" (click)="abrirNovoChamado()">
@@ -117,9 +117,9 @@
     }
   </div>
   } @else {
-  <div class="tickets-grid">
+  <div class="chamados-grid">
     @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
-    <app-card-chamado [chamado]="chamado" (cardClick)="onTicketClick($event)" />
+    <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick($event)" />
     }
   </div>
   }

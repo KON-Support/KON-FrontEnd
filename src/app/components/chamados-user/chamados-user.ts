@@ -111,8 +111,8 @@ export class ChamadosUser implements OnInit {
     return this.chamados().filter((t) => t.status === Status.RESOLVIDO).length;
   }
 
-  onTicketClick(chamado: Chamado): void {
-    console.log('🎯 Chamado clicado:', chamado.cdChamado);
+  onChamadoClick(chamado: Chamado): void {
+    console.log('Chamado clicado:', chamado.cdChamado);
     // Navegação para detalhes do chamado (implementar rota se necessário)
     // this.router.navigate(['/chamado', chamado.cdChamado]);
   }
