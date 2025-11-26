@@ -14,18 +14,36 @@
       </p>
       <p class="fw-bold">{{ chamado?.dsTitulo }}</p>
       <p class="text-muted">{{ chamado?.dsDescricao }}</p>
+      <p>Anexo <br /></p>
+      <div *ngIf="chamado?.anexo?.cdAnexo" class="mt-2">
+        <button
+          class="btn btn-sm btn-link p-0 text-decoration-none"
+          (click)="downloadAnexo(chamado?.anexo?.cdAnexo, chamado?.anexo?.nmArquivo)"
+        >
+          <i class="bi bi-download me-1"></i>Baixar Anexo
+        </button>
+      </div>
     </div>
     <div class="d-flex flex-column flex-nowrap p-3 rounded-2 border border-1">
       <p>Conversação</p>
-      @if (comentarios.length > 0) { @for(comentario of comentarios; track $index) {
-      <div class="rounded-2 border border-1 mb-3 p-3">
-        <p>{{ comentario?.dtCriacao }} | {{ comentario?.hrCriacao }}</p>
-        <p>{{ comentario?.dsConteudo }}</p>
-        <p>{{ comentario?.usuario?.nmUsuario }}</p>
+      <div *ngIf="comentarios.length > 0">
+        <div
+          *ngFor="let comentario of comentarios; let i = index"
+          class="rounded-2 border border-1 mb-3 p-3"
+        >
+          <p>{{ comentario?.dtCriacao }} | {{ comentario?.hrCriacao }}</p>
+          <p>{{ comentario?.dsConteudo }}</p>
+          <div *ngIf="comentarioHasAnexo(comentario)">
+            <button
+              class="btn btn-sm btn-link p-0 text-decoration-none"
+              (click)="downloadAnexo(getAnexoCd(comentario), getAnexoName(comentario))"
+            >
+              <i class="bi bi-download me-1"></i>Baixar anexo
+            </button>
+          </div>
+        </div>
       </div>
-      } } @else {
-      <p class="text-muted">Nenhuma conversa ainda...</p>
-      }
+      <p *ngIf="comentarios.length === 0" class="text-muted">Nenhuma conversa ainda...</p>
       <hr />
       <p>Nova mensagem</p>
       <textarea
@@ -34,10 +52,33 @@
         style="min-height: 100px"
         placeholder="Digite seu comentário aqui..."
       ></textarea>
+      <div class="mb-4">
+        <label for="anexo" class="form-label fw-medium">
+          Anexar Arquivo
+          <span class="badge bg-light text-muted ms-2">Opcional</span>
+        </label>
+        <input
+          type="file"
+          id="anexo"
+          class="form-control"
+          (change)="onFileSelected($event)"
+          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
+        />
+        <div
+          *ngIf="arquivoSelecionado"
+          class="mt-2 p-2 bg-light rounded d-flex align-items-center justify-content-between"
+        >
+          <span class="text-success">
+            <i class="bi bi-file-earmark-check me-1"></i>
+            {{ arquivoSelecionado.name }}
+          </span>
+          <small class="text-muted">{{ formatFileSize(arquivoSelecionado.size || 0) }}</small>
+        </div>
+      </div>
       <button
         (click)="enviarComentario()"
         [disabled]="enviando || !novoConteudo.trim()"
-        class="btn btn-outline-dark rounded-2 w-25 align-start"
+        class="btn btn-outline-dark rounded-2 w-25 align-start mb-3"
       >
         {{ enviando ? 'Enviando...' : 'Enviar' }}
       </button>

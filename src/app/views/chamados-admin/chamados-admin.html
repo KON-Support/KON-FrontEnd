@@ -18,7 +18,12 @@
         <div class="col-md-4">
           <div class="search-input">
             <i class="bi bi-search"></i>
-            <input type="text" class="form-control" placeholder="Buscar chamado..." [(ngModel)]="filtroBusca" />
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar chamado..."
+              [(ngModel)]="filtroBusca"
+            />
           </div>
         </div>
 
@@ -58,17 +63,14 @@
     </div>
     <h5 class="empty-state-title">Nenhum chamado encontrado</h5>
     <p class="empty-state-text">
-      @if (filtroBusca || filtroStatus || filtroCategoria) {
-      Tente ajustar os filtros de busca
-      } @else {
-      Não há chamados no sistema
-      }
+      @if (filtroBusca || filtroStatus || filtroCategoria) { Tente ajustar os filtros de busca }
+      @else { Não há chamados no sistema }
     </p>
   </div>
   } @else {
   <div class="chamados-grid">
     @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
-    <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick($event)" />
+    <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick(chamado)" />
     }
   </div>
   }
