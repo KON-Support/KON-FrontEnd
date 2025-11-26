@@ -1,126 +1,199 @@
 <app-navbar></app-navbar>
-<div class="">
+<div class="tickets-user-container">
   <div class="header-section">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <p class="text-muted mb-0">{{ chamadosFiltrados.length }} chamados encontrados</p>
       </div>
+      <button class="btn btn-primary" (click)="abrirNovoChamado()">
+        <i class="bi bi-plus-lg me-2"></i>
+        Novo Chamado
+      </button>
+    </div>
+    <div class="">
+      <div class="header-section">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <p class="text-muted mb-0">{{ chamadosFiltrados.length }} chamados encontrados</p>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="stat-card stat-card-open">
+              <div class="stat-icon">
+                <i class="bi bi-circle-fill"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Abertos</span>
+                <span class="stat-value">{{ chamadosAbertos }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="stat-card stat-card-progress">
+              <div class="stat-icon">
+                <i class="bi bi-arrow-repeat"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Em Andamento</span>
+                <span class="stat-value">{{ chamadosEmAndamento }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="stat-card stat-card-resolved">
+              <div class="stat-icon">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Resolvidos</span>
+                <span class="stat-value">{{ chamadosResolvidos }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="stat-card stat-card-open">
+              <div class="stat-icon">
+                <i class="bi bi-circle-fill"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Abertos</span>
+                <span class="stat-value">{{ chamadosAbertos }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="stat-card stat-card-progress">
+              <div class="stat-icon">
+                <i class="bi bi-arrow-repeat"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Em Andamento</span>
+                <span class="stat-value">{{ chamadosEmAndamento }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="stat-card stat-card-resolved">
+              <div class="stat-icon">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Resolvidos</span>
+                <span class="stat-value">{{ chamadosResolvidos }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="info-card">
+              <div class="info-card-icon">
+                <i class="bi bi-info-circle-fill"></i>
+              </div>
+              <div class="info-card-content">
+                <h6 class="info-card-title">Como funciona o atendimento</h6>
+                <p class="info-card-text mb-0">
+                  Após criar um chamado, nossa equipe irá analisá-lo e atribuir a um agente
+                  responsável.
+                  <br />Você receberá atualizações conforme o progresso do atendimento.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="filters-section">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <div class="search-input">
+                <i class="bi bi-search"></i>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Buscar tickets..."
+                  [(ngModel)]="filtroBusca"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <select class="form-select" [(ngModel)]="filtroStatus">
+                <option value="">Todos os status</option>
+                <option value="ABERTO">Aberto</option>
+                <option value="EM_ANDAMENTO">Em Andamento</option>
+                <option value="RESOLVIDO">Resolvido</option>
+                <option value="FECHADO">Fechado</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="filters-section">
+        <div class="row g-3">
+          <div class="col-md-8">
+            <div class="search-input">
+              <i class="bi bi-search"></i>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar chamado..."
+                [(ngModel)]="filtroBusca"
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <select class="form-select" [(ngModel)]="filtroStatus">
+              <option value="">Todos os status</option>
+              <option value="ABERTO">Aberto</option>
+              <option value="EM_ANDAMENTO">Em Andamento</option>
+              <option value="RESOLVIDO">Resolvido</option>
+              <option value="FECHADO">Fechado</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="row g-3 mb-4">
-      <div class="col-md-4">
-        <div class="stat-card stat-card-open">
-          <div class="stat-icon">
-            <i class="bi bi-circle-fill"></i>
-          </div>
-          <div class="stat-content">
-            <span class="stat-label">Abertos</span>
-            <span class="stat-value">{{ chamadosAbertos }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="stat-card stat-card-progress">
-          <div class="stat-icon">
-            <i class="bi bi-arrow-repeat"></i>
-          </div>
-          <div class="stat-content">
-            <span class="stat-label">Em Andamento</span>
-            <span class="stat-value">{{ chamadosEmAndamento }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="stat-card stat-card-resolved">
-          <div class="stat-icon">
-            <i class="bi bi-check-circle-fill"></i>
-          </div>
-          <div class="stat-content">
-            <span class="stat-label">Resolvidos</span>
-            <span class="stat-value">{{ chamadosResolvidos }}</span>
-          </div>
-        </div>
-      </div>
+    @if (errorMessage()) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      {{ errorMessage() }}
+      <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
     </div>
-
-    <div class="row mb-4">
-      <div class="col-12">
-        <div class="info-card">
-          <div class="info-card-icon">
-            <i class="bi bi-info-circle-fill"></i>
-          </div>
-          <div class="info-card-content">
-            <h6 class="info-card-title">Como funciona o atendimento</h6>
-            <p class="info-card-text mb-0">
-              Após criar um chamado, nossa equipe irá analisá-lo e atribuir a um agente responsável.
-              <br />Você receberá atualizações conforme o progresso do atendimento.
-            </p>
-          </div>
-        </div>
+    } @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
       </div>
+      <p class="mt-2 text-muted">Carregando seus chamados...</p>
     </div>
-
-    <div class="filters-section">
-      <div class="row g-3">
-        <div class="col-md-8">
-          <div class="search-input">
-            <i class="bi bi-search"></i>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Buscar chamado..."
-              [(ngModel)]="filtroBusca"
-            />
-          </div>
-        </div>
-        <div class="col-md-4">
-          <select class="form-select" [(ngModel)]="filtroStatus">
-            <option value="">Todos os status</option>
-            <option value="ABERTO">Aberto</option>
-            <option value="EM_ANDAMENTO">Em Andamento</option>
-            <option value="RESOLVIDO">Resolvido</option>
-            <option value="FECHADO">Fechado</option>
-          </select>
-        </div>
+    } @else if (chamadosFiltrados.length === 0 && !loading()) {
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <i class="bi bi-inbox"></i>
       </div>
+      <h5 class="empty-state-title">Nenhum chamado encontrado</h5>
+      <p class="empty-state-text">
+        @if (filtroBusca || filtroStatus) { Tente ajustar os filtros de busca } @else { Você ainda
+        não criou nenhum chamado. Comece abrindo um novo chamado! }
+      </p>
+      @if (!filtroBusca && !filtroStatus) {
+      <button class="btn btn-primary mt-3" (click)="abrirNovoChamado()">
+        <i class="bi bi-plus-lg me-2"></i>
+        Abrir Primeiro Chamado
+      </button>
+      }
     </div>
-  </div>
-
-  @if (errorMessage()) {
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="bi bi-exclamation-triangle me-2"></i>
-    {{ errorMessage() }}
-    <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
-  </div>
-  } @if (loading()) {
-  <div class="text-center py-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Carregando...</span>
+    } @else {
+    <div class="chamados-grid">
+      @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
+      <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick($event)" />
+      }
     </div>
-    <p class="mt-2 text-muted">Carregando seus chamados...</p>
-  </div>
-  } @else if (chamadosFiltrados.length === 0 && !loading()) {
-  <div class="empty-state">
-    <div class="empty-state-icon">
-      <i class="bi bi-inbox"></i>
-    </div>
-    <h5 class="empty-state-title">Nenhum chamado encontrado</h5>
-    <p class="empty-state-text">
-      @if (filtroBusca || filtroStatus) { Tente ajustar os filtros de busca } @else { Você ainda não
-      criou nenhum chamado. Comece abrindo um novo chamado! }
-    </p>
-    @if (!filtroBusca && !filtroStatus) {
-    <button class="btn btn-primary mt-3" (click)="abrirNovoChamado()">
-      <i class="bi bi-plus-lg me-2"></i>
-      Abrir Primeiro Chamado
-    </button>
     }
   </div>
-  } @else {
-  <div class="chamados-grid">
-    @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
-    <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick($event)" />
-    }
-  </div>
-  }
 </div>

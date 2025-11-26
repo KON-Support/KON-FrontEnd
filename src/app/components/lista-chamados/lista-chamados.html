@@ -15,7 +15,7 @@
   <div class="row g-4">
     @for (ticket of tickets; track ticket.cdChamado) {
     <div class="col-md-6 col-lg-4">
-      <app-card-chamado [chamado]="ticket" (cardClick)="onTicketClick($event)" />
+      <app-card-chamado [chamado]="ticket" (cardClick)="onTicketClick(ticket)" />
     </div>
     }
   </div>
