@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="chamados-container px-5 py-5">
+<div class="px-5 py-5">
   <div class="header-section">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
@@ -18,7 +18,12 @@
         <div class="col-md-4">
           <div class="search-input">
             <i class="bi bi-search"></i>
-            <input type="text" class="form-control" placeholder="Buscar chamado..." [(ngModel)]="filtroBusca" />
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar chamado..."
+              [(ngModel)]="filtroBusca"
+            />
           </div>
         </div>
 
@@ -58,11 +63,8 @@
     </div>
     <h5 class="empty-state-title">Nenhum chamado encontrado</h5>
     <p class="empty-state-text">
-      @if (filtroBusca || filtroStatus || filtroCategoria) {
-      Tente ajustar os filtros de busca
-      } @else {
-      Não há chamados disponíveis no momento
-      }
+      @if (filtroBusca || filtroStatus || filtroCategoria) { Tente ajustar os filtros de busca }
+      @else { Não há chamados disponíveis no momento }
     </p>
   </div>
   } @else {

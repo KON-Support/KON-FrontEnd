@@ -1,1 +1,206 @@
-<p>novo-chamado-user works!</p>
+<app-navbar></app-navbar>
+
+<div class="mx-5 p-3">
+  <div class="row">
+    <div class="row mt-5">
+      <div class="d-flex align-items-start">
+        <a routerLink="/user/dashboard" class="btn btn-link text-muted p-0 me-3">
+          <i class="bi bi-arrow-left fs-5"></i>
+        </a>
+        <div class="ms-4">
+          <h3 class="mb-0">Novo Chamado</h3>
+          <h5 class="text-muted">Preencha as informações para abrir um novo chamado</h5>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4"></div>
+  </div>
+
+  @if (errorMessage()) {
+  <div class="alert alert-danger alert-dismissible fade show mx-5" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ errorMessage() }}
+    <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+  </div>
+  } @if (successMessage()) {
+  <div class="alert alert-success mx-5" role="alert">
+    <i class="bi bi-check-circle me-2"></i>
+    {{ successMessage() }}
+  </div>
+  }
+
+  <div class="row ms-5 me-5">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="mb-4">
+              <label for="dsTitulo" class="form-label fw-medium">
+                Título <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="dsTitulo"
+                formControlName="dsTitulo"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('dsTitulo')"
+                placeholder="Resumo do problema"
+                maxlength="30"
+              />
+              <div class="d-flex justify-content-between mt-1">
+                @if (isFieldInvalid('dsTitulo')) {
+                <small class="text-danger">{{ getFieldError('dsTitulo') }}</small>
+                } @else {
+                <small></small>
+                }
+                <small class="text-muted"
+                  >{{ caracteresRestantesTitulo }} caracteres restantes</small
+                >
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="dsDescricao" class="form-label fw-medium">
+                Descrição <span class="text-danger">*</span>
+              </label>
+              <textarea
+                id="dsDescricao"
+                formControlName="dsDescricao"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('dsDescricao')"
+                placeholder="Descreva detalhadamente o problema ou solicitação"
+                rows="5"
+                maxlength="300"
+              ></textarea>
+              <div class="d-flex justify-content-between mt-1">
+                @if (isFieldInvalid('dsDescricao')) {
+                <small class="text-danger">{{ getFieldError('dsDescricao') }}</small>
+                } @else {
+                <small></small>
+                }
+                <small class="text-muted"
+                  >{{ caracteresRestantesDescricao }} caracteres restantes</small
+                >
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="cdCategoria" class="form-label fw-medium">
+                Categoria <span class="text-danger">*</span>
+              </label>
+              @if (loadingCategorias()) {
+              <div class="d-flex align-items-center">
+                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                <small class="text-muted">Carregando categorias...</small>
+              </div>
+              } @else {
+              <select
+                id="cdCategoria"
+                formControlName="cdCategoria"
+                class="form-select"
+                [class.is-invalid]="isFieldInvalid('cdCategoria')"
+              >
+                <option [ngValue]="null" disabled>Selecione uma categoria</option>
+                @for (categoria of categorias(); track categoria.cdCategoria) {
+                <option [ngValue]="categoria.cdCategoria">{{ categoria.nmCategoria }}</option>
+                }
+              </select>
+              @if (isFieldInvalid('cdCategoria')) {
+              <small class="text-danger">{{ getFieldError('cdCategoria') }}</small>
+              } }
+            </div>
+
+            <div class="mb-4">
+              <label for="anexo" class="form-label fw-medium">
+                Anexar Arquivo
+                <span class="badge bg-light text-muted ms-2">Opcional</span>
+              </label>
+              <input
+                type="file"
+                id="anexo"
+                class="form-control"
+                (change)="onFileSelected($event)"
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
+              />
+              @if (arquivoSelecionado) {
+              <div
+                class="mt-2 p-2 bg-light rounded d-flex align-items-center justify-content-between"
+              >
+                <span class="text-success">
+                  <i class="bi bi-file-earmark-check me-1"></i>
+                  {{ arquivoSelecionado.name }}
+                </span>
+                <small class="text-muted">{{ formatFileSize(arquivoSelecionado.size) }}</small>
+              </div>
+              }
+              <small class="text-muted d-block mt-1">
+                <i class="bi bi-info-circle me-1"></i>
+                Formatos aceitos: PDF, DOC, DOCX, JPG, PNG, TXT (máx. 20MB)
+              </small>
+            </div>
+
+            <div class="d-flex justify-content-end gap-3 pt-3 border-top">
+              <a routerLink="/user/dashboard" class="btn btn-outline-secondary">
+                <i class="bi bi-x-lg me-2"></i>
+                Cancelar
+              </a>
+              <button type="submit" class="btn btn-primary" [disabled]="loading() || form.invalid">
+                @if (loading()) {
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Criando... } @else {
+                <i class="bi bi-plus-lg me-2"></i>
+                Criar chamado }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 bg-light">
+        <div class="card-body p-4">
+          <h6 class="fw-bold mb-3">
+            <i class="bi bi-lightbulb text-warning me-2"></i>
+            Dicas para um bom chamado
+          </h6>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-3">
+              <i class="bi bi-check2 text-success me-2"></i>
+              <small>Seja claro e objetivo no título</small>
+            </li>
+            <li class="mb-3">
+              <i class="bi bi-check2 text-success me-2"></i>
+              <small>Descreva o problema com detalhes</small>
+            </li>
+            <li class="mb-3">
+              <i class="bi bi-check2 text-success me-2"></i>
+              <small>Selecione a categoria correta</small>
+            </li>
+            <li class="mb-3">
+              <i class="bi bi-check2 text-success me-2"></i>
+              <small>Informe passos para reproduzir o erro</small>
+            </li>
+            <li>
+              <i class="bi bi-check2 text-success me-2"></i>
+              <small>Anexe prints ou arquivos relevantes</small>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card border-0 bg-primary-subtle mt-3">
+        <div class="card-body p-4">
+          <h6 class="fw-bold mb-2">
+            <i class="bi bi-clock text-primary me-2"></i>
+            Tempo de resposta
+          </h6>
+          <small class="text-muted">
+            Após a criação do chamado, nossa equipe entrará em contato de acordo com o SLA definido
+            para a categoria selecionada.
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

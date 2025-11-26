@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { Navbar } from "../../components/navbar/navbar";
+import { Navbar } from '../../components/navbar/navbar';
 import { ChamadoService } from '../../services/chamado-service';
 import { AuthService } from '../../services/auth-service';
 import { Chamado } from '../../shared/models/Chamado';
@@ -27,9 +27,7 @@ interface AtividadeRecente {
   templateUrl: './user-dashboard.html',
   styleUrl: './user-dashboard.scss',
 })
-
 export class UserDashboard implements OnInit {
-  
   private chamadoService = inject(ChamadoService);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -42,7 +40,7 @@ export class UserDashboard implements OnInit {
     abertos: 0,
     emAndamento: 0,
     resolvidos: 0,
-    total: 0
+    total: 0,
   });
   protected atividadesRecentes = signal<AtividadeRecente[]>([]);
   protected nomeUsuario = signal('');
@@ -80,16 +78,18 @@ export class UserDashboard implements OnInit {
         console.error('Erro ao carregar dashboard:', err);
         this.loading.set(false);
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
   private calcularEstatisticas(chamados: Chamado[]): void {
     const stats: Estatisticas = {
-      abertos: chamados.filter(c => c.status === Status.ABERTO).length,
-      emAndamento: chamados.filter(c => c.status === Status.EM_ANDAMENTO).length,
-      resolvidos: chamados.filter(c => c.status === Status.RESOLVIDO || c.status === Status.FECHADO).length,
-      total: chamados.length
+      abertos: chamados.filter((c) => c.status === Status.ABERTO).length,
+      emAndamento: chamados.filter((c) => c.status === Status.EM_ANDAMENTO).length,
+      resolvidos: chamados.filter(
+        (c) => c.status === Status.RESOLVIDO || c.status === Status.FECHADO
+      ).length,
+      total: chamados.length,
     };
     this.estatisticas.set(stats);
   }
@@ -104,27 +104,27 @@ export class UserDashboard implements OnInit {
   private gerarAtividadesRecentes(chamados: Chamado[]): void {
     const atividades: AtividadeRecente[] = [];
 
-    chamados.forEach(chamado => {
+    chamados.forEach((chamado) => {
       if (chamado.status === Status.RESOLVIDO || chamado.status === Status.FECHADO) {
         atividades.push({
           tipo: 'resolvido',
           titulo: 'Chamado Resolvido',
           descricao: `#${chamado.cdChamado} - ${chamado.dsTitulo}`,
-          tempo: this.calcularTempoDecorrido(chamado.dtFechamento || chamado.dtCriacao)
+          tempo: this.calcularTempoDecorrido(chamado.dtFechamento || chamado.dtCriacao),
         });
       } else if (chamado.status === Status.EM_ANDAMENTO) {
         atividades.push({
           tipo: 'andamento',
           titulo: 'Chamado em Atendimento',
           descricao: `#${chamado.cdChamado} - ${chamado.dsTitulo}`,
-          tempo: this.calcularTempoDecorrido(chamado.dtCriacao)
+          tempo: this.calcularTempoDecorrido(chamado.dtCriacao),
         });
       } else if (chamado.status === Status.ABERTO) {
         atividades.push({
           tipo: 'criado',
           titulo: 'Chamado Aberto',
           descricao: `#${chamado.cdChamado} - ${chamado.dsTitulo}`,
-          tempo: this.calcularTempoDecorrido(chamado.dtCriacao)
+          tempo: this.calcularTempoDecorrido(chamado.dtCriacao),
         });
       }
     });
@@ -152,7 +152,7 @@ export class UserDashboard implements OnInit {
       [Status.ABERTO]: 'bg-primary',
       [Status.EM_ANDAMENTO]: 'bg-warning',
       [Status.RESOLVIDO]: 'bg-success',
-      [Status.FECHADO]: 'bg-secondary'
+      [Status.FECHADO]: 'bg-secondary',
     };
     return classes[status] || 'bg-secondary';
   }
@@ -162,27 +162,27 @@ export class UserDashboard implements OnInit {
       [Status.ABERTO]: 'Aberto',
       [Status.EM_ANDAMENTO]: 'Em Andamento',
       [Status.RESOLVIDO]: 'Resolvido',
-      [Status.FECHADO]: 'Fechado'
+      [Status.FECHADO]: 'Fechado',
     };
     return labels[status] || 'Desconhecido';
   }
 
   protected getAtividadeIconClass(tipo: string): string {
     const classes: Record<string, string> = {
-      'criado': 'bg-primary',
-      'andamento': 'bg-warning',
-      'resolvido': 'bg-success',
-      'comentario': 'bg-info'
+      criado: 'bg-primary',
+      andamento: 'bg-warning',
+      resolvido: 'bg-success',
+      comentario: 'bg-info',
     };
     return classes[tipo] || 'bg-secondary';
   }
 
   protected getAtividadeIcon(tipo: string): string {
     const icons: Record<string, string> = {
-      'criado': 'bi bi-plus-circle-fill',
-      'andamento': 'bi bi-arrow-repeat',
-      'resolvido': 'bi bi-check-circle-fill',
-      'comentario': 'bi bi-chat-dots-fill'
+      criado: 'bi bi-plus-circle-fill',
+      andamento: 'bi bi-arrow-repeat',
+      resolvido: 'bi bi-check-circle-fill',
+      comentario: 'bi bi-chat-dots-fill',
     };
     return icons[tipo] || 'bi bi-circle-fill';
   }
@@ -193,7 +193,7 @@ export class UserDashboard implements OnInit {
   }
 
   protected abrirNovoChamado(): void {
-    this.router.navigate(['/novo-chamado']);
+    this.router.navigate(['/novo-chamado-user']);
   }
 
   protected verDetalhesChamado(chamado: Chamado): void {
