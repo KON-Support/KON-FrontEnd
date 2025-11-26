@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="gerenciar-agentes-container">
+<div class="px-5 py-5">
   <div class="header-section">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
@@ -16,8 +16,13 @@
     <div class="filters-section">
       <div class="search-input">
         <i class="bi bi-search"></i>
-        <input type="text" class="form-control" placeholder="Buscar agentes por nome, email" [(ngModel)]="busca"
-          [disabled]="carregando" />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar agentes por nome, email"
+          [(ngModel)]="busca"
+          [disabled]="carregando"
+        />
       </div>
     </div>
   </div>
@@ -38,7 +43,9 @@
       {{ busca ? 'Nenhum agente encontrado' : 'Nenhum agente cadastrado' }}
     </h5>
     <p class="empty-state-text">
-      {{ busca ? 'Tente ajustar os termos da busca.' : 'Clique em "Adicionar Agente" para começar.' }}
+      {{
+        busca ? 'Tente ajustar os termos da busca.' : 'Clique em "Adicionar Agente" para começar.'
+      }}
     </p>
     @if (!busca) {
     <button class="btn btn-primary mt-3" (click)="abrirModalAdicionar()">
@@ -77,15 +84,27 @@
               <i class="bi bi-pencil"></i>
             </button>
             @if (agente.flAtivo) {
-            <button class="btn btn-icon btn-light text-warning" (click)="desativarAgente(agente)" title="Desativar">
+            <button
+              class="btn btn-icon btn-light text-warning"
+              (click)="desativarAgente(agente)"
+              title="Desativar"
+            >
               <i class="bi bi-pause-circle"></i>
             </button>
             } @else {
-            <button class="btn btn-icon btn-light text-success" (click)="reativarAgente(agente)" title="Reativar">
+            <button
+              class="btn btn-icon btn-light text-success"
+              (click)="reativarAgente(agente)"
+              title="Reativar"
+            >
               <i class="bi bi-play-circle"></i>
             </button>
             }
-            <button class="btn btn-icon btn-light text-danger" (click)="excluirAgente(agente)" title="Excluir">
+            <button
+              class="btn btn-icon btn-light text-danger"
+              (click)="excluirAgente(agente)"
+              title="Excluir"
+            >
               <i class="bi bi-trash"></i>
             </button>
           </div>
@@ -94,44 +113,76 @@
     </div>
     }
   </div>
-  }
-
-  @if (mostrarModalAdicionar) {
+  } @if (mostrarModalAdicionar) {
   <div class="modal-backdrop fade show"></div>
-  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5)">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Adicionar Novo Agente</h5>
-          <button type="button" class="btn-close" (click)="fecharModal()" [disabled]="carregando"></button>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="fecharModal()"
+            [disabled]="carregando"
+          ></button>
         </div>
         <div class="modal-body">
           <form>
             <div class="mb-3">
               <label class="form-label">Nome Completo *</label>
-              <input type="text" class="form-control" [(ngModel)]="novoAgente.nmUsuario" name="nome"
-                placeholder="Digite o nome do agente" required [disabled]="carregando">
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="novoAgente.nmUsuario"
+                name="nome"
+                placeholder="Digite o nome do agente"
+                required
+                [disabled]="carregando"
+              />
             </div>
             <div class="mb-3">
               <label class="form-label">Email *</label>
-              <input type="email" class="form-control" [(ngModel)]="novoAgente.dsEmail" name="email"
-                placeholder="Digite o email" required [disabled]="carregando">
+              <input
+                type="email"
+                class="form-control"
+                [(ngModel)]="novoAgente.dsEmail"
+                name="email"
+                placeholder="Digite o email"
+                required
+                [disabled]="carregando"
+              />
             </div>
             <div class="mb-3">
               <label class="form-label">Senha *</label>
-              <input type="password" class="form-control" [(ngModel)]="novoAgente.dsSenha" name="senha"
-                placeholder="Digite a senha inicial" required [disabled]="carregando">
-              <div class="form-text">
-                A senha poderá ser alterada pelo agente posteriormente.
-              </div>
+              <input
+                type="password"
+                class="form-control"
+                [(ngModel)]="novoAgente.dsSenha"
+                name="senha"
+                placeholder="Digite a senha inicial"
+                required
+                [disabled]="carregando"
+              />
+              <div class="form-text">A senha poderá ser alterada pelo agente posteriormente.</div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="fecharModal()" [disabled]="carregando">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fecharModal()"
+            [disabled]="carregando"
+          >
             Cancelar
           </button>
-          <button type="button" class="btn btn-primary" (click)="adicionarAgente()" [disabled]="carregando">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="adicionarAgente()"
+            [disabled]="carregando"
+          >
             <span *ngIf="carregando" class="spinner-border spinner-border-sm me-2"></span>
             <i class="bi bi-plus-lg me-2" *ngIf="!carregando"></i>
             {{ carregando ? 'Cadastrando...' : 'Adicionar Agente' }}
