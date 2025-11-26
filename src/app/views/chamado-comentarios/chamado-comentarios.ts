@@ -7,6 +7,7 @@ import { Chamado } from '../../shared/models/Chamado';
 import { ActivatedRoute } from '@angular/router';
 import { ChamadoService } from '../../services/chamado-service';
 import { OnInit } from '@angular/core';
+import { Usuario } from '../../shared/models/Usuario';
 
 @Component({
   selector: 'app-chamado-comentarios',
@@ -23,6 +24,7 @@ export class ChamadoComentarios implements OnInit {
   chamado: Chamado | null = null;
 
   protected comentarios: Comentario[] = [];
+  protected comentario! : Comentario;
 
   ngOnInit(): void {
     const cdChamado = Number(this.route.snapshot.paramMap.get('cdChamado'));
@@ -38,4 +40,14 @@ export class ChamadoComentarios implements OnInit {
       this.cdr.detectChanges();
     });
   }
+
+  protected cdUsuario = localStorage.getItem('user');
+
+postarComentario(comentario : Comentario){
+    this.comentariosService.EnviarComentario(comentario).subscribe(response => {
+      this.comentario = response;
+      this.cdr.detectChanges();
+    })
+  }
+ 
 }

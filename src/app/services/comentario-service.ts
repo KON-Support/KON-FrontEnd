@@ -13,4 +13,8 @@ export class ComentarioService {
   Comentarios(cdChamado : number):Observable<Comentario[]>{
     return this.http.get<Comentario[]>(`${this.baseUrl}/chamado/${cdChamado}`);
   }
+
+  EnviarComentario(comentario : Comentario):Observable<Comentario>{
+    return this.http.post<Comentario>(`${this.baseUrl}/criar`,comentario);
+  }
 }
