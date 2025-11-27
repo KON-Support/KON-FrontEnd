@@ -14,7 +14,6 @@
       </p>
       <p class="fw-bold">{{ chamado?.dsTitulo }}</p>
       <p class="text-muted">{{ chamado?.dsDescricao }}</p>
-      <p>Anexo <br /></p>
       <div *ngIf="chamado?.anexo?.cdAnexo" class="mt-2">
         <button
           class="btn btn-sm btn-link p-0 text-decoration-none"
@@ -24,16 +23,23 @@
         </button>
       </div>
     </div>
-    <div class="d-flex flex-column flex-nowrap p-3 rounded-2 border border-1">
+    <div class="d-flex flex-column flex-nowrap p-3 rounded-2 border border-1 detalhes">
       <p>Conversação</p>
       @if (comentarios.length > 0) { @for (comentario of comentarios; track $index) {
-      <div [ngClass]="'rounded-2 mb-3 p-3 border border-1 border-dark '">
-        <p class="text-start">{{ comentario?.dtCriacao }} | {{ comentario?.hrCriacao }}</p>
+      <div [ngClass]="'rounded-2 mb-3 p-3 border border-1 border-dark'">
+        @if (comentario.cdComentario) {
+          <p class="fw-bold mb-1">{{ getComentarioNomeUsuario(comentario) }}</p>
+
+        }
+        <p class="text-start">
+        {{ comentario?.dtCriacao | date:'dd/MM' }} | {{ comentario?.hrCriacao }}
+        </p>
+
         <p>{{ comentario?.dsConteudo }}</p>
         @if (comentarioHasAnexo(comentario)) {
         <button
           class="btn btn-sm btn-link p-0 text-decoration-none"
-          (click)="downloadAnexo(getAnexoCd(comentario), getAnexoName(comentario))"
+          (click)="downloadAnexo(getAnexoCd(comentario))"
         >
           <i class="bi bi-download me-1"></i>Baixar anexo
         </button>
@@ -42,6 +48,8 @@
       } }
       <p *ngIf="comentarios.length === 0" class="text-muted">Nenhuma conversa ainda...</p>
       <hr />
+      </div>
+    <div class="d-flex flex-column flex-nowrap p-3 rounded-2 border border-1 mt-3">
       <p>Nova mensagem</p>
       @if (isChamadoFechadoOuResolvido()) {
       <div class="alert alert-warning" role="alert">
@@ -98,13 +106,13 @@
         (change)="onStatusChange()"
         [disabled]="!isAgente() || !chamado?.responsavel"
       >
-        @for (st of getStatusesDisponiveis(); track st) {
+        @for (st of status; track st) {
         <option [ngValue]="st">{{ st }}</option>
         }
       </select>
       @if (!isAgente()) {
       <small class="text-muted">Somente agentes podem alterar o status</small>
-      } @if (isAgente() && !chamado?.responsavel) {
+      } @if (chamado?.status === 'ABERTO' && isAgente()) {
       <button
         class="btn btn-outline-success mt-3"
         (click)="aceitarChamado()"
