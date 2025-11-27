@@ -25,11 +25,12 @@ export class ChamadoDetalhes {
  private chamadoService = inject(ChamadoService);
  private cdr = inject(ChangeDetectorRef);
 
+ status: Status[] = [Status.ABERTO, Status.EM_ANDAMENTO, Status.RESOLVIDO, Status.FECHADO];
+
  novoConteudo: string = '';
  enviando: boolean = false;
   arquivoSelecionado: File | null = null;
  
-  // status control
   statuses: Status[] = [Status.ABERTO, Status.EM_ANDAMENTO, Status.RESOLVIDO, Status.FECHADO];
   selectedStatus: Status | null = null;
   atualizandoStatus: boolean = false;
@@ -49,19 +50,6 @@ export class ChamadoDetalhes {
     }
   }
 
-  getStatusesDisponiveis(): Status[] {
-    // Se chamado está resolvido ou fechado, não permite reabertura
-    if (this.isChamadoFechadoOuResolvido()) {
-      return [this.chamado?.status as Status];
-    }
-    // Se agente e chamado tem responsavel, apenas RESOLVIDO e FECHADO
-    if (this.isAgente() && this.chamado?.responsavel) {
-      return [Status.RESOLVIDO, Status.FECHADO];
-    }
-    // Retorna todos os statuses (para não-agentes, o select estará desabilitado)
-    return this.statuses;
-  }
-
   chamadoAceitoMesmoUsuario(): boolean {
     if (!this.chamado?.responsavel || !this.isAgente()) return false;
     const usuarioAtual = this.authService.currentUser();
@@ -72,52 +60,19 @@ export class ChamadoDetalhes {
     return this.chamado?.status === Status.RESOLVIDO || this.chamado?.status === Status.FECHADO;
   }
 
-  getRolesDosUsuarios(): { [key: number]: string[] } {
-    const roles: { [key: number]: string[] } = {};
-    this.comentarios.forEach(comentario => {
-      const cdUsuario = (comentario as any)?.cdUsuario || (comentario as any)?.usuario?.cdUsuario;
-      if (cdUsuario && !roles[cdUsuario]) {
-        const userRoles = (comentario as any)?.usuario?.roleModel || (comentario as any)?.roles || [];
-        roles[cdUsuario] = userRoles.map((r: any) => typeof r === 'string' ? r : r.nmRole);
-      }
-    });
-    return roles;
-  }
-
-  getComentarioBadgeClass(comentario: Comentario): string {
-    const cdUsuario = (comentario as any)?.cdUsuario || (comentario as any)?.usuario?.cdUsuario;
-    const roles = this.getRolesDosUsuarios()[cdUsuario] || [];
-    if (roles.includes('ROLE_ADMIN')) return 'bg-warning';
-    if (roles.includes('ROLE_AGENTE')) return 'bg-success';
-    if (roles.includes('ROLE_USER')) return 'bg-info';
-    return 'bg-light';
-  }
-
-  getComentarioBorderClass(comentario: Comentario): string {
-    const cdUsuario = (comentario as any)?.cdUsuario || (comentario as any)?.usuario?.cdUsuario;
-    const roles = this.getRolesDosUsuarios()[cdUsuario] || [];
-    if (roles.includes('ROLE_ADMIN')) return 'border-warning';
-    if (roles.includes('ROLE_AGENTE')) return 'border-success';
-    if (roles.includes('ROLE_USER')) return 'border-info';
-    return 'border-light';
-  }
-
   getComentarioNomeUsuario(comentario: Comentario): string {
     return (comentario as any)?.usuario?.nmUsuario || (comentario as any)?.nmUsuario || 'Usuário desconhecido';
   }
 
   onStatusChange(): void {
     if (!this.chamado || !this.selectedStatus) return;
-    // garantia de segurança: somente agentes podem alterar status
     if (!this.isAgente()) {
       alert('Somente agentes podem alterar o status deste chamado.');
-      // resetar seleção para o status atual do chamado
       this.selectedStatus = this.chamado.status ?? null;
       return;
     }
     this.atualizandoStatus = true;
     const cd = this.chamado.cdChamado;
-    // se o novo status for FECHADO, usar o endpoint de fechar
     if (this.selectedStatus === Status.FECHADO) {
       this.chamadoService.fecharChamado(cd, this.selectedStatus).subscribe({
         next: (updated) => {
@@ -151,7 +106,6 @@ export class ChamadoDetalhes {
   }
 
   aceitarChamado(): void {
-    // apenas agentes podem aceitar chamados
     if (!this.isAgente()) {
       alert('Apenas agentes podem aceitar chamados.');
       return;
@@ -168,26 +122,13 @@ export class ChamadoDetalhes {
       next: (updated) => {
         this.chamado = updated;
         this.selectedStatus = Status.EM_ANDAMENTO;
-        // após atribuir, mudar status automaticamente para EM_ANDAMENTO
-        this.chamadoService.atualizarStatus(this.chamado.cdChamado, Status.EM_ANDAMENTO).subscribe({
-          next: (statusUpdated) => {
-            this.chamado = statusUpdated;
-            this.selectedStatus = statusUpdated.status;
-            this.atribuindo = false;
-            this.cdr.detectChanges();
-            alert('Chamado atribuído a você e status alterado para Em Andamento.');
-          },
-          error: (err) => {
-            console.error('Erro ao atualizar status para EM_ANDAMENTO:', err);
-            this.atribuindo = false;
-            alert('Chamado atribuído, mas houve erro ao atualizar status.');
-            this.cdr.detectChanges();
-          }
-        });
+        this.atribuindo = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erro ao atribuir chamado:', err);
         this.atribuindo = false;
+        this.cdr.detectChanges();
         alert('Erro ao aceitar chamado.');
       }
     });
@@ -333,12 +274,4 @@ export class ChamadoDetalhes {
     return null;
   }
 
-  getAnexoName(comentario: Comentario): string | undefined {
-    if (!comentario) return undefined;
-    if ((comentario as any).anexo && (comentario as any).anexo.nmArquivo) return (comentario as any).anexo.nmArquivo;
-    if ((comentario as any).nmArquivo) return (comentario as any).nmArquivo;
-    return undefined;
-  }
 }
-
-export interface ChamadoDetalhesBindings {}
