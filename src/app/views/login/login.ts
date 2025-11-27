@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth-service';
+import { OAuth2Service } from '../../services/oauth2-service';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ import { AuthService } from '../../services/auth-service';
 export class Login {
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
+  private oauth2Service = inject(OAuth2Service);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
@@ -65,9 +67,8 @@ export class Login {
   }
 
   loginWithGoogle(): void {
-    console.log('Login com Google');
+    this.oauth2Service.loginWithGoogle();
   }
-
 
   irParaCadastro(): void {
     this.router.navigate(['/cadastro']);

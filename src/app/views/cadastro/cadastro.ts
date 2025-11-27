@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { OAuth2Service } from '../../services/oauth2-service';
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, CommonModule],
@@ -18,6 +18,7 @@ export class Cadastro {
 
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private oauth2Service = inject(OAuth2Service);
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
@@ -101,6 +102,10 @@ export class Cadastro {
       this.loading = false;
       console.error(err);
     });
+  }
+
+  loginWithGoogle(): void {
+    this.oauth2Service.loginWithGoogle();
   }
 
   irParaLogin() {
