@@ -4,12 +4,12 @@
   <div class="mb-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h3 class="fw-bold text-dark">Gerenciar Agentes</h3>
-        <p class="text-muted mb-0">{{ agentesFiltrados.length }} agentes cadastrados</p>
+        <h3 class="fw-bold text-dark">Gerenciar Usuários</h3>
+        <p class="text-muted mb-0">{{ usuariosFiltrados.length }} usuários cadastrados</p>
       </div>
       <button class="btn btn-primary" (click)="abrirModalAdicionar()" [disabled]="carregando">
         <i class="bi bi-plus-lg me-2"></i>
-        Adicionar Agente
+        Adicionar Usuário
       </button>
     </div>
 
@@ -21,7 +21,7 @@
         <input
           type="text"
           class="form-control border-start-0 ps-0"
-          placeholder="Buscar agentes por nome, email"
+          placeholder="Buscar usuários por nome, email"
           [(ngModel)]="busca"
           [disabled]="carregando"
         />
@@ -34,31 +34,31 @@
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Carregando...</span>
     </div>
-    <p class="mt-2 text-muted">Carregando agentes...</p>
+    <p class="mt-2 text-muted">Carregando usuários...</p>
   </div>
-  } @else if (agentesFiltrados.length === 0) {
+  } @else if (usuariosFiltrados.length === 0) {
   <div class="text-center py-5">
     <div class="mb-3">
       <i class="bi bi-people display-1 text-muted"></i>
     </div>
     <h5 class="fw-bold">
-      {{ busca ? 'Nenhum agente encontrado' : 'Nenhum agente cadastrado' }}
+      {{ busca ? 'Nenhum usuário encontrado' : 'Nenhum usuário cadastrado' }}
     </h5>
     <p class="text-muted">
       {{
-        busca ? 'Tente ajustar os termos da busca.' : 'Clique em "Adicionar Agente" para começar.'
+        busca ? 'Tente ajustar os termos da busca.' : 'Clique em "Adicionar Usuário" para começar.'
       }}
     </p>
     @if (!busca) {
     <button class="btn btn-primary mt-3" (click)="abrirModalAdicionar()">
       <i class="bi bi-plus-lg me-2"></i>
-      Adicionar Primeiro Agente
+      Adicionar Primeiro Usuário
     </button>
     }
   </div>
   } @else {
   <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
-    @for (agente of agentesFiltrados; track agente.cdUsuario) {
+    @for (usuario of usuariosFiltrados; track usuario.cdUsuario) {
     <div class="col">
       <div class="card h-100 border-light shadow-sm">
         <div class="card-body p-4">
@@ -68,28 +68,35 @@
                 class="avatar rounded-circle bg-primary text-white d-flex align-items-center justify-content-center flex-shrink-0"
                 style="width: 56px; height: 56px; font-size: 1.1rem; font-weight: 600"
               >
-                {{ getIniciais(agente.nmUsuario) }}
+                {{ getIniciais(usuario.nmUsuario) }}
               </div>
               <div class="flex-grow-1">
-                <h6 class="fw-bold mb-1">{{ agente.nmUsuario }}</h6>
-                <p class="text-muted small mb-2">{{ agente.dsEmail }}</p>
+                <h6 class="fw-bold mb-1">{{ usuario.nmUsuario }}</h6>
+                <p class="text-muted small mb-2">{{ usuario.dsEmail }}</p>
                 <div class="d-flex gap-2 flex-wrap">
-                  <span class="badge bg-info">Agente</span>
-                  <span class="badge bg-light text-dark border">ID: {{ agente.cdUsuario }}</span>
-                  <span class="badge" [ngClass]="getStatusClass(agente.flAtivo)">
-                    {{ getStatusText(agente.flAtivo) }}
+                  <span class="badge bg-light text-dark border">ID: {{ usuario.cdUsuario }}</span>
+                  @if (usuario.nuFuncionario) {
+                  <span class="badge bg-light text-dark border"
+                    >Funcionários: {{ usuario.nuFuncionario }}</span
+                  >
+                  }
+                  <span class="badge" [ngClass]="getStatusClass(usuario.flAtivo)">
+                    {{ getStatusText(usuario.flAtivo) }}
                   </span>
+                  <p class="badge bg-light text-dark border">
+                    {{ usuario.plano.nmPlano || 'Sem Plano' }}
+                  </p>
                 </div>
               </div>
             </div>
             <div class="d-flex gap-1">
-              <button class="btn btn-light btn-sm" (click)="editarAgente(agente)" title="Editar">
+              <button class="btn btn-light btn-sm" (click)="editarUsuario(usuario)" title="Editar">
                 <i class="bi bi-pencil"></i>
               </button>
-              @if (agente.flAtivo) {
+              @if (usuario.flAtivo) {
               <button
                 class="btn btn-light btn-sm text-warning"
-                (click)="desativarAgente(agente)"
+                (click)="desativarUsuario(usuario)"
                 title="Desativar"
               >
                 <i class="bi bi-pause-circle"></i>
@@ -97,7 +104,7 @@
               } @else {
               <button
                 class="btn btn-light btn-sm text-success"
-                (click)="reativarAgente(agente)"
+                (click)="reativarUsuario(usuario)"
                 title="Reativar"
               >
                 <i class="bi bi-play-circle"></i>
@@ -105,7 +112,7 @@
               }
               <button
                 class="btn btn-light btn-sm text-danger"
-                (click)="excluirAgente(agente)"
+                (click)="excluirUsuario(usuario)"
                 title="Excluir"
               >
                 <i class="bi bi-trash"></i>
@@ -124,7 +131,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">
-            {{ agenteEmEdicaoId ? 'Editar Agente' : 'Adicionar Novo Agente' }}
+            {{ usuarioEmEdicaoId ? 'Editar Usuário' : 'Adicionar Novo Usuário' }}
           </h5>
           <button
             type="button"
@@ -140,9 +147,9 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="novoAgente.nmUsuario"
+                [(ngModel)]="novoUsuario.nmUsuario"
                 name="nome"
-                placeholder="Digite o nome do agente"
+                placeholder="Digite o nome do usuário"
                 required
                 [disabled]="carregando"
               />
@@ -152,7 +159,7 @@
               <input
                 type="email"
                 class="form-control"
-                [(ngModel)]="novoAgente.dsEmail"
+                [(ngModel)]="novoUsuario.dsEmail"
                 name="email"
                 placeholder="Digite o email"
                 required
@@ -160,24 +167,32 @@
               />
             </div>
             <div class="mb-3">
-              <label class="form-label">Senha {{ agenteEmEdicaoId ? '(Opcional)' : '*' }}</label>
+              <label class="form-label">Senha {{ usuarioEmEdicaoId ? '(Opcional)' : '*' }}</label>
               <input
                 type="password"
                 class="form-control"
-                [(ngModel)]="novoAgente.dsSenha"
+                [(ngModel)]="novoUsuario.dsSenha"
                 name="senha"
                 [placeholder]="
-                  agenteEmEdicaoId
+                  usuarioEmEdicaoId
                     ? 'Deixe em branco para manter a senha atual'
                     : 'Digite a senha inicial'
                 "
-                [required]="!agenteEmEdicaoId"
+                [required]="!usuarioEmEdicaoId"
                 [disabled]="carregando"
               />
-              <div class="form-text">
-                A senha deve conter pelo menos uma letra maiúscula, uma minúscula, um número e um
-                caractere especial.
-              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Funcionários *</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="novoUsuario.nuFuncionario"
+                name="funcionario"
+                placeholder="Digite a quantidade de funcionários do usuário"
+                required
+                [disabled]="carregando"
+              />
             </div>
           </form>
         </div>
@@ -193,7 +208,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="salvarAgente()"
+            (click)="salvarUsuario()"
             [disabled]="carregando"
           >
             <span *ngIf="carregando" class="spinner-border spinner-border-sm me-2"></span>
@@ -201,14 +216,15 @@
             {{
               carregando
                 ? 'Salvando...'
-                : agenteEmEdicaoId
+                : usuarioEmEdicaoId
                 ? 'Salvar Alterações'
-                : 'Adicionar Agente'
+                : 'Adicionar Usuário'
             }}
           </button>
         </div>
       </div>
     </div>
   </div>
+
   }
 </div>

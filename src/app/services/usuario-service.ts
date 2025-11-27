@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Plano } from '../shared/models/Plano';
 
 export interface UsuarioRequest {
   nmUsuario: string;
@@ -16,6 +17,7 @@ export interface UsuarioResponse {
   nmUsuario: string;
   dsEmail: string;
   nuFuncionario: number;
+  plano: Plano;
   flAtivo: boolean;
   roles: string[];
 }
@@ -36,10 +38,14 @@ export class UsuarioService {
   }
 
   desativar(cdUsuario: number): Observable<UsuarioResponse> {
-    return this.http.patch<UsuarioResponse>(`${this.baseUrl}/desativar/${cdUsuario}`, {});
+    return this.http.put<UsuarioResponse>(`${this.baseUrl}/desativar/${cdUsuario}`, {});
   }
 
   reativar(cdUsuario: number): Observable<UsuarioResponse> {
-    return this.http.patch<UsuarioResponse>(`${this.baseUrl}/reativar/${cdUsuario}`, {});
+    return this.http.put<UsuarioResponse>(`${this.baseUrl}/reativar/${cdUsuario}`, {});
+  }
+
+  atualizar(cdUsuario: number, dto: Partial<UsuarioRequest>): Observable<UsuarioResponse> {
+    return this.http.put<UsuarioResponse>(`${this.baseUrl}/atualizar/${cdUsuario}`, dto);
   }
 }

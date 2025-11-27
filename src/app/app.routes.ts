@@ -13,6 +13,7 @@ import { AdminDashboard } from './views/admin-dashboard/admin-dashboard';
 import { MeusChamadosView } from './views/meus-chamados-view/meus-chamados-view';
 import { NovoChamadoUser } from './components/novo-chamado-user/novo-chamado-user';
 import { ChamadoComentarios } from './views/chamado-comentarios/chamado-comentarios';
+import { GerenciarUsuarios } from './views/gerenciar-usuarios/gerenciar-usuarios';
 
 export const routes: Routes = [
   {
@@ -89,10 +90,16 @@ export const routes: Routes = [
     data: { roles: ['ROLE_ADMIN'] },
   },
   {
+    path: 'admin/gerenciar-usuarios',
+    component: GerenciarUsuarios,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN'] },
+  },
+  {
     path: 'chamado/detalhes/:cdChamado',
     component: ChamadoComentarios,
     canActivate: [RoleGuard],
-    data: { roles: ['ROLE_USER','ROLE_AGENTE']},
+    data: { roles: ['ROLE_USER', 'ROLE_AGENTE'] },
   },
   {
     path: '**',

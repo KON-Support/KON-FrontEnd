@@ -38,12 +38,12 @@
       <div class="user-row d-flex align-items-center mb-2">
         <i class="bi bi-person text-muted me-2"></i>
         <small class="text-muted me-1">Solicitante:</small>
-        <small class="fw-medium">{{ chamado().solicitante?.nmUsuario || 'Não informado' }}</small>
+        <small class="fw-medium">{{ chamado().solicitante.nmUsuario || 'Não informado' }}</small>
       </div>
       <div class="user-row d-flex align-items-center">
         <i class="bi bi-person-gear text-muted me-2"></i>
         <small class="text-muted me-1">Responsável:</small>
-        <small class="fw-medium">{{ chamado().responsavel?.nmUsuario || 'Não atribuído' }}</small>
+        <small class="fw-medium">{{ chamado().responsavel.nmUsuario || 'Não atribuído' }}</small>
       </div>
     </div>
 
