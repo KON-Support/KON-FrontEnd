@@ -1,49 +1,62 @@
-import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Navbar } from '../../components/navbar/navbar';
 import { ChamadoService } from '../../services/chamado-service';
 import { Chamado } from '../../shared/models/Chamado';
 import { Status } from '../../shared/models/Status';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexDataLabels,
+  ApexTitleSubtitle,
+  ApexStroke,
+  ApexGrid,
+  ApexFill,
+  ApexMarkers,
+  ApexYAxis,
+  ApexNonAxisChartSeries,
+  ApexResponsive,
+  ApexLegend,
+  ApexPlotOptions,
+  ApexTooltip,
+  NgApexchartsModule,
+} from 'ng-apexcharts';
 
-interface Estatisticas {
-  totalChamados: number;
-  chamadosAbertos: number;
-  chamadosEmAndamento: number;
-  chamadosResolvidos: number;
-  chamadosFechados: number;
-  slaViolado: number;
-  proximoVencimento: number;
-  dentroPrazo: number;
-}
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  dataLabels: ApexDataLabels;
+  grid: ApexGrid;
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
+  fill: ApexFill;
+  markers: ApexMarkers;
+  yaxis: ApexYAxis;
+  colors: string[];
+  tooltip: ApexTooltip;
+  plotOptions: ApexPlotOptions;
+  legend: ApexLegend;
+};
 
-interface StatusData {
-  status: string;
-  label: string;
-  quantidade: number;
-  porcentagem: number;
-  colorClass: string;
-}
-
-interface CategoriaData {
-  categoria: string;
-  quantidade: number;
-  porcentagem: number;
-}
-
-interface PerformanceAtendente {
-  nome: string;
-  iniciais: string;
-  totalAtribuidos: number;
-  resolvidos: number;
-  emAndamento: number;
-  taxaResolucao: number;
-  tempoMedio: number;
-}
+export type PieChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  responsive: ApexResponsive[];
+  legend: ApexLegend;
+  colors: string[];
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  tooltip: ApexTooltip;
+};
 
 @Component({
   selector: 'app-relatorios',
   standalone: true,
-  imports: [CommonModule, Navbar],
+  imports: [CommonModule, FormsModule, Navbar, NgApexchartsModule],
   templateUrl: './relatorios.html',
   styleUrl: './relatorios.scss',
 })
@@ -51,227 +64,209 @@ export class Relatorios implements OnInit {
   private chamadoService = inject(ChamadoService);
   private cdr = inject(ChangeDetectorRef);
 
-  protected chamados = signal<Chamado[]>([]);
-  protected loading = signal(true);
-  protected estatisticas = signal<Estatisticas>({
-    totalChamados: 0,
-    chamadosAbertos: 0,
-    chamadosEmAndamento: 0,
-    chamadosResolvidos: 0,
-    chamadosFechados: 0,
-    slaViolado: 0,
-    proximoVencimento: 0,
-    dentroPrazo: 0,
-  });
+  public statusChartOptions: Partial<PieChartOptions> | any;
+  public categoryChartOptions: Partial<ChartOptions> | any;
+  public timelineChartOptions: Partial<ChartOptions> | any;
 
-  protected statusData = signal<StatusData[]>([]);
-  protected categoriaData = signal<CategoriaData[]>([]);
-  protected performanceAtendentes = signal<PerformanceAtendente[]>([]);
-  protected tempoMedioResolucao = signal<number>(0);
+  constructor() {}
 
   ngOnInit(): void {
-    console.log('📊 Relatórios - Componente inicializado');
-    this.carregarDados();
+    this.initCharts();
+    setTimeout(() => {
+      this.loadData();
+    }, 100);
   }
 
-  private carregarDados(): void {
-    this.loading.set(true);
-
+  loadData() {
     this.chamadoService.buscarChamados().subscribe({
-      next: (response) => {
-        console.log('Dados carregados para relatórios:', response.length);
-        this.chamados.set(response);
-        this.calcularEstatisticas();
-        this.calcularStatusData();
-        this.calcularCategoriaData();
-        this.calcularPerformanceAtendentes();
-        this.calcularTempoMedio();
-        this.loading.set(false);
+      next: (chamados) => {
+        this.processStatusChart(chamados);
+        this.processCategoryChart(chamados);
+        this.processTimelineChart(chamados);
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar dados:', err);
-        this.loading.set(false);
-        this.cdr.detectChanges();
+        console.error('Erro ao carregar chamados', err);
       },
     });
   }
 
-  private calcularEstatisticas(): void {
-    const chamados = this.chamados();
-    
-    const stats: Estatisticas = {
-      totalChamados: chamados.length,
-      chamadosAbertos: chamados.filter((t) => t.status === Status.ABERTO).length,
-      chamadosEmAndamento: chamados.filter((t) => t.status === Status.EM_ANDAMENTO).length,
-      chamadosResolvidos: chamados.filter((t) => t.status === Status.RESOLVIDO).length,
-      chamadosFechados: chamados.filter((t) => t.status === Status.FECHADO).length,
-      slaViolado: chamados.filter((t) => t.flSlaViolado).length,
-      proximoVencimento: this.calcularProximoVencimento(chamados),
-      dentroPrazo: chamados.filter((t) => !t.flSlaViolado && t.status !== Status.FECHADO).length,
+  processStatusChart(chamados: Chamado[]) {
+    const statusCounts: { [key: string]: number } = {
+      [Status.ABERTO]: 0,
+      [Status.EM_ANDAMENTO]: 0,
+      [Status.RESOLVIDO]: 0,
+      [Status.FECHADO]: 0,
     };
 
-    this.estatisticas.set(stats);
-    console.log('📈 Estatísticas calculadas:', stats);
-  }
-
-  private calcularProximoVencimento(chamados: Chamado[]): number {
-    const hoje = new Date();
-    const limite = new Date(hoje);
-    limite.setHours(limite.getHours() + 24);
-
-    return chamados.filter((t) => {
-      if (!t.dtVencimento || t.status === Status.FECHADO) return false;
-      const vencimento = new Date(t.dtVencimento);
-      return vencimento > hoje && vencimento <= limite;
-    }).length;
-  }
-
-  private calcularStatusData(): void {
-    const chamados = this.chamados();
-    const total = chamados.length || 1;
-
-    const data: StatusData[] = [
-      {
-        status: Status.ABERTO,
-        label: 'Aberto',
-        quantidade: chamados.filter((t) => t.status === Status.ABERTO).length,
-        porcentagem: 0,
-        colorClass: 'bg-primary',
-      },
-      {
-        status: Status.EM_ANDAMENTO,
-        label: 'Em Andamento',
-        quantidade: chamados.filter((t) => t.status === Status.EM_ANDAMENTO).length,
-        porcentagem: 0,
-        colorClass: 'bg-warning',
-      },
-      {
-        status: Status.RESOLVIDO,
-        label: 'Resolvido',
-        quantidade: chamados.filter((t) => t.status === Status.RESOLVIDO).length,
-        porcentagem: 0,
-        colorClass: 'bg-success',
-      },
-      {
-        status: Status.FECHADO,
-        label: 'Fechado',
-        quantidade: chamados.filter((t) => t.status === Status.FECHADO).length,
-        porcentagem: 0,
-        colorClass: 'bg-secondary',
-      },
-    ];
-
-    data.forEach((item) => {
-      item.porcentagem = Math.round((item.quantidade / total) * 100);
-    });
-
-    this.statusData.set(data);
-  }
-
-  private calcularCategoriaData(): void {
-    const chamados = this.chamados();
-    const total = chamados.length || 1;
-
-    const categorias = new Map<string, number>();
-
-    chamados.forEach((chamado) => {
-      if (chamado.categoria) {
-        const nome = chamado.categoria.nmCategoria;
-        categorias.set(nome, (categorias.get(nome) || 0) + 1);
+    chamados.forEach((c) => {
+      if (statusCounts[c.status] !== undefined) {
+        statusCounts[c.status]++;
       }
     });
 
-    const data: CategoriaData[] = Array.from(categorias.entries()).map(([categoria, quantidade]) => ({
-      categoria,
-      quantidade,
-      porcentagem: Math.round((quantidade / total) * 100),
-    }));
-
-    data.sort((a, b) => b.quantidade - a.quantidade);
-
-    this.categoriaData.set(data);
+    this.statusChartOptions = {
+      ...this.statusChartOptions,
+      series: Object.values(statusCounts),
+      labels: Object.keys(statusCounts).map((s) => s.replace('_', ' ')),
+    };
   }
 
-  private calcularPerformanceAtendentes(): void {
-    const chamados = this.chamados();
-    
-    const atendentes = new Map<number, PerformanceAtendente>();
+  processCategoryChart(chamados: Chamado[]) {
+    const categoryCounts: { [key: string]: number } = {};
 
-    chamados.forEach((chamado) => {
-      if (chamado.responsavel) {
-        const id = chamado.responsavel.cdUsuario;
-        
-        if (!atendentes.has(id)) {
-          atendentes.set(id, {
-            nome: chamado.responsavel.nmUsuario,
-            iniciais: this.getIniciais(chamado.responsavel.nmUsuario),
-            totalAtribuidos: 0,
-            resolvidos: 0,
-            emAndamento: 0,
-            taxaResolucao: 0,
-            tempoMedio: 0,
-          });
+    chamados.forEach((c) => {
+      const catName = c.categoria?.nmCategoria || 'Sem Categoria';
+      categoryCounts[catName] = (categoryCounts[catName] || 0) + 1;
+    });
+
+    const categories = Object.keys(categoryCounts);
+    const data = Object.values(categoryCounts);
+
+    this.categoryChartOptions = {
+      ...this.categoryChartOptions,
+      series: [
+        {
+          name: 'Chamados',
+          data: data,
+        },
+      ],
+      xaxis: {
+        ...this.categoryChartOptions.xaxis,
+        categories: categories,
+      },
+    };
+  }
+
+  processTimelineChart(chamados: Chamado[]) {
+    const dateMap: {
+      [key: string]: { abertos: number; resolvidos: number };
+    } = {};
+
+    chamados.forEach((c) => {
+      const dtCriacao = new Date(c.dtCriacao).toISOString().split('T')[0];
+      if (!dateMap[dtCriacao]) {
+        dateMap[dtCriacao] = { abertos: 0, resolvidos: 0 };
+      }
+      dateMap[dtCriacao].abertos++;
+
+      if (c.dtFechamento) {
+        const dtFechamento = new Date(c.dtFechamento).toISOString().split('T')[0];
+        if (!dateMap[dtFechamento]) {
+          dateMap[dtFechamento] = { abertos: 0, resolvidos: 0 };
         }
-
-        const atendente = atendentes.get(id)!;
-        atendente.totalAtribuidos++;
-
-        if (chamado.status === Status.RESOLVIDO || chamado.status === Status.FECHADO) {
-          atendente.resolvidos++;
-        } else if (chamado.status === Status.EM_ANDAMENTO) {
-          atendente.emAndamento++;
-        }
+        dateMap[dtFechamento].resolvidos++;
       }
     });
 
-    atendentes.forEach((atendente) => {
-      atendente.taxaResolucao = atendente.totalAtribuidos > 0
-        ? Math.round((atendente.resolvidos / atendente.totalAtribuidos) * 100)
-        : 0;
-      atendente.tempoMedio = Math.round(Math.random() * 10 + 5);
-    });
+    const sortedDates = Object.keys(dateMap).sort();
+    const abertosData = sortedDates.map((d) => dateMap[d].abertos);
+    const resolvidosData = sortedDates.map((d) => dateMap[d].resolvidos);
 
-    const data = Array.from(atendentes.values()).sort(
-      (a, b) => b.taxaResolucao - a.taxaResolucao
-    );
-
-    this.performanceAtendentes.set(data);
+    this.timelineChartOptions = {
+      ...this.timelineChartOptions,
+      series: [
+        {
+          name: 'Chamados Abertos',
+          data: abertosData,
+        },
+        {
+          name: 'Chamados Resolvidos',
+          data: resolvidosData,
+        },
+      ],
+      xaxis: {
+        ...this.timelineChartOptions.xaxis,
+        type: 'datetime',
+        categories: sortedDates,
+      },
+    };
   }
 
-  private calcularTempoMedio(): void {
-    const chamadosResolvidos = this.chamados().filter(
-      (t) => t.status === Status.RESOLVIDO || t.status === Status.FECHADO
-    );
+  initCharts() {
+    this.statusChartOptions = {
+      series: [],
+      chart: {
+        type: 'pie',
+        height: 350,
+      },
+      labels: [],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: 'bottom',
+            },
+          },
+        },
+      ],
+    };
 
-    if (chamadosResolvidos.length === 0) {
-      this.tempoMedioResolucao.set(0);
-      return;
-    }
+    this.categoryChartOptions = {
+      series: [],
+      chart: {
+        type: 'bar',
+        height: 350,
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '55%',
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent'],
+      },
+      xaxis: {
+        categories: [],
+      },
+      yaxis: {
+        title: {
+          text: 'Quantidade',
+        },
+      },
+      fill: {
+        opacity: 1,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val: any) {
+            return val + ' chamados';
+          },
+        },
+      },
+    };
 
-    let totalHoras = 0;
-    let count = 0;
-
-    chamadosResolvidos.forEach((chamado) => {
-      if (chamado.dtCriacao && chamado.dtFechamento) {
-        const criacao = new Date(chamado.dtCriacao);
-        const fechamento = new Date(chamado.dtFechamento);
-        const diff = fechamento.getTime() - criacao.getTime();
-        const horas = diff / (1000 * 60 * 60);
-        totalHoras += horas;
-        count++;
-      }
-    });
-
-    const media = count > 0 ? Math.round(totalHoras / count) : 0;
-    this.tempoMedioResolucao.set(media);
-  }
-
-  private getIniciais(nome: string): string {
-    const partes = nome.split(' ');
-    if (partes.length >= 2) {
-      return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
-    }
-    return nome.substring(0, 2).toUpperCase();
+    this.timelineChartOptions = {
+      series: [],
+      chart: {
+        height: 350,
+        type: 'area',
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+      },
+      xaxis: {
+        type: 'datetime',
+        categories: [],
+      },
+      tooltip: {
+        x: {
+          format: 'dd/MM/yy',
+        },
+      },
+    };
   }
 }
