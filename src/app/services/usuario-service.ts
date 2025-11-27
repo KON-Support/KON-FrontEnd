@@ -54,4 +54,5 @@ export class UsuarioService {
     return this.http.delete<void>(`${this.baseUrl}/deletar/${cdUsuario}`, {});
   }
 
+
 }

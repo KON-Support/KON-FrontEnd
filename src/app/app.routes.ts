@@ -15,6 +15,7 @@ import { NovoChamadoUser } from './components/novo-chamado-user/novo-chamado-use
 import { ChamadoComentarios } from './views/chamado-comentarios/chamado-comentarios';
 import { GerenciarUsuarios } from './views/gerenciar-usuarios/gerenciar-usuarios';
 import { OAuth2RedirectComponent } from './components/oauth2-redirect/oauth2-redirect';
+import { CompletarCadastro } from './components/completar-cadastro/completar-cadastro';
 
 export const routes: Routes = [
   
@@ -35,6 +36,11 @@ export const routes: Routes = [
     path: 'oauth2/redirect',
     component: OAuth2RedirectComponent,
   },
+  {
+    path: 'completar-cadastro', 
+    component: CompletarCadastro
+  },
+
   {
     path: 'agente/dashboard',
     component: AgenteDashboard,
