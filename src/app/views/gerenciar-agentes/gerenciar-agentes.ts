@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Navbar } from "../../components/navbar/navbar";
+import { Navbar } from '../../components/navbar/navbar';
 import { UsuarioRequest, UsuarioResponse, UsuarioService } from '../../services/usuario-service';
 
 @Component({
@@ -15,19 +15,18 @@ export class GerenciarAgentes implements OnInit {
   agentes: UsuarioResponse[] = [];
   mostrarModalAdicionar = false;
   carregando = false;
+  agenteEmEdicaoId: number | null = null;
+
   novoAgente: UsuarioRequest = {
     nmUsuario: '',
     dsSenha: '',
     nuFuncionario: 0,
     dsEmail: '',
     flAtivo: true,
-    roles: ['ROLE_AGENTE']
+    roles: ['ROLE_AGENTE'],
   };
 
-  constructor(
-    private usuarioService: UsuarioService,
-    private cdRef: ChangeDetectorRef 
-  ) {}
+  constructor(private usuarioService: UsuarioService, private cdRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.carregarAgentes();
@@ -36,7 +35,7 @@ export class GerenciarAgentes implements OnInit {
   carregarAgentes() {
     this.carregando = true;
     this.cdRef.detectChanges();
-    
+
     this.usuarioService.buscarTodos().subscribe({
       next: (usuarios: any[]) => {
         this.agentes = usuarios || [];
@@ -47,121 +46,135 @@ export class GerenciarAgentes implements OnInit {
         console.error(' Erro:', error);
         this.carregando = false;
         this.cdRef.detectChanges();
-      }
+      },
     });
   }
 
   get agentesFiltrados(): UsuarioResponse[] {
-    const apenasAgentes = this.agentes.filter(agente => 
-      agente.roles && agente.roles.includes('ROLE_AGENTE')
+    const apenasAgentes = this.agentes.filter(
+      (agente) => agente.roles && agente.roles.includes('ROLE_AGENTE')
     );
 
     if (!this.busca) {
       return apenasAgentes;
     }
-    
+
     const termo = this.busca.toLowerCase();
-    return apenasAgentes.filter(agente => 
-      agente.nmUsuario?.toLowerCase().includes(termo) ||
-      agente.dsEmail?.toLowerCase().includes(termo) ||
-      agente.nuFuncionario?.toString().includes(termo)
+    return apenasAgentes.filter(
+      (agente) =>
+        agente.nmUsuario?.toLowerCase().includes(termo) ||
+        agente.dsEmail?.toLowerCase().includes(termo) ||
+        agente.nuFuncionario?.toString().includes(termo)
     );
   }
 
   abrirModalAdicionar() {
     this.mostrarModalAdicionar = true;
+    this.agenteEmEdicaoId = null;
     this.novoAgente = {
       nmUsuario: '',
       dsSenha: '',
       nuFuncionario: 0,
       dsEmail: '',
       flAtivo: true,
-      roles: ['ROLE_AGENTE']
+      roles: ['ROLE_AGENTE'],
     };
   }
 
-
-  adicionarAgente() {
-  if (!this.novoAgente.nmUsuario || !this.novoAgente.dsEmail || !this.novoAgente.dsSenha) {
-    alert('Por favor, preencha todos os campos obrigatórios!');
-    return;
+  editarAgente(agente: UsuarioResponse) {
+    this.agenteEmEdicaoId = agente.cdUsuario;
+    this.mostrarModalAdicionar = true;
+    this.novoAgente = {
+      nmUsuario: agente.nmUsuario,
+      dsSenha: '',
+      nuFuncionario: agente.nuFuncionario,
+      dsEmail: agente.dsEmail,
+      flAtivo: agente.flAtivo,
+      roles: agente.roles || ['ROLE_AGENTE'],
+    };
   }
 
-  this.carregando = true;
-  
-  this.usuarioService.cadastrar(this.novoAgente).subscribe({
-    next: (novoAgente: any) => {
-      this.agentes.push(novoAgente);
-      
-      this.busca = '';
-      this.carregando = false;
-      
-      setTimeout(() => {
-        this.fecharModal();
-        this.cdRef.detectChanges();
-      }, 100);
-      
-      alert('Agente cadastrado com sucesso!');
-    },
-    error: (error: any) => {
-      console.error('Erro ao cadastrar agente:', error);
-      this.carregando = false;
-      this.cdRef.detectChanges();
-      alert('Erro ao cadastrar agente. Tente novamente.');
+  salvarAgente() {
+    if (!this.novoAgente.nmUsuario || !this.novoAgente.dsEmail) {
+      alert('Por favor, preencha os campos obrigatórios.');
+      return;
     }
-  });
-}
 
-fecharModal() {
-  this.mostrarModalAdicionar = false;
-  this.cdRef.detectChanges();
-}
+    if (!this.agenteEmEdicaoId && !this.novoAgente.dsSenha) {
+      alert('A senha é obrigatória para novos agentes.');
+      return;
+    }
 
-  desativarAgente(agente: UsuarioResponse) {
-    if (confirm(`Tem certeza que deseja desativar o agente ${agente.nmUsuario}?`)) {
-      this.usuarioService.desativar(agente.cdUsuario).subscribe({
-        next: (agenteAtualizado: UsuarioResponse) => {
-          const agenteNaLista = this.agentes.find(a => a.cdUsuario === agenteAtualizado.cdUsuario);
-          if (agenteNaLista) {
-            agenteNaLista.flAtivo = agenteAtualizado.flAtivo;
+    this.carregando = true;
+
+    if (this.agenteEmEdicaoId) {
+      const dadosAtualizacao = { ...this.novoAgente };
+      if (!dadosAtualizacao.dsSenha) {
+        delete (dadosAtualizacao as any).dsSenha;
+      }
+
+      this.usuarioService.atualizar(this.agenteEmEdicaoId, dadosAtualizacao).subscribe({
+        next: (agenteAtualizado) => {
+          const index = this.agentes.findIndex((a) => a.cdUsuario === this.agenteEmEdicaoId);
+          if (index !== -1) {
+            this.agentes[index] = agenteAtualizado;
           }
-          this.cdRef.detectChanges();
-          alert('Agente desativado com sucesso!');
+          this.carregando = false;
+          this.fecharModal();
         },
-        error: (error: any) => {
-          console.error('Erro ao desativar agente:', error);
-          alert('Erro ao desativar agente.');
-        }
+        error: (error) => this.tratarErro(error, 'Erro ao atualizar agente'),
+      });
+    } else {
+      this.usuarioService.cadastrar(this.novoAgente).subscribe({
+        next: (agenteCadastrado) => {
+          if (!agenteCadastrado.roles) {
+            agenteCadastrado.roles = ['ROLE_AGENTE'];
+          }
+          this.agentes.push(agenteCadastrado);
+          this.carregando = false;
+          this.fecharModal();
+        },
+        error: (error) => this.tratarErro(error, 'Erro ao cadastrar agente'),
       });
     }
   }
 
-  reativarAgente(agente: UsuarioResponse) {
-    this.usuarioService.reativar(agente.cdUsuario).subscribe({
-      next: (agenteAtualizado: UsuarioResponse) => {
-        const agenteNaLista = this.agentes.find(a => a.cdUsuario === agenteAtualizado.cdUsuario);
-        if (agenteNaLista) {
-          agenteNaLista.flAtivo = agenteAtualizado.flAtivo;
-        }
-        this.cdRef.detectChanges();
-        alert('Agente reativado com sucesso!');
-      },
-      error: (error: any) => {
-        console.error('Erro ao reativar agente:', error);
-        alert('Erro ao reativar agente.');
-      }
-    });
+  private tratarErro(error: any, mensagemPadrao: string) {
+    console.error(mensagemPadrao, error);
+    this.carregando = false;
+    this.cdRef.detectChanges();
+    const msg = error.error?.message || error.message || mensagemPadrao;
+    alert(msg);
   }
 
-  excluirAgente(agente: UsuarioResponse) {
-  
+  fecharModal() {
+    this.mostrarModalAdicionar = false;
+    this.agenteEmEdicaoId = null;
+    this.carregando = false;
+    this.cdRef.detectChanges();
   }
+
+  desativarAgente(agente: UsuarioResponse) {
+    if (confirm(`Tem certeza que deseja desativar o agente ${agente.nmUsuario}?`)) {
+      this.usuarioService.desativar(agente.cdUsuario).subscribe();
+      window.location.reload();
+    }
+  }
+
+  reativarAgente(agente: UsuarioResponse) {
+    if (confirm(`Tem certeza que deseja reativar o agente ${agente.nmUsuario}?`)) {
+      this.usuarioService.reativar(agente.cdUsuario).subscribe();
+      window.location.reload();
+    }
+  }
+
+  excluirAgente(agente: UsuarioResponse) {}
 
   getIniciais(nome: string): string {
     if (!nome) return '';
     return nome
       .split(' ')
-      .map(palavra => palavra.charAt(0))
+      .map((palavra) => palavra.charAt(0))
       .join('')
       .toUpperCase()
       .substring(0, 2);
@@ -174,11 +187,4 @@ fecharModal() {
   getStatusClass(flAtivo: boolean): string {
     return flAtivo ? 'bg-success' : 'bg-danger';
   }
-
-  editarAgente(agente: UsuarioResponse) {
-    console.log('Editar agente:', agente);
-    alert('Fazer');
-  }
-
- 
 }

@@ -4,12 +4,11 @@ import { Chamado } from '../../shared/models/Chamado';
 import { ChamadoService } from '../../services/chamado-service';
 import { CardChamado } from '../card-chamado/card-chamado';
 import { Router } from '@angular/router';
-import { Navbar } from "../navbar/navbar";
 
 @Component({
   selector: 'app-lista-chamados',
   standalone: true,
-  imports: [CommonModule, CardChamado, Navbar],
+  imports: [CommonModule, CardChamado],
   templateUrl: './lista-chamados.html',
   styleUrl: './lista-chamados.scss',
 })
@@ -20,40 +19,40 @@ export class ListaChamados implements OnInit {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
-  @Input() tickets: Chamado[] = [];
+  @Input() chamados: Chamado[] = [];
   protected loading = true;
 
   ngOnInit(): void {
-    console.log('🎬 ListaTickets - Componente inicializado');
-    this.carregarTickets();
+    console.log('ListaChamados - Componente inicializado');
+    this.carregarChamados();
   }
 
-  private carregarTickets(): void {
-    console.log('🔄 Iniciando carregamento de tickets...');
+  private carregarChamados(): void {
+    console.log('Iniciando carregamento de chamados...');
     this.loading = true;
 
     this.chamadoService.buscarChamados().subscribe({
       next: (response) => {
-        console.log('✅ Tickets recebidos:', response);
-        console.log('📊 Quantidade:', response.length);
+        console.log('Chamados recebidos:', response);
+        console.log('Quantidade:', response.length);
 
-        this.tickets = response;
+        this.chamados = response;
         this.loading = false;
 
         this.cdr.detectChanges();
 
-        console.log('💾 Tickets armazenados e view atualizada');
+        console.log('Chamados armazenados e view atualizada');
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar tickets:', err);
+        console.error('Erro ao carregar chamados:', err);
         this.loading = false;
         this.cdr.detectChanges();
       },
     });
   }
 
-  onTicketClick(chamado: Chamado): void {
-    console.log('🎯 Ticket clicado:', chamado.cdChamado);
-    this.router.navigate(['/tickets', chamado.cdChamado]);
+  onChamadoClick(chamado: Chamado): void {
+    console.log('Chamado clicado:', chamado.cdChamado);
+    this.router.navigate(['/chamados', chamado.cdChamado]);
   }
 }

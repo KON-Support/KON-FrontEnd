@@ -132,80 +132,68 @@
           </div>
         </div>
       </div>
+      <div class="filters-section">
+        <div class="row g-3">
+          <div class="col-md-8">
+            <div class="search-input">
+              <i class="bi bi-search"></i>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar chamado..."
+                [(ngModel)]="filtroBusca"
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <select class="form-select" [(ngModel)]="filtroStatus">
+              <option value="">Todos os status</option>
+              <option value="ABERTO">Aberto</option>
+              <option value="EM_ANDAMENTO">Em Andamento</option>
+              <option value="RESOLVIDO">Resolvido</option>
+              <option value="FECHADO">Fechado</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      @if (errorMessage()) {
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-triangle me-2"></i>
-        {{ errorMessage() }}
-        <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+    @if (errorMessage()) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      {{ errorMessage() }}
+      <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+    </div>
+    } @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
       </div>
-      } @if (loading()) {
-      <div class="text-center py-5">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Carregando...</span>
-        </div>
-        <p class="mt-2 text-muted">Carregando seus tickets...</p>
+      <p class="mt-2 text-muted">Carregando seus chamados...</p>
+    </div>
+    } @else if (chamadosFiltrados.length === 0 && !loading()) {
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <i class="bi bi-inbox"></i>
       </div>
-      } @else if (chamadosFiltrados.length === 0 && !loading()) {
-      <div class="empty-state">
-        <div class="empty-state-icon">
-          <i class="bi bi-inbox"></i>
-        </div>
-        <h5 class="empty-state-title">Nenhum ticket encontrado</h5>
-        <p class="empty-state-text">
-          @if (filtroBusca || filtroStatus) { Tente ajustar os filtros de busca } @else { Você ainda
-          não criou nenhum ticket. Comece abrindo um novo chamado! }
-        </p>
-        @if (!filtroBusca && !filtroStatus) {
-        <button class="btn btn-primary mt-3" (click)="abrirNovoChamado()">
-          <i class="bi bi-plus-lg me-2"></i>
-          Abrir Primeiro Chamado
-        </button>
-        }
-      </div>
-      } @else {
-      <div class="tickets-grid">
-        @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
-        <app-card-chamado [chamado]="chamado" (cardClick)="onTicketClick(chamado)" />
-        }
-      </div>
-      } @if (errorMessage()) {
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-triangle me-2"></i>
-        {{ errorMessage() }}
-        <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
-      </div>
-      } @if (loading()) {
-      <div class="text-center py-5">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Carregando...</span>
-        </div>
-        <p class="mt-2 text-muted">Carregando seus tickets...</p>
-      </div>
-      } @else if (chamadosFiltrados.length === 0 && !loading()) {
-      <div class="empty-state">
-        <div class="empty-state-icon">
-          <i class="bi bi-inbox"></i>
-        </div>
-        <h5 class="empty-state-title">Nenhum ticket encontrado</h5>
-        <p class="empty-state-text">
-          @if (filtroBusca || filtroStatus) { Tente ajustar os filtros de busca } @else { Você ainda
-          não criou nenhum ticket. Comece abrindo um novo chamado! }
-        </p>
-        @if (!filtroBusca && !filtroStatus) {
-        <button class="btn btn-primary mt-3" (click)="abrirNovoChamado()">
-          <i class="bi bi-plus-lg me-2"></i>
-          Abrir Primeiro Chamado
-        </button>
-        }
-      </div>
-      } @else {
-      <div class="tickets-grid">
-        @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
-        <app-card-chamado [chamado]="chamado" (cardClick)="onTicketClick(chamado)" />
-        }
-      </div>
+      <h5 class="empty-state-title">Nenhum chamado encontrado</h5>
+      <p class="empty-state-text">
+        @if (filtroBusca || filtroStatus) { Tente ajustar os filtros de busca } @else { Você ainda
+        não criou nenhum chamado. Comece abrindo um novo chamado! }
+      </p>
+      @if (!filtroBusca && !filtroStatus) {
+      <button class="btn btn-primary mt-3" (click)="abrirNovoChamado()">
+        <i class="bi bi-plus-lg me-2"></i>
+        Abrir Primeiro Chamado
+      </button>
       }
     </div>
+    } @else {
+    <div class="chamados-grid">
+      @for (chamado of chamadosFiltrados; track chamado.cdChamado) {
+      <app-card-chamado [chamado]="chamado" (cardClick)="onChamadoClick(chamado)" />
+      }
+    </div>
+    }
   </div>
 </div>

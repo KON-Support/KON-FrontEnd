@@ -39,6 +39,10 @@
   font-size: 14px;
 }
 
+.botao-olho{
+    background: #f3f3f5;
+}
+
 .form-control:focus {
   background: #f3f3f5;
   box-shadow: none;
@@ -93,14 +97,4 @@
 .btn-outline-secondary {
   border: none;
   color: #6a7282;
-}
-
-.btn-outline-secondary:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #4a5565;
-}
-
-.btn-outline-light.text-dark.border:hover {
-  border-color: rgba(0, 0, 0, 0.2) !important;
-  transform: translateY(-1px);
 }

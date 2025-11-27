@@ -13,13 +13,8 @@
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-3">
         <div class="form-group">
           <label class="form-label">Nome completo</label>
-          <input
-            type="text"
-            class="form-control"
-            [class.is-invalid]="nome?.invalid && nome?.touched"
-            placeholder="Memphis Depay"
-            formControlName="nome"
-          />
+          <input type="text" class="form-control" [class.is-invalid]="nome?.invalid && nome?.touched"
+            placeholder="Memphis Depay" formControlName="nome" />
 
           <div class="invalid-feedback" *ngIf="nome?.invalid && nome?.touched">
             <span *ngIf="nome?.errors?.['required']">Nome é obrigatório</span>
@@ -28,13 +23,8 @@
 
         <div class="form-group">
           <label class="form-label">E-mail</label>
-          <input
-            type="email"
-            class="form-control"
-            [class.is-invalid]="email?.invalid && email?.touched"
-            placeholder="seu@email.com"
-            formControlName="email"
-          />
+          <input type="email" class="form-control" [class.is-invalid]="email?.invalid && email?.touched"
+            placeholder="seu@email.com" formControlName="email" />
 
           <div class="invalid-feedback" *ngIf="email?.invalid && email?.touched">
             <span *ngIf="email?.errors?.['required']">E-mail é obrigatório</span>
@@ -44,21 +34,19 @@
 
         <div class="form-group">
           <label class="form-label">Número de funcionários</label>
-          <input
-            type="number"
-            class="form-control"
-            [class.is-invalid]="funcionarios?.invalid && funcionarios?.touched"
-            placeholder="Ex: 50"
-            formControlName="funcionarios"
-          />
+          <input type="number" class="form-control" [class.is-invalid]="funcionarios?.invalid && funcionarios?.touched"
+            placeholder="Ex: 50" formControlName="funcionarios" />
 
           <div class="form-text">
             Informe quantos funcionários sua empresa possui
           </div>
 
-          <div class="invalid-feedback" *ngIf="funcionarios?.invalid && funcionarios?.touched">
-            <span *ngIf="funcionarios?.errors?.['required']">Número de funcionários é obrigatório</span>
-            <span *ngIf="funcionarios?.errors?.['min']">Valor mínimo é 1</span>
+          <div class="invalid-feedback">
+            @if (funcionarios?.errors?.['required'] && funcionarios?.touched) {
+            <span>Número de funcionários é obrigatório</span>
+            } @else if(funcionarios?.invalid && funcionarios?.touched) {
+            <span>Valor mínimo é 1</span>
+            }
           </div>
         </div>
 
@@ -66,23 +54,21 @@
           <label class="form-label">Senha</label>
 
           <div class="input-group">
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              class="form-control"
-              [class.is-invalid]="senha?.invalid && senha?.touched"
-              placeholder="••••••••"
-              formControlName="senha"
-            />
-            <button type="button" class="btn btn-outline-secondary" (click)="senhaVisivel()">
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control"
+              [class.is-invalid]="senha?.invalid && senha?.touched" placeholder="••••••••" formControlName="senha" />
+            <button type="button" class="btn btn-outline-secondary botao-olho" (click)="senhaVisivel()">
               <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
             </button>
-          </div>
 
-          <div class="form-text">Mínimo de 6 caracteres</div>
 
-          <div class="invalid-feedback" *ngIf="senha?.invalid && senha?.touched">
-            <span *ngIf="senha?.errors?.['required']">Senha é obrigatória</span>
-            <span *ngIf="senha?.errors?.['minlength']">Mínimo de 6 caracteres</span>
+            <div class="invalid-feedback d-flex flex-column">
+              @if(senha?.errors?.['required'] && senha?.touched) {
+              <span>Senha é obrigatória</span>
+              } @else if (senha?.errors?.['pattern'] && senha?.touched) {
+              <span>A senha deve conter no mínimo 6 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um
+                número e um caractere especial.</span>
+              }
+            </div>
           </div>
         </div>
 
@@ -90,21 +76,17 @@
           <label class="form-label">Confirmar senha</label>
 
           <div class="input-group">
-            <input
-              [type]="showConfirmPassword ? 'text' : 'password'"
-              class="form-control"
-              [class.is-invalid]="confirmarSenha?.invalid && confirmarSenha?.touched"
-              placeholder="••••••••"
-              formControlName="confirmarSenha"
-            />
-            <button type="button" class="btn btn-outline-secondary" (click)="senhaVisivelConfirmar()">
-              <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-            </button>
+            <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control"
+              [class.is-invalid]="confirmarSenha?.invalid && confirmarSenha?.touched" placeholder="••••••••"
+              formControlName="confirmarSenha" />
           </div>
 
-          <div class="invalid-feedback" *ngIf="confirmarSenha?.invalid && confirmarSenha?.touched">
-            <span *ngIf="confirmarSenha?.errors?.['required']">Confirmação de senha é obrigatória</span>
-            <span *ngIf="registerForm?.errors?.['passwordMismatch'] && confirmarSenha?.touched">As senhas não coincidem</span>
+          <div class="invalid-feedback d-flex flex-column">
+            @if(confirmarSenha?.errors?.['required'] && confirmarSenha?.touched) {
+            <span>Confirmar senha é obrigatório</span>
+            } @else if (confirmarSenha?.hasError('passwordMismatch') && confirmarSenha?.touched) {
+            <span>As senhas devem ser iguais</span>
+            }
           </div>
         </div>
 
@@ -126,7 +108,7 @@
         </div>
 
         <div class="d-grid gap-2">
-          <button type="button" class="btn btn-outline-light text-dark border">
+          <button type="button" class="btn btn-outline-light text-dark border" (click)="loginWithGoogle()">
             <img src="google.svg" class="me-2" width="20" height="20" />
             Google
           </button>

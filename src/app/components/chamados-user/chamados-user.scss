@@ -1,4 +1,4 @@
-.tickets-user-container {
+.chamados-user-container {
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
@@ -204,7 +204,7 @@
     }
 }
 
-.tickets-grid {
+.chamados-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 1.5rem;
@@ -253,7 +253,7 @@
 }
 
 @media (max-width: 768px) {
-    .tickets-user-container {
+    .chamados-user-container {
         padding: 1rem;
     }
 
@@ -273,7 +273,7 @@
         }
     }
 
-    .tickets-grid {
+    .chamados-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
