@@ -26,26 +26,29 @@
     </div>
     <div class="d-flex flex-column flex-nowrap p-3 rounded-2 border border-1">
       <p>Conversação</p>
-      <div *ngIf="comentarios.length > 0">
-        <div
-          *ngFor="let comentario of comentarios; let i = index"
-          class="rounded-2 border border-1 mb-3 p-3"
+      @if (comentarios.length > 0) { @for (comentario of comentarios; track $index) {
+      <div [ngClass]="'rounded-2 mb-3 p-3 border border-1 border-dark '">
+        <p class="text-start">{{ comentario?.dtCriacao }} | {{ comentario?.hrCriacao }}</p>
+        <p>{{ comentario?.dsConteudo }}</p>
+        @if (comentarioHasAnexo(comentario)) {
+        <button
+          class="btn btn-sm btn-link p-0 text-decoration-none"
+          (click)="downloadAnexo(getAnexoCd(comentario), getAnexoName(comentario))"
         >
-          <p>{{ comentario?.dtCriacao }} | {{ comentario?.hrCriacao }}</p>
-          <p>{{ comentario?.dsConteudo }}</p>
-          <div *ngIf="comentarioHasAnexo(comentario)">
-            <button
-              class="btn btn-sm btn-link p-0 text-decoration-none"
-              (click)="downloadAnexo(getAnexoCd(comentario), getAnexoName(comentario))"
-            >
-              <i class="bi bi-download me-1"></i>Baixar anexo
-            </button>
-          </div>
-        </div>
+          <i class="bi bi-download me-1"></i>Baixar anexo
+        </button>
+        }
       </div>
+      } }
       <p *ngIf="comentarios.length === 0" class="text-muted">Nenhuma conversa ainda...</p>
       <hr />
       <p>Nova mensagem</p>
+      @if (isChamadoFechadoOuResolvido()) {
+      <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        Chamado fechado ou resolvido. Não é possível adicionar comentários.
+      </div>
+      } @else {
       <textarea
         [(ngModel)]="novoConteudo"
         class="rounded-2 border border-1 border-dark mb-3 p-2"
@@ -63,6 +66,7 @@
           class="form-control"
           (change)="onFileSelected($event)"
           accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
+          [disabled]="isChamadoFechadoOuResolvido()"
         />
         <div
           *ngIf="arquivoSelecionado"
@@ -77,22 +81,38 @@
       </div>
       <button
         (click)="enviarComentario()"
-        [disabled]="enviando || !novoConteudo.trim()"
+        [disabled]="enviando || !novoConteudo.trim() || isChamadoFechadoOuResolvido()"
         class="btn btn-outline-dark rounded-2 w-25 align-start mb-3"
       >
         {{ enviando ? 'Enviando...' : 'Enviar' }}
       </button>
+      }
     </div>
   </main>
   <aside class="d-flex flex-column flex-nowrap p-3 w-25">
     <div class="p-3 mb-3 rounded-2 border border-1" style="min-height: 160px">
       <p>Status</p>
-      <select class="rounded-2 border border-1 border-dark px-3">
-        <option value="1">Aberto</option>
-        <option value="2">Em andamento</option>
-        <option value="3">Resolvido</option>
-        <option value="4">Fechado</option>
+      <select
+        class="form-select rounded-2 border border-1 border-dark px-3"
+        [(ngModel)]="selectedStatus"
+        (change)="onStatusChange()"
+        [disabled]="!isAgente() || !chamado?.responsavel"
+      >
+        @for (st of getStatusesDisponiveis(); track st) {
+        <option [ngValue]="st">{{ st }}</option>
+        }
       </select>
+      @if (!isAgente()) {
+      <small class="text-muted">Somente agentes podem alterar o status</small>
+      } @if (isAgente() && !chamado?.responsavel) {
+      <button
+        class="btn btn-outline-success mt-3"
+        (click)="aceitarChamado()"
+        [disabled]="atribuindo"
+      >
+        {{ atribuindo ? 'Atribuindo...' : 'Aceitar' }}
+      </button>
+      }
     </div>
     <div class="p-3 mb-3 rounded-2 border border-1">
       <p class="fw-light"><strong>Detalhes</strong></p>

@@ -61,6 +61,7 @@ export class ChamadoService {
   }
 
   atualizarStatus(cdChamado: number, status: Status): Observable<Chamado> {
+    // Endpoint: PUT /api/v1/chamado/atualizar/status/:cdChamado?status=STATUS
     return this.http.put<Chamado>(
       `${this.baseUrl}/atualizar/status/${cdChamado}?status=${status}`,
       {}
@@ -68,9 +69,11 @@ export class ChamadoService {
   }
 
   fecharChamado(cdChamado: number, status: Status): Observable<Chamado> {
+    // Endpoint solicitado: PUT /api/v1/chamado/fechar/:cdChamado
+    // Envia { status } no corpo para garantir informação do novo status
     return this.http.put<Chamado>(
-      `${this.baseUrl}/fechar/${cdChamado}?status=${status}`,
-      {}
+      `${this.baseUrl}/fechar/${cdChamado}`,
+      { status }
     );
   }
 

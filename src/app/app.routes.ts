@@ -92,7 +92,7 @@ export const routes: Routes = [
     path: 'chamado/detalhes/:cdChamado',
     component: ChamadoComentarios,
     canActivate: [RoleGuard],
-    data: { roles: ['ROLE_USER','ROLE_AGENTE']},
+    data: { roles: ['ROLE_USER','ROLE_AGENTE','ROLE_ADMIN']},
   },
   {
     path: '**',
