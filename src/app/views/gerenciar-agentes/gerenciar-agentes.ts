@@ -168,7 +168,12 @@ export class GerenciarAgentes implements OnInit {
     }
   }
 
-  excluirAgente(agente: UsuarioResponse) {}
+  excluirAgente(agente: UsuarioResponse) {
+    if(confirm(`Tem certeza que deseja excluir o agente ${agente.nmUsuario}? Esta ação é irreversível.`)) {
+      this.usuarioService.excluir(agente.cdUsuario).subscribe();
+      window.location.reload();
+    }
+  }
 
   getIniciais(nome: string): string {
     if (!nome) return '';
