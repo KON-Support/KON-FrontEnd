@@ -193,7 +193,12 @@ export class GerenciarUsuarios implements OnInit {
     }
   }
 
-  excluirUsuario(usuario: UsuarioResponse) {}
+  excluirUsuario(usuario: UsuarioResponse) {
+    if(confirm(`Tem certeza que deseja excluir o usuário ${usuario.nmUsuario}? Esta ação é irreversível.`)) {
+      this.usuarioService.excluir(usuario.cdUsuario).subscribe();
+      window.location.reload();
+    }
+  }
 
   getIniciais(nome: string): string {
     if (!nome) return '';

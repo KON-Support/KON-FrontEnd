@@ -1,0 +1,95 @@
+<div class="register-wrapper">
+  <div class="register-card card">
+    <div class="card-body p-4">
+      <div class="header text-center mb-4">
+        <div class="logo-circle mx-auto mb-2">
+          <i class="bi bi-person-check-fill"></i>
+        </div>
+
+        <h1 class="h3 mb-1">Completar Cadastro</h1>
+        <p class="text-muted mb-0">Faltam poucos dados para ativar sua conta</p>
+      </div>
+
+      <div *ngIf="sucesso" class="alert alert-success d-flex align-items-center">
+        <i class="bi bi-check-circle me-2"></i>
+        Cadastro completado com sucesso. Redirecionando...
+      </div>
+
+      <div *ngIf="erro" class="alert alert-danger d-flex align-items-center">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        {{ erro }}
+      </div>
+
+      <div class="user-info-section bg-light rounded p-3 mb-3">
+        <div class="info-item mb-2">
+          <label class="small text-muted mb-1">Nome</label>
+          <div class="info-value p-2 bg-white rounded border">{{ userData.nome }}</div>
+        </div>
+        <div class="info-item">
+          <label class="small text-muted mb-1">E-mail</label>
+          <div class="info-value p-2 bg-white rounded border">{{ userData.email }}</div>
+        </div>
+      </div>
+
+      <form [formGroup]="formulario" (ngSubmit)="submeter()" class="d-flex flex-column gap-3">
+        <div class="form-group">
+          <label class="form-label">Número de funcionários</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [class.is-invalid]="formulario.get('nuFuncionario')?.invalid && formulario.get('nuFuncionario')?.touched"
+            placeholder="Ex: 150" 
+            formControlName="nuFuncionario"
+            (input)="apenasNumeros($event)"
+            [disabled]="enviando || sucesso"
+            maxlength="8"
+          />
+
+          <div class="form-text">
+            Informe quantos funcionários sua empresa possui (1 a 10.000.000)
+          </div>
+
+          <div class="invalid-feedback">
+            <div *ngIf="formulario.get('nuFuncionario')?.errors?.['required'] && formulario.get('nuFuncionario')?.touched">
+              Número de funcionários é obrigatório
+            </div>
+            <div *ngIf="formulario.get('nuFuncionario')?.errors?.['pattern'] && formulario.get('nuFuncionario')?.touched">
+              Apenas números são permitidos
+            </div>
+            <div *ngIf="formulario.get('nuFuncionario')?.errors?.['min'] && formulario.get('nuFuncionario')?.touched">
+              Mínimo de 1 funcionário
+            </div>
+            <div *ngIf="formulario.get('nuFuncionario')?.errors?.['max'] && formulario.get('nuFuncionario')?.touched">
+              Máximo de 10.000.000 funcionários
+            </div>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn btn-primary w-100" 
+          [disabled]="formulario.invalid || enviando || sucesso"
+        >
+          <ng-container *ngIf="enviando; else normal">
+            <span class="spinner-border spinner-border-sm me-2"></span> Processando...
+          </ng-container>
+          <ng-template #normal>
+            <ng-container *ngIf="!sucesso; else success">
+              Completar Cadastro
+            </ng-container>
+          </ng-template>
+          <ng-template #success>
+            <i class="bi bi-check-circle me-2"></i>Sucesso!
+          </ng-template>
+        </button>
+
+        <div class="info-box bg-light rounded p-3 mt-2">
+          <p class="small text-muted mb-0">
+            <strong>Por que precisamos disso?</strong><br>
+            O número de funcionários é necessário para personalizar sua experiência no sistema.
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

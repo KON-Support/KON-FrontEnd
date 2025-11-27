@@ -15,6 +15,6 @@ export class App {
 
   get showMainContent(): boolean {
     const url = this.router.url || '';
-    return !(url.startsWith('/login') || url.startsWith('/cadastro'));
+    return !(url.startsWith('/login') || url.startsWith('/cadastro') || url.startsWith('/oauth2-redirect') || url.startsWith('/completar-cadastro'));
   }
 }
