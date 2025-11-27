@@ -25,6 +25,7 @@ export interface UsuarioResponse {
 @Injectable({
   providedIn: 'root',
 })
+
 export class UsuarioService {
   private http = inject(HttpClient);
   private baseUrl = 'http://localhost:8089/api/usuario';
@@ -48,4 +49,9 @@ export class UsuarioService {
   atualizar(cdUsuario: number, dto: Partial<UsuarioRequest>): Observable<UsuarioResponse> {
     return this.http.put<UsuarioResponse>(`${this.baseUrl}/atualizar/${cdUsuario}`, dto);
   }
+
+  excluir(cdUsuario: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/deletar/${cdUsuario}`, {});
+  }
+
 }
