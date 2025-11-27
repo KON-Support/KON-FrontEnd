@@ -1,52 +1,52 @@
 <div class="row g-3 mb-4">
-  <div class="col-md-3">
+  <div class="col-6 col-md-3">
     <div class="stat-card stat-open">
-      <div class="stat-icon">
+      <div class="stat-icon d-none d-sm-flex">
         <i class="bi bi-circle-fill"></i>
       </div>
       <div class="stat-content">
         <h2 class="stat-number">{{ qtdChamados }}</h2>
         <p class="stat-label">Chamados Abertos</p>
-        <small class="stat-detail text-muted">Em atendimento</small>
+        <small class="stat-detail text-muted d-none d-md-block">Em atendimento</small>
       </div>
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-6 col-md-3">
     <div class="stat-card stat-critical">
-      <div class="stat-icon">
+      <div class="stat-icon d-none d-sm-flex">
         <i class="bi bi-exclamation-circle-fill"></i>
       </div>
       <div class="stat-content">
         <h2 class="stat-number">0</h2>
         <p class="stat-label">Críticos</p>
-        <small class="stat-detail text-muted">Alta prioridade</small>
+        <small class="stat-detail text-muted d-none d-md-block">Alta prioridade</small>
       </div>
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-6 col-md-3">
     <div class="stat-card stat-sla">
-      <div class="stat-icon">
+      <div class="stat-icon d-none d-sm-flex">
         <i class="bi bi-exclamation-triangle-fill"></i>
       </div>
       <div class="stat-content">
         <h2 class="stat-number">{{ qtdSlaVencido }}</h2>
         <p class="stat-label">SLA Vencido</p>
-        <small class="stat-detail text-muted">Requer atenção</small>
+        <small class="stat-detail text-muted d-none d-md-block">Requer atenção</small>
       </div>
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-6 col-md-3">
     <div class="stat-card stat-resolved">
-      <div class="stat-icon">
+      <div class="stat-icon d-none d-sm-flex">
         <i class="bi bi-check-circle-fill"></i>
       </div>
       <div class="stat-content">
         <h2 class="stat-number">{{ qtdResolvidosHoje }}</h2>
         <p class="stat-label">Resolvidos Hoje</p>
-        <small class="stat-detail text-muted">Chamados fechados</small>
+        <small class="stat-detail text-muted d-none d-md-block">Chamados fechados</small>
       </div>
     </div>
   </div>

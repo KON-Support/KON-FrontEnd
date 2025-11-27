@@ -15,6 +15,15 @@ export class Navbar {
   private router = inject(Router);
 
   protected usuario = this.authService.currentUser();
+  sidebarOpen = false;
+
+  toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  closeSidebar(): void {
+    this.sidebarOpen = false;
+  }
   
   get user() {
     const u = this.authService.currentUser();

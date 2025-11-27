@@ -1,16 +1,16 @@
 <app-navbar></app-navbar>
 
-<div class="mx-5 p-3">
+<div class="container-fluid px-3 px-md-4 px-lg-5 py-4 py-lg-5 main-content-area">
 
     <div class="row">
-        <div class="row mt-5">
+        <div class="row mt-3 mt-lg-5">
             <div class="d-flex align-items-start">
                 <a routerLink="/user/dashboard" class="btn btn-link text-muted p-0 me-3">
                     <i class="bi bi-arrow-left fs-5"></i>
                 </a>
-                <div class="ms-4">
-                    <h3 class="mb-0">Novo Chamado</h3>
-                    <h5 class="text-muted">Preencha as informações para abrir um novo chamado</h5>
+                <div class="ms-2 ms-md-4">
+                    <h3 class="mb-0 fs-4 fs-md-3">Novo Chamado</h3>
+                    <h5 class="text-muted fs-6">Preencha as informações para abrir um novo chamado</h5>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
     </div>
 
     @if (errorMessage()) {
-    <div class="alert alert-danger alert-dismissible fade show mx-5" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="bi bi-exclamation-triangle me-2"></i>
         {{ errorMessage() }}
         <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
@@ -27,14 +27,14 @@
     }
 
     @if (successMessage()) {
-    <div class="alert alert-success mx-5" role="alert">
+    <div class="alert alert-success" role="alert">
         <i class="bi bi-check-circle me-2"></i>
         {{ successMessage() }}
     </div>
     }
 
-    <div class="row ms-5 me-5">
-        <div class="col-lg-8">
+    <div class="row g-4">
+        <div class="col-12 col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -120,12 +120,12 @@
                             </small>
                         </div>
 
-                        <div class="d-flex justify-content-end gap-3 pt-3 border-top">
-                            <a routerLink="/user/dashboard" class="btn btn-outline-secondary">
+                        <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 gap-sm-3 pt-3 border-top">
+                            <a routerLink="/user/dashboard" class="btn btn-outline-secondary order-2 order-sm-1">
                                 <i class="bi bi-x-lg me-2"></i>
                                 Cancelar
                             </a>
-                            <button type="submit" class="btn btn-primary" [disabled]="loading() || form.invalid">
+                            <button type="submit" class="btn btn-primary order-1 order-sm-2" [disabled]="loading() || form.invalid">
                                 @if (loading()) {
                                 <span class="spinner-border spinner-border-sm me-2" role="status"></span>
                                 Criando...
@@ -141,9 +141,9 @@
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4">
             <div class="card border-0 bg-light">
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <h6 class="fw-bold mb-3">
                         <i class="bi bi-lightbulb text-warning me-2"></i>
                         Dicas para um bom chamado
@@ -174,7 +174,7 @@
             </div>
 
             <div class="card border-0 bg-primary-subtle mt-3">
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <h6 class="fw-bold mb-2">
                         <i class="bi bi-clock text-primary me-2"></i>
                         Tempo de resposta

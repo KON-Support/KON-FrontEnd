@@ -24,14 +24,30 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991.98px) {
+    .dashboard-container {
+        padding: 1.5rem;
+    }
+
+    .header-section {
+        h3 {
+            font-size: 1.5rem;
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
     .dashboard-container {
         padding: 1rem;
     }
 
     .header-section {
         h3 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
+        }
+        
+        h5 {
+            font-size: 0.875rem;
         }
     }
 }

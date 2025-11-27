@@ -1,0 +1,53 @@
+
+.header-section {
+    h3 {
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.avatar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .card-body {
+        .d-flex.gap-3 {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .avatar {
+            margin: 0 auto;
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    h3 {
+        font-size: 1.25rem;
+    }
+    
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.4rem;
+    }
+}

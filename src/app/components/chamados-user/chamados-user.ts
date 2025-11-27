@@ -118,6 +118,6 @@ export class ChamadosUser implements OnInit {
   }
 
   abrirNovoChamado(): void {
-    this.router.navigate(['/novo-chamado']);
+    this.router.navigate(['/novo-chamado-user']);
   }
 }
