@@ -1,4 +1,12 @@
-import { asNativeElements, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +18,6 @@ import { ComentarioService } from '../../services/comentario-service';
 import { UsuarioService } from '../../services/usuario-service';
 import { Usuario } from '../../shared/models/Usuario';
 import { Status } from '../../shared/models/Status';
-import { Anexo } from '../../shared/models/Anexo';
 import { AuthService } from '../../services/auth-service';
 
 @Component({
@@ -19,18 +26,22 @@ import { AuthService } from '../../services/auth-service';
   templateUrl: './chamado-detalhes.html',
   styleUrl: './chamado-detalhes.scss',
 })
-export class ChamadoDetalhes implements OnInit {
+export class ChamadoDetalhes implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private chamadoService = inject(ChamadoService);
   private comentarioService = inject(ComentarioService);
+  private usuarioService = inject(UsuarioService);
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
+
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
 
   protected chamado: Chamado | null = null;
   protected usuario: Usuario | null = null;
   protected novoConteudo = '';
   protected comentarios: Comentario[] = [];
   protected todosStatus = Object.values(Status);
+  private pollingInterval: any;
 
   protected formatarStatus(status: string): string {
     return status.replace(/_/g, ' ');
@@ -41,8 +52,13 @@ export class ChamadoDetalhes implements OnInit {
 
     this.comentarioService.comentarios(this.chamado.cdChamado).subscribe({
       next: (response) => {
+        const novosComentarios = response.length > this.comentarios.length;
         this.comentarios = response;
         this.cdr.detectChanges();
+
+        if (novosComentarios) {
+          this.chatNoFinal();
+        }
       },
       error: (err) => {
         console.error('Erro ao recarregar comentários', err);
@@ -51,7 +67,13 @@ export class ChamadoDetalhes implements OnInit {
     });
   }
 
-  chat: any;
+  chatNoFinal(): void {
+    try {
+      setTimeout(() => {
+        this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+      }, 100);
+    } catch (err) {}
+  }
 
   ngOnInit(): void {
     const cdChamado = Number(this.route.snapshot.params['cdChamado']);
@@ -65,9 +87,8 @@ export class ChamadoDetalhes implements OnInit {
         this.chamado = response;
         this.cdr.detectChanges();
         this.recarregarComentarios();
-        this.chat.DeixarNoFinal = this.chat.nativeElement.clientHeight;
 
-        setInterval(() => {
+        this.pollingInterval = setInterval(() => {
           this.recarregarComentarios();
         }, 5000);
       },
@@ -76,7 +97,13 @@ export class ChamadoDetalhes implements OnInit {
         this.cdr.detectChanges();
       },
     });
-    this.getUsuarioLogadoRole();
+    this.isAgente();
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   }
 
   getComentarioNomeUsuario(comentario: Comentario): string {
@@ -135,13 +162,11 @@ export class ChamadoDetalhes implements OnInit {
     }
 
     const usuario = this.authService.currentUser();
-    const token = this.authService.getToken();
 
     const formData = new FormData();
     formData.append('cdChamado', String(this.chamado.cdChamado));
     formData.append('cdUsuario', usuario?.cdUsuario ? String(usuario.cdUsuario) : '');
     formData.append('dsConteudo', this.novoConteudo);
-    formData.append('token', token || '');
 
     if (this.novoAnexo) {
       formData.append('anexo', this.novoAnexo, this.novoAnexo.name);
@@ -155,7 +180,7 @@ export class ChamadoDetalhes implements OnInit {
     });
   }
 
-  getUsuarioLogadoRole(): Boolean {
+  isAgente(): Boolean {
     return this.authService.hasRole('ROLE_AGENTE');
   }
 
