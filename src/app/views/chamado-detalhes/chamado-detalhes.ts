@@ -8,7 +8,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Navbar } from '../../components/navbar/navbar';
 import { ChamadoService } from '../../services/chamado-service';
@@ -28,6 +28,7 @@ import { AuthService } from '../../services/auth-service';
 })
 export class ChamadoDetalhes implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private chamadoService = inject(ChamadoService);
   private comentarioService = inject(ComentarioService);
   private usuarioService = inject(UsuarioService);
@@ -86,6 +87,18 @@ export class ChamadoDetalhes implements OnInit, OnDestroy {
       next: (response) => {
         this.chamado = response;
         this.cdr.detectChanges();
+
+        const currentUser = this.authService.currentUser();
+        const isAdmin = this.authService.isAdmin();
+        const isAgente = this.authService.isAgente();
+
+        if (!isAdmin && !isAgente) {
+          if (this.chamado.solicitante?.cdUsuario !== currentUser?.cdUsuario) {
+            this.router.navigate(['/user/dashboard']);
+            return;
+          }
+        }
+
         this.recarregarComentarios();
 
         this.pollingInterval = setInterval(() => {
@@ -94,6 +107,7 @@ export class ChamadoDetalhes implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Erro ao carregar detalhes do chamado', err);
+        this.router.navigate(['/user/dashboard']);
         this.cdr.detectChanges();
       },
     });
