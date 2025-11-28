@@ -10,14 +10,13 @@
       </div>
       <div class="chamado-indicators">
         @if (isSlaViolado()) {
-          <span class="badge bg-danger" title="SLA Violado">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-          </span>
-        }
-        @if (hasAnexo()) {
-          <span class="badge bg-secondary ms-1" title="Possui anexo">
-            <i class="bi bi-paperclip"></i>
-          </span>
+        <span class="badge bg-danger" title="SLA Violado">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+        </span>
+        } @if (hasAnexo()) {
+        <span class="badge bg-secondary ms-1" title="Possui anexo">
+          <i class="bi bi-paperclip"></i>
+        </span>
         }
       </div>
     </div>
@@ -26,44 +25,46 @@
     <p class="card-description text-muted mb-3">{{ chamado().dsDescricao }}</p>
 
     @if (chamado().categoria) {
-      <div class="mb-3">
-        <span class="badge bg-light text-dark">
-          <i class="bi bi-tag me-1"></i>
-          {{ chamado().categoria.nmCategoria }}
-        </span>
-      </div>
+    <div class="mb-3">
+      <span class="badge bg-light text-dark">
+        <i class="bi bi-tag me-1"></i>
+        {{ chamado().categoria?.nmCategoria }}
+      </span>
+    </div>
     }
 
     <div class="users-info mb-3">
       <div class="user-row d-flex align-items-center mb-2">
         <i class="bi bi-person text-muted me-2"></i>
         <small class="text-muted me-1">Solicitante:</small>
-        <small class="fw-medium">{{ chamado().solicitante.nmUsuario || 'Não informado' }}</small>
+        <small class="fw-medium">{{ chamado().solicitante?.nmUsuario || 'Não informado' }}</small>
       </div>
       <div class="user-row d-flex align-items-center">
         <i class="bi bi-person-gear text-muted me-2"></i>
         <small class="text-muted me-1">Responsável:</small>
-        <small class="fw-medium">{{ chamado().responsavel.nmUsuario || 'Não atribuído' }}</small>
+        <small class="fw-medium">{{ chamado().responsavel?.nmUsuario || 'Não atribuído' }}</small>
       </div>
     </div>
 
-    <div class="card-footer-custom d-flex justify-content-between align-items-center pt-3 border-top">
+    <div
+      class="card-footer-custom d-flex justify-content-between align-items-center pt-3 border-top"
+    >
       <div class="date-info">
         <small class="text-muted">
           <i class="bi bi-calendar3 me-1"></i>
           {{ formatDate(chamado().dtCriacao) }}
           @if (chamado().hrCriacao) {
-            <span class="ms-1">{{ formatTime(chamado().hrCriacao) }}</span>
+          <span class="ms-1">{{ formatTime(chamado().hrCriacao) }}</span>
           }
         </small>
       </div>
       @if (chamado().dtVencimento) {
-        <div class="sla-info">
-          <small [ngClass]="isSlaViolado() ? 'text-danger' : 'text-warning'">
-            <i class="bi bi-clock me-1"></i>
-            Vence: {{ formatDate(chamado().dtVencimento) }}
-          </small>
-        </div>
+      <div class="sla-info">
+        <small [ngClass]="isSlaViolado() ? 'text-danger' : 'text-warning'">
+          <i class="bi bi-clock me-1"></i>
+          Vence: {{ formatDate(chamado().dtVencimento) }}
+        </small>
+      </div>
       }
     </div>
   </div>

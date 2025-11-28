@@ -1,6 +1,6 @@
-import { Anexo } from "./Anexo";
-import { Chamado } from "./Chamado";
-import { Usuario } from "./Usuario";
+import { Anexo } from './Anexo';
+import { Chamado } from './Chamado';
+import { Usuario } from './Usuario';
 
 export class Comentario {
   constructor(
@@ -10,6 +10,8 @@ export class Comentario {
     public usuario: Usuario,
 
     public anexo: Anexo | null,
+
+    public cdAnexo: number | null,
 
     public dsConteudo: string,
 
