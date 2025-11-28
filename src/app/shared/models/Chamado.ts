@@ -13,12 +13,12 @@ export class Chamado {
 
     public status: Status,
 
-    public solicitante: Usuario,
-    public responsavel: Usuario,
+    public solicitante: Usuario | null,
+    public responsavel: Usuario | null,
 
     public anexo: Anexo | null,
 
-    public categoria: Categoria,
+    public categoria: Categoria | null,
 
     public sla: SLA | null,
 

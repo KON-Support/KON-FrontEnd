@@ -12,13 +12,12 @@ import { GerenciarAgentes } from './views/gerenciar-agentes/gerenciar-agentes';
 import { AdminDashboard } from './views/admin-dashboard/admin-dashboard';
 import { MeusChamadosView } from './views/meus-chamados-view/meus-chamados-view';
 import { NovoChamadoUser } from './components/novo-chamado-user/novo-chamado-user';
-import { ChamadoComentarios } from './views/chamado-comentarios/chamado-comentarios';
 import { GerenciarUsuarios } from './views/gerenciar-usuarios/gerenciar-usuarios';
 import { OAuth2RedirectComponent } from './components/oauth2-redirect/oauth2-redirect';
 import { CompletarCadastro } from './components/completar-cadastro/completar-cadastro';
+import { ChamadoDetalhes } from './views/chamado-detalhes/chamado-detalhes';
 
 export const routes: Routes = [
-  
   {
     path: '',
     redirectTo: '/login',
@@ -37,8 +36,8 @@ export const routes: Routes = [
     component: OAuth2RedirectComponent,
   },
   {
-    path: 'completar-cadastro', 
-    component: CompletarCadastro
+    path: 'completar-cadastro',
+    component: CompletarCadastro,
   },
 
   {
@@ -109,7 +108,7 @@ export const routes: Routes = [
   },
   {
     path: 'chamado/detalhes/:cdChamado',
-    component: ChamadoComentarios,
+    component: ChamadoDetalhes,
     canActivate: [RoleGuard],
     data: { roles: ['ROLE_USER', 'ROLE_AGENTE', 'ROLE_ADMIN'] },
   },
@@ -117,5 +116,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: '/login',
   },
-  
 ];

@@ -7,14 +7,14 @@ import { Comentario } from '../shared/models/Comentario';
   providedIn: 'root',
 })
 export class ComentarioService {
-   private http = inject(HttpClient);
+  private http = inject(HttpClient);
   private baseUrl = 'http://localhost:8089/api/v1/comentario';
 
-  Comentarios(cdChamado : number):Observable<Comentario[]>{
+  comentarios(cdChamado?: number) {
     return this.http.get<Comentario[]>(`${this.baseUrl}/chamado/${cdChamado}`);
   }
-  
-  EnviarComentario(comentario: Comentario | FormData): Observable<Comentario> {
+
+  enviarComentario(comentario: Comentario | FormData): Observable<Comentario> {
     // Se for FormData (contém anexo), enviar para endpoint de criação com anexo
     if (comentario instanceof FormData) {
       return this.http.post<Comentario>(`${this.baseUrl}/criar-com-anexo`, comentario);
@@ -29,5 +29,4 @@ export class ComentarioService {
     const url = `http://localhost:8089/api/v1/anexo/baixar/${cdAnexo}`;
     return this.http.get(url, { responseType: 'blob' });
   }
-
 }
