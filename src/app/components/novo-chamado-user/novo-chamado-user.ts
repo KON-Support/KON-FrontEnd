@@ -115,11 +115,8 @@ export class NovoChamadoUser implements OnInit {
       anexo: this.arquivoSelecionado,
     };
 
-    console.log('📤 Enviando chamado:', payload);
-
     this.chamadoService.abrirChamado(payload).subscribe({
       next: (response) => {
-        console.log('Chamado criado com sucesso:', response);
         this.loading.set(false);
         this.successMessage.set('Chamado criado com sucesso!');
         setTimeout(() => {

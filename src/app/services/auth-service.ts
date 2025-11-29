@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap, catchError, throwError } from 'rxjs';
 import { Usuario } from '../shared/models/Usuario';
 import { Role } from '../shared/models/Role';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -21,45 +22,51 @@ export class AuthService {
   }
 
   login(email: string, senha: string): Observable<any> {
-    return this.http.post<any>('http://localhost:8089/api/auth/login', {
+    return this.http.post<any>(`${environment.apiUrl}/auth/login`, {
       dsEmail: email,
       dsSenha: senha,
     }).pipe(
       tap((response) => {
         if (response.token) {
           localStorage.setItem('token', response.token);
-          const usuario = this.normalizeUser(response.usuarioDTO || response.usuario);
+
+          const usuario = this.normalizeUser(
+            response.usuarioDTO || response.usuario
+          );
+
           localStorage.setItem('user', JSON.stringify(usuario));
+
           this.isAuthenticated.set(true);
           this.currentUser.set(usuario);
-          
-          setTimeout(() => {
-            this.redirectBasedOnRole();
-          }, 0);
+
+          setTimeout(() => this.redirectBasedOnRole(), 0);
         }
       }),
       catchError((error) => {
         if (error.status === 401) {
           return throwError(() => new Error('Email ou senha inválidos'));
         }
-        return throwError(() => new Error(error.error?.message || 'Erro ao fazer login'));
+        return throwError(
+          () => new Error(error.error?.message || 'Erro ao fazer login')
+        );
       })
     );
   }
 
-  
   private normalizeUser(userData: any): any {
     if (!userData) return userData;
 
     if (userData.roles && Array.isArray(userData.roles)) {
-      const roleModels: Role[] = userData.roles.map((roleString: string, index: number) => ({
-        cdRole: index + 1, 
-        nmRole: roleString
-      }));
+      const roleModels: Role[] = userData.roles.map(
+        (roleString: string, index: number) => ({
+          cdRole: index + 1,
+          nmRole: roleString,
+        })
+      );
 
       return {
         ...userData,
-        roleModel: roleModels
+        roleModel: roleModels,
       };
     }
 
@@ -101,10 +108,8 @@ export class AuthService {
 
   getUserRoles(): string[] {
     const user = this.currentUser();
-  
     if (!user || !user.roleModel) return [];
-    const roles = user.roleModel.map(role => role.nmRole);
-    return roles;
+    return user.roleModel.map((r) => r.nmRole);
   }
 
   getMainRole(): string | null {
@@ -113,34 +118,28 @@ export class AuthService {
   }
 
   hasRole(role: string): boolean {
-    const userRoles = this.getUserRoles();
-    return userRoles.includes(role);
+    return this.getUserRoles().includes(role);
   }
 
   hasAnyRole(roles: string[]): boolean {
     const userRoles = this.getUserRoles();
-    return userRoles.some(userRole => roles.includes(userRole));
+    return userRoles.some((r) => roles.includes(r));
   }
 
   redirectBasedOnRole(): void {
-    const mainRole = this.getMainRole();
-    
-    if (mainRole) {
-      switch(mainRole) {
-        case 'ROLE_ADMIN':
-          this.router.navigate(['/admin/dashboard']);
-          break;
-        case 'ROLE_AGENTE':
-          this.router.navigate(['/agente/dashboard']);
-          break;
-        case 'ROLE_USER':
-          this.router.navigate(['/user/dashboard']);
-          break;
-        default:
-          this.router.navigate(['/user/dashboard']); 
-      }
-    } else {
-      this.router.navigate(['/user/dashboard']);
+    const role = this.getMainRole();
+
+    switch (role) {
+      case 'ROLE_ADMIN':
+        this.router.navigate(['/admin/dashboard']);
+        break;
+      case 'ROLE_AGENTE':
+        this.router.navigate(['/agente/dashboard']);
+        break;
+      case 'ROLE_USER':
+      default:
+        this.router.navigate(['/user/dashboard']);
+        break;
     }
   }
 

@@ -3,8 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ChamadoService } from '../../services/chamado-service';
+import { AuthService } from '../../services/auth-service';
 import { Chamado } from '../../shared/models/Chamado';
 import { CardChamado } from '../card-chamado/card-chamado';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chamados-nao-atribuidos',
@@ -15,6 +18,7 @@ import { CardChamado } from '../card-chamado/card-chamado';
 })
 export class ChamadosNaoAtribuidos implements OnInit {
   private chamadoService = inject(ChamadoService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
@@ -25,24 +29,45 @@ export class ChamadosNaoAtribuidos implements OnInit {
   protected filtroStatus: string = '';
 
   ngOnInit(): void {
-    console.log('ChamadosNaoAtribuidos - Componente inicializado');
     this.carregarChamadosNaoAtribuidos();
   }
 
   private carregarChamadosNaoAtribuidos(): void {
-    console.log('Carregando chamados não atribuídos');
     this.loading.set(true);
 
-    this.chamadoService.buscarChamados().subscribe({
+    const user = this.authService.currentUser();
+    if (!user) {
+      this.loading.set(false);
+      return;
+    }
+
+    let chamadosObservable: Observable<Chamado[]>;
+
+    if (this.authService.isAdmin() || this.authService.isAgente()) {
+      // ADMIN e AGENTE: podem ver chamados não atribuídos
+      chamadosObservable = this.chamadoService.buscarNaoAtribuidos();
+    } else {
+      // USER: não tem acesso
+      chamadosObservable = of([]);
+    }
+
+    chamadosObservable.pipe(
+      catchError((err) => {
+        // Se for 403, significa que não tem permissão - retorna array vazio
+        if (err.status === 403) {
+          return of([]);
+        }
+        throw err;
+      })
+    ).subscribe({
       next: (response) => {
-        const chamados = response.filter((chamado) => !chamado.responsavel);
-        console.log('Chamados não atribuídos carregados:', chamados.length);
-        this.chamadosNaoAtribuidos.set(chamados);
+        this.chamadosNaoAtribuidos.set(response);
         this.loading.set(false);
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erro ao carregar chamados não atribuídos:', err);
+        this.chamadosNaoAtribuidos.set([]);
         this.loading.set(false);
         this.cdr.detectChanges();
       },
@@ -70,7 +95,6 @@ export class ChamadosNaoAtribuidos implements OnInit {
   }
 
   onChamadoClick(chamado: Chamado): void {
-    console.log('Chamado clicado:', chamado.cdChamado);
     this.router.navigate(['/chamados', chamado.cdChamado]);
   }
 }

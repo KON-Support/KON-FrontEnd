@@ -28,7 +28,8 @@ export class OAuth2RedirectComponent implements OnInit {
                     params['token'],
                     params['userId'],
                     params['userName'],
-                    params['userEmail']
+                    params['userEmail'],
+                    params['userRoles'] || ''
                 );
             } else if (params['tempEmail'] && params['tempName']) {
                 this.message = 'Complete seu cadastro para continuar...';
