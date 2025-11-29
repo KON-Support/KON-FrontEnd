@@ -38,6 +38,10 @@ export class UsuarioService {
     return this.http.get<UsuarioResponse[]>(`${this.baseUrl}/buscar/todos`);
   }
 
+  buscarPorId(cdUsuario: number) {
+    return this.http.get<UsuarioResponse>(`${this.baseUrl}/buscar/${cdUsuario}`);
+  }
+
   desativar(cdUsuario: number): Observable<UsuarioResponse> {
     return this.http.put<UsuarioResponse>(`${this.baseUrl}/desativar/${cdUsuario}`, {});
   }
