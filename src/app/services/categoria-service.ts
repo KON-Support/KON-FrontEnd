@@ -2,26 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Categoria } from '../shared/models/Categoria';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class CategoriaService {
-  
+
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8089/api/v1/categoria';
+  private baseUrl = `${environment.apiUrl}/v1/categoria`;
 
   listarCategoriasAtivas(): Observable<Categoria[]> {
-    const url = `${this.baseUrl}/listar/ativas`;
-    console.log('Chamando URL:', url);
-    
-    return this.http.get<Categoria[]>(url).pipe(
-      tap(categorias => {
-        console.log('Resposta recebida:', categorias);
-        console.log('Quantidade de categorias:', categorias.length);
-      })
-    );
+    return this.http.get<Categoria[]>(`${this.baseUrl}/listar/ativas`);
   }
 
   listarTodasCategorias(): Observable<Categoria[]> {

@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Chamado } from '../shared/models/Chamado';
 import { Status } from '../shared/models/Status';
+import { environment } from '../environments/environment';
 
 export interface ChamadoRequest {
   dsTitulo: string;
@@ -21,7 +22,7 @@ export interface ChamadoRequest {
 
 export class ChamadoService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8089/api/v1/chamado';
+  private baseUrl = `${environment.apiUrl}/v1/chamado`;
 
   buscarChamados(): Observable<Chamado[]> {
     return this.http.get<Chamado[]>(`${this.baseUrl}/listar/todos`);

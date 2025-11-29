@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { OAuth2Service } from '../../services/oauth2-service';
+import { UsuarioService } from '../../services/usuario-service';
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, CommonModule],
@@ -19,6 +20,7 @@ export class Cadastro {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private oauth2Service = inject(OAuth2Service);
+  private usuarioService = inject(UsuarioService);
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
@@ -73,34 +75,22 @@ export class Cadastro {
 
     console.log('Enviando DTO:', dto);
 
-    fetch('http://localhost:8089/api/usuario/cadastro', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json'
+    this.usuarioService.cadastrar(dto).subscribe({
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/login']);
       },
-      body: JSON.stringify(dto)
-    })
-    .then(async res => {
-      this.loading = false;
-
-      
-      if(res.status === 500) {
+      error: (err) => {
+        this.loading = false;
         this.cdr.detectChanges();
-        this.error = 'E-mail já cadastrado.';
+        
+        if (err.status === 500 || err.status === 400) {
+          this.error = err.error?.message || 'E-mail já cadastrado.';
+        } else {
+          this.error = 'Erro ao cadastrar usuário. Tente novamente.';
+        }
+        console.error(err);
       }
-
-      if (!res.ok) {
-        const msg = await res.json().catch(() => ({ message: 'Erro desconhecido' }));
-        this.cdr.detectChanges();
-        return;
-      }
-
-      this.router.navigate(['/login']);
-    })
-    .catch(err => {
-      this.cdr.detectChanges();
-      this.loading = false;
-      console.error(err);
     });
   }
 

@@ -2,91 +2,141 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { environment } from '../environments/environment';
+import { AuthService } from './auth-service';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class OAuth2Service {
-    private readonly BACKEND_URL = 'http://localhost:8089';
+  
+  private readonly BACKEND_URL = environment.apiUrl.replace('/api', '');
 
-    constructor(
-        private router: Router,
-        private http: HttpClient
-    ) { }
+  constructor(
+    private router: Router, 
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
-    loginWithGoogle(): void {
-        window.location.href = `${this.BACKEND_URL}/oauth2/authorization/google`;
+  loginWithGoogle(): void {
+    // Redireciona para o endpoint de autorização OAuth2 do Spring Security
+    const oauthUrl = `${this.BACKEND_URL}/oauth2/authorization/google`;
+    
+    // Verifica se a URL está válida
+    if (!oauthUrl || oauthUrl === '/oauth2/authorization/google') {
+      console.error('ERRO: URL do OAuth2 está inválida!');
+      alert('Erro de configuração: URL do backend não encontrada. Verifique as configurações do ambiente.');
+      return;
+    }
+    
+    // Verifica se é uma URL válida
+    try {
+      new URL(oauthUrl);
+    } catch (error) {
+      console.error('ERRO: URL do OAuth2 não é uma URL válida:', oauthUrl);
+      alert('Erro: URL do backend está malformada. Verifique as configurações.');
+      return;
+    }
+    
+    // Tenta redirecionar
+    try {
+      window.location.href = oauthUrl;
+    } catch (error) {
+      console.error('Erro ao redirecionar para OAuth2:', error);
+      alert('Erro ao iniciar login com Google. Verifique o console para mais detalhes.');
+    }
+  }
+
+  handleOAuth2Callback(
+    token: string,
+    userId: string,
+    userName: string,
+    userEmail: string,
+    userRoles: string = ''
+  ): void {
+    // Se o backend retornou um token, significa que o cadastro está completo
+    // Não precisa verificar novamente, pode finalizar o login diretamente
+    localStorage.setItem('token', token);
+    
+    // Finaliza o login imediatamente já que o backend validou que o cadastro está completo
+    this.finalizarLogin(userId, userName, userEmail, userRoles);
+  }
+
+  verificarPerfilCompleto(userId: string): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/usuario/${userId}/profile-status`);
+  }
+
+  completarCadastroOAuth(
+    nome: string,
+    email: string,
+    nuFuncionario: string
+  ): Observable<any> {
+    const num = Number(nuFuncionario);
+
+    if (isNaN(num) || num < 1 || num > 10000000) {
+      return throwError(() => new Error('Número de funcionários inválido'));
     }
 
-    handleOAuth2Callback(token: string, userId: string, userName: string, userEmail: string): void {
-        localStorage.setItem('token', token);
-        localStorage.setItem('tempUserId', userId);
-        localStorage.setItem('tempUserName', userName);
-        localStorage.setItem('tempUserEmail', userEmail);
+    return this.http.post(`${environment.apiUrl}/oauth2/completar-cadastro`, {
+      email,
+      nome,
+      nuFuncionario: num,
+    });
+  }
 
-        this.verificarPerfilCompleto(userId).subscribe(
-            (response: any) => {
-                if (response.perfilCompleto) {
-                    this.finalizarLogin(userId, userName, userEmail);
-                } else {
-                    this.router.navigate(['/completar-cadastro']);
-                }
-            },
-            (error) => {
-                this.router.navigate(['/completar-cadastro']);
-            }
-        );
-    }
+  finalizarLogin(userId: string, userName: string, userEmail: string, userRoles: string = ''): void {
+    // Parse das roles recebidas (separadas por vírgula)
+    const rolesArray = userRoles ? userRoles.split(',').map(r => r.trim()) : ['ROLE_USER'];
+    
+    // Normaliza as roles para o formato esperado pelo AuthService
+    const roleModel = rolesArray.map((role, index) => ({
+      cdRole: index + 1,
+      nmRole: role
+    }));
 
-    verificarPerfilCompleto(userId: string): Observable<any> {
-        return this.http.get(`${this.BACKEND_URL}/api/usuario/${userId}/profile-status`);
-    }
+    const userData = {
+      cdUsuario: Number(userId),
+      nmUsuario: decodeURIComponent(userName),
+      dsEmail: decodeURIComponent(userEmail),
+      roleModel: roleModel,
+      roles: rolesArray // Adiciona roles no formato array também
+    };
 
-    completarCadastroOAuth(nome: string, email: string, nuFuncionario: string): Observable<any> {
-        const numeroFuncionarios = parseInt(nuFuncionario);
+    // Salva no localStorage
+    localStorage.setItem('user', JSON.stringify(userData));
+    
+    // Atualiza o AuthService para garantir que o interceptor funcione
+    (this.authService as any).currentUser.set(userData);
+    (this.authService as any).isAuthenticated.set(true);
+    
+    // Limpa dados temporários
+    localStorage.removeItem('tempUserId');
+    localStorage.removeItem('tempUserName');
+    localStorage.removeItem('tempUserEmail');
 
-        if (isNaN(numeroFuncionarios) || numeroFuncionarios < 1 || numeroFuncionarios > 10000000) {
-            return throwError(() => new Error('Número de funcionários inválido'));
-        }
+    // Redireciona baseado na role principal usando AuthService
+    setTimeout(() => this.authService.redirectBasedOnRole(), 0);
+  }
 
-        return this.http.post(`${this.BACKEND_URL}/api/oauth2/completar-cadastro`, {
-            email: email,
-            nome: nome,
-            nuFuncionario: numeroFuncionarios
-        });
-    }
+  handleOAuth2Error(error: string): void {
+    console.error('Erro OAuth2:', error);
 
-    finalizarLogin(userId: string, userName: string, userEmail: string): void {
-        const userData = {
-            cdUsuario: parseInt(userId),
-            nmUsuario: decodeURIComponent(userName),
-            dsEmail: decodeURIComponent(userEmail),
-            roleModel: [{ cdRole: 1, nmRole: 'ROLE_USER' }]
-        };
+    localStorage.removeItem('tempUserId');
+    localStorage.removeItem('tempUserName');
+    localStorage.removeItem('tempUserEmail');
 
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.removeItem('tempUserId');
-        localStorage.removeItem('tempUserName');
-        localStorage.removeItem('tempUserEmail');
+    alert('Erro ao fazer login com Google. Por favor, tente novamente.');
 
-        this.router.navigate(['/user/dashboard']);
-    }
+    this.router.navigate(['/login']);
+  }
 
-    handleOAuth2Error(error: string): void {
-        console.error('Erro OAuth2:', error);
-        localStorage.removeItem('tempUserId');
-        localStorage.removeItem('tempUserName');
-        localStorage.removeItem('tempUserEmail');
-        alert('Erro ao fazer login com Google. Por favor, tente novamente.');
-        this.router.navigate(['/login']);
-    }
-
-    logout(): void {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        localStorage.removeItem('tempUserId');
-        localStorage.removeItem('tempUserName');
-        localStorage.removeItem('tempUserEmail');
-        this.router.navigate(['/login']);
-    }
+  logout(): void {
+    // Usa o AuthService para garantir consistência
+    this.authService.logout();
+    
+    // Limpa dados temporários do OAuth2
+    localStorage.removeItem('tempUserId');
+    localStorage.removeItem('tempUserName');
+    localStorage.removeItem('tempUserEmail');
+  }
 }

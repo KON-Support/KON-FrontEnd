@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Plano } from '../shared/models/Plano';
+import { environment } from '../environments/environment';
 
 export interface UsuarioRequest {
   nmUsuario: string;
@@ -25,10 +26,9 @@ export interface UsuarioResponse {
 @Injectable({
   providedIn: 'root',
 })
-
 export class UsuarioService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8089/api/usuario';
+  private baseUrl = `${environment.apiUrl}/usuario`;
 
   cadastrar(dto: UsuarioRequest): Observable<UsuarioResponse> {
     return this.http.post<UsuarioResponse>(`${this.baseUrl}/cadastro`, dto);
@@ -51,8 +51,6 @@ export class UsuarioService {
   }
 
   excluir(cdUsuario: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/deletar/${cdUsuario}`, {});
+    return this.http.delete<void>(`${this.baseUrl}/deletar/${cdUsuario}`);
   }
-
-
 }

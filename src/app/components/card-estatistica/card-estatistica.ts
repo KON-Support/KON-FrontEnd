@@ -1,7 +1,10 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ChamadoService } from '../../services/chamado-service';
+import { AuthService } from '../../services/auth-service';
 import { Chamado } from '../../shared/models/Chamado';
 import { Status } from '../../shared/models/Status';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-card-estatistica',
@@ -11,6 +14,7 @@ import { Status } from '../../shared/models/Status';
 })
 export class CardEstatistica implements OnInit {
   private chamadoService = inject(ChamadoService);
+  private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 
   protected chamados: Chamado[] = [];
@@ -20,15 +24,44 @@ export class CardEstatistica implements OnInit {
   protected qtdCriticos: number = 0;
 
   ngOnInit(): void {
-    this.chamadoService.buscarChamados().subscribe((response) => {
-      this.chamados = response;
-      this.qtdChamados = this.chamados.filter(
-        (chamado) => chamado.status !== Status.FECHADO && chamado.status !== Status.RESOLVIDO
-      ).length;
-      this.qtdSlaVencido = this.chamados.filter((chamado) => chamado.flSlaViolado).length;
-      this.calcularResolvidosHoje();
-      this.cdr.detectChanges();
-      console.log(this.qtdResolvidosHoje);
+    this.carregarChamados();
+  }
+
+  private carregarChamados(): void {
+    const user = this.authService.currentUser();
+    if (!user) return;
+
+    let chamadosObservable: Observable<Chamado[]>;
+
+    if (this.authService.isAdmin()) {
+      // ADMIN: lista todos os chamados
+      chamadosObservable = this.chamadoService.buscarChamados();
+    } else if (this.authService.isAgente()) {
+      // AGENTE: lista apenas chamados atribuídos a ele
+      chamadosObservable = this.chamadoService.buscarPorResponsavel(user.cdUsuario).pipe(
+        catchError(() => of([]))
+      );
+    } else {
+      // USER: lista apenas seus próprios chamados
+      chamadosObservable = this.chamadoService.buscarPorSolicitante(user.cdUsuario);
+    }
+
+    chamadosObservable.subscribe({
+      next: (response) => {
+        this.chamados = response;
+        this.qtdChamados = this.chamados.filter(
+          (chamado) => chamado.status !== Status.FECHADO && chamado.status !== Status.RESOLVIDO
+        ).length;
+        this.qtdSlaVencido = this.chamados.filter((chamado) => chamado.flSlaViolado).length;
+        this.calcularResolvidosHoje();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        // Se for 403, significa que não tem permissão - apenas não carrega dados
+        if (err.status !== 403) {
+          console.error('Erro ao carregar estatísticas:', err);
+        }
+      }
     });
   }
 

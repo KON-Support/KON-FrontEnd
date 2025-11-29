@@ -79,11 +79,16 @@ export class CompletarCadastro implements OnInit {
                     if (token && usuario) {
                         localStorage.setItem('token', token);
                         
+                        // Extrai as roles do usuário retornado
+                        const rolesArray = usuario.roles || [];
+                        const rolesString = rolesArray.join(',');
+                        
                         setTimeout(() => {
                             this.oauth2Service.finalizarLogin(
                                 usuario.cdUsuario.toString(),
                                 usuario.nmUsuario,
-                                usuario.dsEmail
+                                usuario.dsEmail,
+                                rolesString
                             );
                         }, 1500);
                     } else {

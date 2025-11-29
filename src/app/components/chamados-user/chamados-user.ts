@@ -59,11 +59,8 @@ export class ChamadosUser implements OnInit {
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    console.log('🔍 Buscando chamados do usuário:', this.usuarioLogadoId);
-
     this.chamadoService.buscarPorSolicitante(this.usuarioLogadoId).subscribe({
       next: (response) => {
-        console.log('✅ Chamados recebidos:', response.length);
         this.chamados.set(response);
         this.loading.set(false);
         this.cdr.detectChanges();
