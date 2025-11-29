@@ -23,17 +23,14 @@ export class JwtInterceptor implements HttpInterceptor {
     const token = this.authService.getToken();
     const tokenFromStorage = localStorage.getItem('token');
 
-    // Clona a requisição e adiciona headers necessários
     let clonedRequest = request;
     const finalToken = token || tokenFromStorage;
 
     if (finalToken) {
-      // Para FormData, não define Content-Type (deixa o navegador definir com boundary)
       if (request.body instanceof FormData) {
         clonedRequest = request.clone({
           setHeaders: {
             Authorization: `Bearer ${finalToken}`,
-            // Não define Content-Type para FormData - o navegador faz isso automaticamente
           },
         });
       } else {
@@ -45,7 +42,6 @@ export class JwtInterceptor implements HttpInterceptor {
         });
       }
     } else {
-      // Mesmo sem token, garante que Content-Type está definido se necessário
       const contentType = request.headers.get('Content-Type');
       if (!contentType && request.body && typeof request.body === 'object' && !(request.body instanceof FormData)) {
         clonedRequest = request.clone({
@@ -58,8 +54,6 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(clonedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
-        // 401 = Não autenticado (token inválido ou ausente) - faz logout
-        // 403 = Autenticado mas sem permissão - apenas deixa o erro propagar
         if (error.status === 401) {
           this.authService.logout();
           this.router.navigate(['/login']);
@@ -69,4 +63,5 @@ export class JwtInterceptor implements HttpInterceptor {
       })
     );
   }
+  
 }
