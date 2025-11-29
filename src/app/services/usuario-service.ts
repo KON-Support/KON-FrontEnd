@@ -25,7 +25,6 @@ export interface UsuarioResponse {
 @Injectable({
   providedIn: 'root',
 })
-
 export class UsuarioService {
   private http = inject(HttpClient);
   private baseUrl = 'http://localhost:8089/api/usuario';
@@ -36,6 +35,10 @@ export class UsuarioService {
 
   buscarTodos(): Observable<UsuarioResponse[]> {
     return this.http.get<UsuarioResponse[]>(`${this.baseUrl}/buscar/todos`);
+  }
+
+  buscarPorId(cdUsuario: number) {
+    return this.http.get<UsuarioResponse>(`${this.baseUrl}/buscar/${cdUsuario}`);
   }
 
   desativar(cdUsuario: number): Observable<UsuarioResponse> {
@@ -53,6 +56,4 @@ export class UsuarioService {
   excluir(cdUsuario: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/deletar/${cdUsuario}`, {});
   }
-
-
 }

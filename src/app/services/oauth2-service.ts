@@ -1,92 +1,85 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { UsuarioService } from './usuario-service';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class OAuth2Service {
-    private readonly BACKEND_URL = 'http://localhost:8089';
+  private readonly BACKEND_URL = 'http://localhost:8089';
 
-    constructor(
-        private router: Router,
-        private http: HttpClient
-    ) { }
+  private usuarioService = inject(UsuarioService);
 
-    loginWithGoogle(): void {
-        window.location.href = `${this.BACKEND_URL}/oauth2/authorization/google`;
+  constructor(private router: Router, private http: HttpClient) {}
+
+  loginWithGoogle(): void {
+    window.location.href = `${this.BACKEND_URL}/oauth2/authorization/google`;
+  }
+
+  handleOAuth2Callback(token: string, userId: string, userName: string, userEmail: string): void {
+    localStorage.setItem('token', token);
+    localStorage.setItem('tempUserId', userId);
+    localStorage.setItem('tempUserName', userName);
+    localStorage.setItem('tempUserEmail', userEmail);
+
+    const cdUsuario = parseInt(userId);
+    this.usuarioService.buscarPorId(cdUsuario).subscribe({
+      next: () => {
+        this.finalizarLogin(userId, userName, userEmail);
+      },
+      error: () => {
+        this.router.navigate(['/completar-cadastro']);
+      },
+    });
+  }
+
+  completarCadastroOAuth(nome: string, email: string, nuFuncionario: string): Observable<any> {
+    const numeroFuncionarios = parseInt(nuFuncionario);
+
+    if (isNaN(numeroFuncionarios) || numeroFuncionarios < 1 || numeroFuncionarios > 10000000) {
+      return throwError(() => new Error('Número de funcionários inválido'));
     }
 
-    handleOAuth2Callback(token: string, userId: string, userName: string, userEmail: string): void {
-        localStorage.setItem('token', token);
-        localStorage.setItem('tempUserId', userId);
-        localStorage.setItem('tempUserName', userName);
-        localStorage.setItem('tempUserEmail', userEmail);
+    return this.http.post(`${this.BACKEND_URL}/api/oauth2/completar-cadastro`, {
+      email: email,
+      nome: nome,
+      nuFuncionario: numeroFuncionarios,
+    });
+  }
 
-        this.verificarPerfilCompleto(userId).subscribe(
-            (response: any) => {
-                if (response.perfilCompleto) {
-                    this.finalizarLogin(userId, userName, userEmail);
-                } else {
-                    this.router.navigate(['/completar-cadastro']);
-                }
-            },
-            (error) => {
-                this.router.navigate(['/completar-cadastro']);
-            }
-        );
-    }
+  finalizarLogin(userId: string, userName: string, userEmail: string): void {
+    const userData = {
+      cdUsuario: parseInt(userId),
+      nmUsuario: decodeURIComponent(userName),
+      dsEmail: decodeURIComponent(userEmail),
+      roleModel: [{ cdRole: 1, nmRole: 'ROLE_USER' }],
+    };
 
-    verificarPerfilCompleto(userId: string): Observable<any> {
-        return this.http.get(`${this.BACKEND_URL}/api/usuario/${userId}/profile-status`);
-    }
+    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.removeItem('tempUserId');
+    localStorage.removeItem('tempUserName');
+    localStorage.removeItem('tempUserEmail');
 
-    completarCadastroOAuth(nome: string, email: string, nuFuncionario: string): Observable<any> {
-        const numeroFuncionarios = parseInt(nuFuncionario);
+    this.router.navigate(['/user/dashboard']);
+  }
 
-        if (isNaN(numeroFuncionarios) || numeroFuncionarios < 1 || numeroFuncionarios > 10000000) {
-            return throwError(() => new Error('Número de funcionários inválido'));
-        }
+  handleOAuth2Error(error: string): void {
+    console.error('Erro OAuth2:', error);
+    localStorage.removeItem('tempUserId');
+    localStorage.removeItem('tempUserName');
+    localStorage.removeItem('tempUserEmail');
+    alert('Erro ao fazer login com Google. Por favor, tente novamente.');
+    this.router.navigate(['/login']);
+  }
 
-        return this.http.post(`${this.BACKEND_URL}/api/oauth2/completar-cadastro`, {
-            email: email,
-            nome: nome,
-            nuFuncionario: numeroFuncionarios
-        });
-    }
-
-    finalizarLogin(userId: string, userName: string, userEmail: string): void {
-        const userData = {
-            cdUsuario: parseInt(userId),
-            nmUsuario: decodeURIComponent(userName),
-            dsEmail: decodeURIComponent(userEmail),
-            roleModel: [{ cdRole: 1, nmRole: 'ROLE_USER' }]
-        };
-
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.removeItem('tempUserId');
-        localStorage.removeItem('tempUserName');
-        localStorage.removeItem('tempUserEmail');
-
-        this.router.navigate(['/user/dashboard']);
-    }
-
-    handleOAuth2Error(error: string): void {
-        console.error('Erro OAuth2:', error);
-        localStorage.removeItem('tempUserId');
-        localStorage.removeItem('tempUserName');
-        localStorage.removeItem('tempUserEmail');
-        alert('Erro ao fazer login com Google. Por favor, tente novamente.');
-        this.router.navigate(['/login']);
-    }
-
-    logout(): void {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        localStorage.removeItem('tempUserId');
-        localStorage.removeItem('tempUserName');
-        localStorage.removeItem('tempUserEmail');
-        this.router.navigate(['/login']);
-    }
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('tempUserId');
+    localStorage.removeItem('tempUserName');
+    localStorage.removeItem('tempUserEmail');
+    this.router.navigate(['/login']);
+  }
 }
