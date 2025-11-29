@@ -125,7 +125,8 @@
                                 <i class="bi bi-x-lg me-2"></i>
                                 Cancelar
                             </a>
-                            <button type="submit" class="btn btn-primary order-1 order-sm-2" [disabled]="loading() || form.invalid">
+                            <button type="submit" class="btn btn-primary order-1 order-sm-2"
+                                [disabled]="loading() || form.invalid">
                                 @if (loading()) {
                                 <span class="spinner-border spinner-border-sm me-2" role="status"></span>
                                 Criando...

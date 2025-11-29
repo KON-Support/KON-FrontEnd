@@ -60,6 +60,7 @@ export type PieChartOptions = {
   templateUrl: './relatorios.html',
   styleUrl: './relatorios.scss',
 })
+
 export class Relatorios implements OnInit {
   private chamadoService = inject(ChamadoService);
   private cdr = inject(ChangeDetectorRef);
@@ -68,7 +69,7 @@ export class Relatorios implements OnInit {
   public categoryChartOptions: Partial<ChartOptions> | any;
   public timelineChartOptions: Partial<ChartOptions> | any;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.initCharts();

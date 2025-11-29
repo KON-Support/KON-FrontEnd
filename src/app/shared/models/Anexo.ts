@@ -15,5 +15,5 @@ export class Anexo {
     public hrUpload: string,
 
     public arquivo: Uint8Array
-  ) {}
+  ) { }
 }

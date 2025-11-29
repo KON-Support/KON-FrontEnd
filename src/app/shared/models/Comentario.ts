@@ -17,5 +17,5 @@ export class Comentario {
 
     public hrCriacao: string,
     public dtCriacao: Date
-  ) {}
+  ) { }
 }

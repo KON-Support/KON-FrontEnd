@@ -7,10 +7,11 @@ import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
+
 export class ComentarioService {
   private http = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/v1/comentario`;
-  
+
   comentarios(cdChamado?: number) {
     return this.http.get<Comentario[]>(`${this.baseUrl}/chamado/${cdChamado}`);
   }
@@ -24,8 +25,8 @@ export class ComentarioService {
   }
 
   baixarAnexo(cdAnexo: number): Observable<Blob> {
-  return this.http.get(`${environment.apiUrl}/v1/anexo/baixar/${cdAnexo}`, {
-    responseType: 'blob'
-  });
+    return this.http.get(`${environment.apiUrl}/v1/anexo/baixar/${cdAnexo}`, {
+      responseType: 'blob'
+    });
   }
 }

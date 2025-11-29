@@ -12,5 +12,5 @@ export class SLA {
 
     public usuario: Usuario,
     public categoria: Categoria
-  ) {}
+  ) { }
 }

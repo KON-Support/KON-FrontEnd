@@ -32,5 +32,5 @@ export class Chamado {
     public hrVencimento: string | null,
 
     public flSlaViolado: boolean
-  ) {}
+  ) { }
 }

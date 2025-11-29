@@ -6,6 +6,7 @@ import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
+
 export class PlanoService {
   private http = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/plano`;

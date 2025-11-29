@@ -10,6 +10,7 @@ import { OAuth2Service } from '../../services/oauth2-service';
     templateUrl: 'oauth2-redirect.html',
     styleUrls: ['oauth2-redirect.scss'],
 })
+
 export class OAuth2RedirectComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);

@@ -12,6 +12,7 @@ import { AuthService } from './auth-service';
 import { Router } from '@angular/router';
 
 @Injectable()
+
 export class JwtInterceptor implements HttpInterceptor {
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -63,5 +64,5 @@ export class JwtInterceptor implements HttpInterceptor {
       })
     );
   }
-  
+
 }

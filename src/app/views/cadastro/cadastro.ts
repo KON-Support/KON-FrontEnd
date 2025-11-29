@@ -10,6 +10,7 @@ import { UsuarioService } from '../../services/usuario-service';
   templateUrl: './cadastro.html',
   styleUrls: ['./cadastro.scss']
 })
+
 export class Cadastro {
   registerForm: FormGroup;
   showPassword = false;
@@ -30,21 +31,21 @@ export class Cadastro {
       senha: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=]).{6,}$/)]],
       confirmarSenha: ['', Validators.required]
     },
-    { validators: this.validarSenha }
+      { validators: this.validarSenha }
     );
   }
 
   validarSenha(form: AbstractControl) {
     const password = form.get('senha');
     const confirmPassword = form.get('confirmarSenha');
-    
+
     if (password && confirmPassword) {
       if (password.value !== confirmPassword.value) {
         confirmPassword.setErrors({ passwordMismatch: true });
         return { passwordMismatch: true };
       } else {
-          confirmPassword.setErrors(null);
-        
+        confirmPassword.setErrors(null);
+
       }
     }
     return null;
@@ -70,7 +71,7 @@ export class Cadastro {
       dsSenha: this.registerForm.value.senha,
       nuFuncionario: this.registerForm.value.funcionarios,
       flAtivo: true,
-      roles: []  
+      roles: []
     };
 
     console.log('Enviando DTO:', dto);
@@ -83,7 +84,7 @@ export class Cadastro {
       error: (err) => {
         this.loading = false;
         this.cdr.detectChanges();
-        
+
         if (err.status === 500 || err.status === 400) {
           this.error = err.error?.message || 'E-mail já cadastrado.';
         } else {

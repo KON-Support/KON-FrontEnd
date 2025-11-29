@@ -12,6 +12,7 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './card-estatistica.html',
   styleUrl: './card-estatistica.scss',
 })
+
 export class CardEstatistica implements OnInit {
   private chamadoService = inject(ChamadoService);
   private authService = inject(AuthService);
@@ -34,15 +35,12 @@ export class CardEstatistica implements OnInit {
     let chamadosObservable: Observable<Chamado[]>;
 
     if (this.authService.isAdmin()) {
-      // ADMIN: lista todos os chamados
       chamadosObservable = this.chamadoService.buscarChamados();
     } else if (this.authService.isAgente()) {
-      // AGENTE: lista apenas chamados atribuídos a ele
       chamadosObservable = this.chamadoService.buscarPorResponsavel(user.cdUsuario).pipe(
         catchError(() => of([]))
       );
     } else {
-      // USER: lista apenas seus próprios chamados
       chamadosObservable = this.chamadoService.buscarPorSolicitante(user.cdUsuario);
     }
 
@@ -57,7 +55,6 @@ export class CardEstatistica implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        // Se for 403, significa que não tem permissão - apenas não carrega dados
         if (err.status !== 403) {
           console.error('Erro ao carregar estatísticas:', err);
         }

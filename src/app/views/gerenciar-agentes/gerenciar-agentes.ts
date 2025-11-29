@@ -10,6 +10,7 @@ import { UsuarioRequest, UsuarioResponse, UsuarioService } from '../../services/
   templateUrl: './gerenciar-agentes.html',
   styleUrl: './gerenciar-agentes.scss',
 })
+
 export class GerenciarAgentes implements OnInit {
   busca = '';
   agentes: UsuarioResponse[] = [];
@@ -26,7 +27,7 @@ export class GerenciarAgentes implements OnInit {
     roles: ['ROLE_AGENTE'],
   };
 
-  constructor(private usuarioService: UsuarioService, private cdRef: ChangeDetectorRef) {}
+  constructor(private usuarioService: UsuarioService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.carregarAgentes();
@@ -169,7 +170,7 @@ export class GerenciarAgentes implements OnInit {
   }
 
   excluirAgente(agente: UsuarioResponse) {
-    if(confirm(`Tem certeza que deseja excluir o agente ${agente.nmUsuario}? Esta ação é irreversível.`)) {
+    if (confirm(`Tem certeza que deseja excluir o agente ${agente.nmUsuario}? Esta ação é irreversível.`)) {
       this.usuarioService.excluir(agente.cdUsuario).subscribe();
       window.location.reload();
     }

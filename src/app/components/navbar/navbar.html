@@ -28,7 +28,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="sidebar-header d-flex d-lg-none">
     <div class="d-flex align-items-center">
       <div class="logo-icon me-2">
@@ -48,13 +48,8 @@
     <ul class="nav flex-column">
       <ng-container *ngIf="isAdmin">
         <li class="nav-item">
-          <a
-            routerLink="/admin/dashboard"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="nav-link"
-            (click)="closeSidebar()"
-          >
+          <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link" (click)="closeSidebar()">
             <i class="bi bi-grid-fill me-2"></i>
             Dashboard
           </a>
@@ -87,23 +82,16 @@
 
       <ng-container *ngIf="isAgente">
         <div class="px-3 mb-3">
-          <a
-            routerLink="/novo-chamado"
+          <a routerLink="/novo-chamado"
             class="btn btn-primary w-100 d-flex align-items-center justify-content-center py-2"
-            (click)="closeSidebar()"
-          >
+            (click)="closeSidebar()">
             <i class="bi bi-plus-lg me-2"></i>
             <span>Novo Chamado</span>
           </a>
         </div>
         <li class="nav-item">
-          <a
-            routerLink="/agente/dashboard"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="nav-link"
-            (click)="closeSidebar()"
-          >
+          <a routerLink="/agente/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link" (click)="closeSidebar()">
             <i class="bi bi-grid-fill me-2"></i>
             Dashboard
           </a>
@@ -118,23 +106,16 @@
 
       <ng-container *ngIf="isUser">
         <div class="px-3 mb-3">
-          <a
-            routerLink="/novo-chamado-user"
+          <a routerLink="/novo-chamado-user"
             class="btn btn-primary w-100 d-flex align-items-center justify-content-center py-2"
-            (click)="closeSidebar()"
-          >
+            (click)="closeSidebar()">
             <i class="bi bi-plus-lg me-2"></i>
             <span>Novo Chamado</span>
           </a>
         </div>
         <li class="nav-item">
-          <a
-            routerLink="/user/dashboard"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="nav-link"
-            (click)="closeSidebar()"
-          >
+          <a routerLink="/user/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link" (click)="closeSidebar()">
             <i class="bi bi-grid-fill me-2"></i>
             Dashboard
           </a>

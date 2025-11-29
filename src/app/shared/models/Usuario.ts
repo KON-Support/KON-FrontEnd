@@ -19,5 +19,5 @@ export class Usuario {
     public flAtivo: boolean,
 
     public roleModel: Role[]
-  ) {}
+  ) { }
 }

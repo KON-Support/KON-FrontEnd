@@ -12,6 +12,7 @@ import { PlanoService } from '../../services/plano-service';
   templateUrl: './gerenciar-usuarios.html',
   styleUrl: './gerenciar-usuarios.scss',
 })
+
 export class GerenciarUsuarios implements OnInit {
   busca = '';
   usuarios: UsuarioResponse[] = [];
@@ -33,7 +34,7 @@ export class GerenciarUsuarios implements OnInit {
     private usuarioService: UsuarioService,
     private planoService: PlanoService,
     private cdRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.carregarUsuarios();
@@ -194,7 +195,7 @@ export class GerenciarUsuarios implements OnInit {
   }
 
   excluirUsuario(usuario: UsuarioResponse) {
-    if(confirm(`Tem certeza que deseja excluir o usuário ${usuario.nmUsuario}? Esta ação é irreversível.`)) {
+    if (confirm(`Tem certeza que deseja excluir o usuário ${usuario.nmUsuario}? Esta ação é irreversível.`)) {
       this.usuarioService.excluir(usuario.cdUsuario).subscribe();
       window.location.reload();
     }

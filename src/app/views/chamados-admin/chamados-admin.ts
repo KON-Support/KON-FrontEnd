@@ -97,7 +97,6 @@ export class ChamadosAdmin implements OnInit {
 
   onChamadoClick(chamado: Chamado): void {
     console.log('Chamado clicado:', chamado.cdChamado);
-    // Implementar navegação para detalhes se necessário
   }
 
   abrirNovoChamado(): void {

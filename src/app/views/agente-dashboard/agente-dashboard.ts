@@ -10,4 +10,7 @@ import { Navbar } from '../../components/navbar/navbar';
   templateUrl: './agente-dashboard.html',
   styleUrl: './agente-dashboard.scss',
 })
-export class AgenteDashboard {}
+
+export class AgenteDashboard {
+
+}

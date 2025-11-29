@@ -27,6 +27,7 @@ interface AtividadeRecente {
   templateUrl: './user-dashboard.html',
   styleUrl: './user-dashboard.scss',
 })
+
 export class UserDashboard implements OnInit {
   private chamadoService = inject(ChamadoService);
   private authService = inject(AuthService);
@@ -197,7 +198,6 @@ export class UserDashboard implements OnInit {
   }
 
   protected verDetalhesChamado(chamado: Chamado): void {
-    // Implementar navegação para detalhes do chamado
     console.log('Ver detalhes:', chamado);
   }
 }

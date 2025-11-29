@@ -1,3 +1,3 @@
 export class Role {
-  constructor(public cdRole: number, public nmRole: string) {}
+  constructor(public cdRole: number, public nmRole: string) { }
 }

@@ -34,26 +34,22 @@
       <form [formGroup]="formulario" (ngSubmit)="submeter()" class="d-flex flex-column gap-3">
         <div class="form-group">
           <label class="form-label">Número de funcionários</label>
-          <input 
-            type="text" 
-            class="form-control" 
+          <input type="text" class="form-control"
             [class.is-invalid]="formulario.get('nuFuncionario')?.invalid && formulario.get('nuFuncionario')?.touched"
-            placeholder="Ex: 150" 
-            formControlName="nuFuncionario"
-            (input)="apenasNumeros($event)"
-            [disabled]="enviando || sucesso"
-            maxlength="8"
-          />
+            placeholder="Ex: 150" formControlName="nuFuncionario" (input)="apenasNumeros($event)"
+            [disabled]="enviando || sucesso" maxlength="8" />
 
           <div class="form-text">
             Informe quantos funcionários sua empresa possui (1 a 10.000.000)
           </div>
 
           <div class="invalid-feedback">
-            <div *ngIf="formulario.get('nuFuncionario')?.errors?.['required'] && formulario.get('nuFuncionario')?.touched">
+            <div
+              *ngIf="formulario.get('nuFuncionario')?.errors?.['required'] && formulario.get('nuFuncionario')?.touched">
               Número de funcionários é obrigatório
             </div>
-            <div *ngIf="formulario.get('nuFuncionario')?.errors?.['pattern'] && formulario.get('nuFuncionario')?.touched">
+            <div
+              *ngIf="formulario.get('nuFuncionario')?.errors?.['pattern'] && formulario.get('nuFuncionario')?.touched">
               Apenas números são permitidos
             </div>
             <div *ngIf="formulario.get('nuFuncionario')?.errors?.['min'] && formulario.get('nuFuncionario')?.touched">
@@ -65,11 +61,7 @@
           </div>
         </div>
 
-        <button 
-          type="submit" 
-          class="btn btn-primary w-100" 
-          [disabled]="formulario.invalid || enviando || sucesso"
-        >
+        <button type="submit" class="btn btn-primary w-100" [disabled]="formulario.invalid || enviando || sucesso">
           <ng-container *ngIf="enviando; else normal">
             <span class="spinner-border spinner-border-sm me-2"></span> Processando...
           </ng-container>

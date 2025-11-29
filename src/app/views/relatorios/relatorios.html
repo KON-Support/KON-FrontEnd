@@ -3,25 +3,18 @@
 <div class="px-5 py-5">
   <h2 class="mb-4">Relatórios e Estatísticas</h2>
 
-  <div
-    class="row"
-    *ngIf="
+  <div class="row" *ngIf="
       statusChartOptions.series.length > 0 ||
       categoryChartOptions.series.length > 0 ||
       timelineChartOptions.series.length > 0
-    "
-  >
+    ">
     <div class="col-md-6 col-lg-4 mb-4">
       <div class="card shadow-sm h-100">
         <div class="card-body">
           <h5 class="card-title">Chamados por Status</h5>
           <div id="chart-status">
-            <apx-chart
-              [series]="statusChartOptions.series"
-              [chart]="statusChartOptions.chart"
-              [labels]="statusChartOptions.labels"
-              [responsive]="statusChartOptions.responsive"
-            ></apx-chart>
+            <apx-chart [series]="statusChartOptions.series" [chart]="statusChartOptions.chart"
+              [labels]="statusChartOptions.labels" [responsive]="statusChartOptions.responsive"></apx-chart>
           </div>
         </div>
       </div>
@@ -32,17 +25,11 @@
         <div class="card-body">
           <h5 class="card-title">Chamados por Categoria</h5>
           <div id="chart-category">
-            <apx-chart
-              [series]="categoryChartOptions.series"
-              [chart]="categoryChartOptions.chart"
-              [dataLabels]="categoryChartOptions.dataLabels"
-              [plotOptions]="categoryChartOptions.plotOptions"
-              [xaxis]="categoryChartOptions.xaxis"
-              [yaxis]="categoryChartOptions.yaxis"
-              [fill]="categoryChartOptions.fill"
-              [tooltip]="categoryChartOptions.tooltip"
-              [stroke]="categoryChartOptions.stroke"
-            ></apx-chart>
+            <apx-chart [series]="categoryChartOptions.series" [chart]="categoryChartOptions.chart"
+              [dataLabels]="categoryChartOptions.dataLabels" [plotOptions]="categoryChartOptions.plotOptions"
+              [xaxis]="categoryChartOptions.xaxis" [yaxis]="categoryChartOptions.yaxis"
+              [fill]="categoryChartOptions.fill" [tooltip]="categoryChartOptions.tooltip"
+              [stroke]="categoryChartOptions.stroke"></apx-chart>
           </div>
         </div>
       </div>
@@ -53,28 +40,20 @@
         <div class="card-body">
           <h5 class="card-title">Evolução de Chamados</h5>
           <div id="chart-timeline">
-            <apx-chart
-              [series]="timelineChartOptions.series"
-              [chart]="timelineChartOptions.chart"
-              [xaxis]="timelineChartOptions.xaxis"
-              [stroke]="timelineChartOptions.stroke"
-              [tooltip]="timelineChartOptions.tooltip"
-              [dataLabels]="timelineChartOptions.dataLabels"
-            ></apx-chart>
+            <apx-chart [series]="timelineChartOptions.series" [chart]="timelineChartOptions.chart"
+              [xaxis]="timelineChartOptions.xaxis" [stroke]="timelineChartOptions.stroke"
+              [tooltip]="timelineChartOptions.tooltip" [dataLabels]="timelineChartOptions.dataLabels"></apx-chart>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div
-    class="row"
-    *ngIf="
+  <div class="row" *ngIf="
       statusChartOptions.series.length === 0 &&
       categoryChartOptions.series.length === 0 &&
       timelineChartOptions.series.length === 0
-    "
-  >
+    ">
     <div class="col-12 text-center py-5">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Carregando...</span>

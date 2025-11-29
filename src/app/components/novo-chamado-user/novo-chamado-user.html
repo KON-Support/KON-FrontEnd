@@ -38,24 +38,15 @@
               <label for="dsTitulo" class="form-label fw-medium">
                 Título <span class="text-danger">*</span>
               </label>
-              <input
-                type="text"
-                id="dsTitulo"
-                formControlName="dsTitulo"
-                class="form-control"
-                [class.is-invalid]="isFieldInvalid('dsTitulo')"
-                placeholder="Resumo do problema"
-                maxlength="30"
-              />
+              <input type="text" id="dsTitulo" formControlName="dsTitulo" class="form-control"
+                [class.is-invalid]="isFieldInvalid('dsTitulo')" placeholder="Resumo do problema" maxlength="30" />
               <div class="d-flex justify-content-between mt-1">
                 @if (isFieldInvalid('dsTitulo')) {
                 <small class="text-danger">{{ getFieldError('dsTitulo') }}</small>
                 } @else {
                 <small></small>
                 }
-                <small class="text-muted"
-                  >{{ caracteresRestantesTitulo }} caracteres restantes</small
-                >
+                <small class="text-muted">{{ caracteresRestantesTitulo }} caracteres restantes</small>
               </div>
             </div>
 
@@ -63,24 +54,16 @@
               <label for="dsDescricao" class="form-label fw-medium">
                 Descrição <span class="text-danger">*</span>
               </label>
-              <textarea
-                id="dsDescricao"
-                formControlName="dsDescricao"
-                class="form-control"
+              <textarea id="dsDescricao" formControlName="dsDescricao" class="form-control"
                 [class.is-invalid]="isFieldInvalid('dsDescricao')"
-                placeholder="Descreva detalhadamente o problema ou solicitação"
-                rows="5"
-                maxlength="300"
-              ></textarea>
+                placeholder="Descreva detalhadamente o problema ou solicitação" rows="5" maxlength="300"></textarea>
               <div class="d-flex justify-content-between mt-1">
                 @if (isFieldInvalid('dsDescricao')) {
                 <small class="text-danger">{{ getFieldError('dsDescricao') }}</small>
                 } @else {
                 <small></small>
                 }
-                <small class="text-muted"
-                  >{{ caracteresRestantesDescricao }} caracteres restantes</small
-                >
+                <small class="text-muted">{{ caracteresRestantesDescricao }} caracteres restantes</small>
               </div>
             </div>
 
@@ -94,12 +77,8 @@
                 <small class="text-muted">Carregando categorias...</small>
               </div>
               } @else {
-              <select
-                id="cdCategoria"
-                formControlName="cdCategoria"
-                class="form-select"
-                [class.is-invalid]="isFieldInvalid('cdCategoria')"
-              >
+              <select id="cdCategoria" formControlName="cdCategoria" class="form-select"
+                [class.is-invalid]="isFieldInvalid('cdCategoria')">
                 <option [ngValue]="null" disabled>Selecione uma categoria</option>
                 @for (categoria of categorias(); track categoria.cdCategoria) {
                 <option [ngValue]="categoria.cdCategoria">{{ categoria.nmCategoria }}</option>
@@ -115,17 +94,10 @@
                 Anexar Arquivo
                 <span class="badge bg-light text-muted ms-2">Opcional</span>
               </label>
-              <input
-                type="file"
-                id="anexo"
-                class="form-control"
-                (change)="onFileSelected($event)"
-                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
-              />
+              <input type="file" id="anexo" class="form-control" (change)="onFileSelected($event)"
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt" />
               @if (arquivoSelecionado) {
-              <div
-                class="mt-2 p-2 bg-light rounded d-flex align-items-center justify-content-between"
-              >
+              <div class="mt-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
                 <span class="text-success">
                   <i class="bi bi-file-earmark-check me-1"></i>
                   {{ arquivoSelecionado.name }}

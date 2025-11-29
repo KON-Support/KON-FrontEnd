@@ -10,6 +10,7 @@ import { OAuth2Service } from '../../services/oauth2-service';
     templateUrl: 'completar-cadastro.html',
     styleUrls: ['completar-cadastro.scss'],
 })
+
 export class CompletarCadastro implements OnInit {
     private fb = inject(FormBuilder);
     private oauth2Service = inject(OAuth2Service);
@@ -78,11 +79,10 @@ export class CompletarCadastro implements OnInit {
 
                     if (token && usuario) {
                         localStorage.setItem('token', token);
-                        
-                        // Extrai as roles do usuário retornado
+
                         const rolesArray = usuario.roles || [];
                         const rolesString = rolesArray.join(',');
-                        
+
                         setTimeout(() => {
                             this.oauth2Service.finalizarLogin(
                                 usuario.cdUsuario.toString(),
@@ -107,7 +107,7 @@ export class CompletarCadastro implements OnInit {
     apenasNumeros(event: any): void {
         const input = event.target;
         input.value = input.value.replace(/[^\d]/g, '');
-        
+
         if (input.value.length > 8) {
             input.value = input.value.substring(0, 8);
         }

@@ -15,6 +15,7 @@ import { Navbar } from '../../components/navbar/navbar';
   templateUrl: './chamados.html',
   styleUrl: './chamados.scss',
 })
+
 export class Chamados implements OnInit {
   private chamadoService = inject(ChamadoService);
   private categoriaService = inject(CategoriaService);
@@ -45,7 +46,7 @@ export class Chamados implements OnInit {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar chamados:', err);
+        console.error('Erro ao carregar chamados:', err);
         this.loading.set(false);
         this.cdr.markForCheck();
       },
@@ -57,7 +58,7 @@ export class Chamados implements OnInit {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar categorias:', err);
+        console.error('Erro ao carregar categorias:', err);
       },
     });
   }
@@ -92,8 +93,7 @@ export class Chamados implements OnInit {
   }
 
   onChamadoClick(chamado: Chamado): void {
-    console.log('🎯 Chamado clicado:', chamado.cdChamado);
-    // Implementar navegação para detalhes se necessário
+    console.log('Chamado clicado:', chamado.cdChamado);
   }
 
   abrirNovoChamado(): void {

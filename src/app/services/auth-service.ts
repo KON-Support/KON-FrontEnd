@@ -9,6 +9,7 @@ import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService {
   private http: HttpClient;
   private router: Router;

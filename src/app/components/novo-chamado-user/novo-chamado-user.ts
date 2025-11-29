@@ -16,6 +16,7 @@ import { Navbar } from '../navbar/navbar';
   templateUrl: './novo-chamado-user.html',
   styleUrls: ['./novo-chamado-user.scss'],
 })
+
 export class NovoChamadoUser implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);

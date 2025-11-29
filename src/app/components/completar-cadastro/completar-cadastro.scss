@@ -25,7 +25,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   i {
     font-size: 30px;
     color: #155dfc;
@@ -73,13 +73,13 @@
   border: none;
   border-radius: 8px;
   font-size: 14px;
-  
+
   &.alert-success {
     background: #f0fdf4;
     color: #166534;
     border: 1px solid #bbf7d0;
   }
-  
+
   &.alert-danger {
     background: #fef2f2;
     color: #dc2626;
@@ -104,14 +104,14 @@
 
 .user-info-section {
   border: 1px solid #e5e7eb;
-  
+
   .info-item {
     label {
       font-size: 12px;
       font-weight: 500;
       margin-bottom: 4px;
     }
-    
+
     .info-value {
       font-size: 14px;
       color: #374151;
@@ -121,11 +121,11 @@
 
 .info-box {
   border: 1px solid #e5e7eb;
-  
+
   p {
     font-size: 13px;
     line-height: 1.4;
-    
+
     strong {
       color: #374151;
     }
@@ -135,22 +135,22 @@
 .invalid-feedback {
   font-size: 12px;
   color: #dc2626;
-  
+
   div {
     margin-bottom: 2px;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
   }
 }
 
-// Animações
 @keyframes slideDown {
   from {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -165,11 +165,11 @@
   .register-wrapper {
     padding: 0.5rem;
   }
-  
+
   .register-card {
     border-radius: 12px;
   }
-  
+
   .card-body {
     padding: 1.5rem !important;
   }

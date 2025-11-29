@@ -39,21 +39,21 @@ export class ChamadoService {
   abrirChamado(chamado: ChamadoRequest): Observable<Chamado> {
 
     const formData = new FormData();
-    
+
     formData.append('dsTitulo', chamado.dsTitulo);
     formData.append('dsDescricao', chamado.dsDescricao);
     formData.append('status', chamado.status);
     formData.append('cdCategoria', chamado.cdCategoria.toString());
     formData.append('solicitante', chamado.solicitante.toString());
-    
+
     if (chamado.responsavel) {
       formData.append('responsavel', chamado.responsavel.toString());
     }
-    
+
     if (chamado.cdPlano) {
       formData.append('cdPlano', chamado.cdPlano.toString());
     }
-    
+
     if (chamado.anexo) {
       formData.append('anexo', chamado.anexo);
     }
@@ -62,7 +62,6 @@ export class ChamadoService {
   }
 
   atualizarStatus(cdChamado: number, status: Status): Observable<Chamado> {
-    // Endpoint: PUT /api/v1/chamado/atualizar/status/:cdChamado?status=STATUS
     return this.http.put<Chamado>(
       `${this.baseUrl}/atualizar/status/${cdChamado}?status=${status}`,
       {}
@@ -70,8 +69,6 @@ export class ChamadoService {
   }
 
   fecharChamado(cdChamado: number, status: Status): Observable<Chamado> {
-    // Endpoint solicitado: PUT /api/v1/chamado/fechar/:cdChamado
-    // Envia { status } no corpo para garantir informação do novo status
     return this.http.put<Chamado>(
       `${this.baseUrl}/fechar/${cdChamado}`,
       { status }

@@ -12,6 +12,7 @@ import { OAuth2Service } from '../../services/oauth2-service';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
+
 export class Login {
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);

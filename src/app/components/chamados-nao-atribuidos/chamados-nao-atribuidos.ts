@@ -16,6 +16,7 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './chamados-nao-atribuidos.html',
   styleUrl: './chamados-nao-atribuidos.scss',
 })
+
 export class ChamadosNaoAtribuidos implements OnInit {
   private chamadoService = inject(ChamadoService);
   private authService = inject(AuthService);
@@ -24,7 +25,7 @@ export class ChamadosNaoAtribuidos implements OnInit {
 
   protected chamadosNaoAtribuidos = signal<Chamado[]>([]);
   protected loading = signal(true);
-  
+
   protected filtroBusca: string = '';
   protected filtroStatus: string = '';
 
@@ -44,16 +45,13 @@ export class ChamadosNaoAtribuidos implements OnInit {
     let chamadosObservable: Observable<Chamado[]>;
 
     if (this.authService.isAdmin() || this.authService.isAgente()) {
-      // ADMIN e AGENTE: podem ver chamados não atribuídos
       chamadosObservable = this.chamadoService.buscarNaoAtribuidos();
     } else {
-      // USER: não tem acesso
       chamadosObservable = of([]);
     }
 
     chamadosObservable.pipe(
       catchError((err) => {
-        // Se for 403, significa que não tem permissão - retorna array vazio
         if (err.status === 403) {
           return of([]);
         }

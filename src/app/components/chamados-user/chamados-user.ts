@@ -110,8 +110,6 @@ export class ChamadosUser implements OnInit {
 
   onChamadoClick(chamado: Chamado): void {
     console.log('Chamado clicado:', chamado.cdChamado);
-    // Navegação para detalhes do chamado (implementar rota se necessário)
-    // this.router.navigate(['/chamado', chamado.cdChamado]);
   }
 
   abrirNovoChamado(): void {

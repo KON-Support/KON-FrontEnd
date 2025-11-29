@@ -26,6 +26,7 @@ export interface UsuarioResponse {
 @Injectable({
   providedIn: 'root',
 })
+
 export class UsuarioService {
   private http = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/usuario`;

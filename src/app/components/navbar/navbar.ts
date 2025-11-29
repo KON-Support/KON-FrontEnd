@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
+
 export class Navbar {
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -24,7 +25,7 @@ export class Navbar {
   closeSidebar(): void {
     this.sidebarOpen = false;
   }
-  
+
   get user() {
     const u = this.authService.currentUser();
     return {

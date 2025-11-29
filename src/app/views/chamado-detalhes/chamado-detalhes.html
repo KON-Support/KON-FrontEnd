@@ -13,10 +13,8 @@
         <p class="mt-3 text-break">{{ chamado?.dsDescricao }}</p>
         @if(chamado?.anexo) {
         <div class="mt-3">
-          <button
-            class="btn btn-outline-primary"
-            (click)="baixarAnexo(chamado?.anexo?.cdAnexo, chamado?.anexo?.nmArquivo)"
-          >
+          <button class="btn btn-outline-primary"
+            (click)="baixarAnexo(chamado?.anexo?.cdAnexo, chamado?.anexo?.nmArquivo)">
             <i class="bi bi-paperclip">Anexo</i>
           </button>
         </div>
@@ -32,26 +30,21 @@
             } @for (comentario of comentarios; track comentario.cdComentario) {
             <li class="mb-3 border border p-3 rounded fundo">
               <div class="d-flex align-items-center mb-1">
-                <strong class="bg-dark text-white p-2 rounded-circle"
-                  >{{ getComentarioNomeUsuario(comentario).charAt(0).toUpperCase()
+                <strong class="bg-dark text-white p-2 rounded-circle">{{
+                  getComentarioNomeUsuario(comentario).charAt(0).toUpperCase()
                   }}{{
-                    getComentarioNomeUsuario(comentario)
-                      .charAt(getComentarioNomeUsuario(comentario).length - 1)
-                      .toUpperCase()
-                  }}</strong
-                >
+                  getComentarioNomeUsuario(comentario)
+                  .charAt(getComentarioNomeUsuario(comentario).length - 1)
+                  .toUpperCase()
+                  }}</strong>
                 <strong class="ms-3">{{ getComentarioNomeUsuario(comentario) }}</strong>
-                <span class="text-muted small ms-3"
-                  >{{ comentario.dtCriacao | date : 'dd/MM' }},
-                  {{ formatarHora(comentario.hrCriacao) }}</span
-                >
+                <span class="text-muted small ms-3">{{ comentario.dtCriacao | date : 'dd/MM' }},
+                  {{ formatarHora(comentario.hrCriacao) }}</span>
               </div>
               <p class="mt-3">{{ comentario.dsConteudo }}</p>
               @if(comentarioTemAnexo(comentario)) {
-              <button
-                class="btn btn-outline-primary btn-sm"
-                (click)="baixarAnexo(comentario.cdAnexo, comentario.anexo?.nmArquivo)"
-              >
+              <button class="btn btn-outline-primary btn-sm"
+                (click)="baixarAnexo(comentario.cdAnexo, comentario.anexo?.nmArquivo)">
                 <i class="bi bi-paperclip"></i>Anexo
               </button>
               }
@@ -65,36 +58,19 @@
         <h5>Adicionar Comentário</h5>
         <form>
           <div class="mb-3">
-            <textarea
-              class="form-control"
-              rows="3"
-              [(ngModel)]="novoConteudo"
-              name="comentario"
-              placeholder="Digite uma mensagem..."
-              required
-            ></textarea>
-            <label for="anexo" class="form-label mt-3"
-              >Anexar arquivo
+            <textarea class="form-control" rows="3" [(ngModel)]="novoConteudo" name="comentario"
+              placeholder="Digite uma mensagem..." required></textarea>
+            <label for="anexo" class="form-label mt-3">Anexar arquivo
               <span class="text-muted small">(opcional)</span>
             </label>
-            <input
-              type="file"
-              id="anexo"
-              class="form-control"
-              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
-              (change)="onFileSelected($event)"
-            />
+            <input type="file" id="anexo" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
+              (change)="onFileSelected($event)" />
             <small class="text-muted d-block mt-2">
               <i class="bi bi-info-circle me-1"></i>
               Formatos aceitos: PDF, DOC, DOCX, JPG, PNG, TXT (máx. 20MB)
             </small>
           </div>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            (click)="postarComentario()"
-            [disabled]="!novoConteudo.trim()"
-          >
+          <button type="submit" class="btn btn-primary" (click)="postarComentario()" [disabled]="!novoConteudo.trim()">
             Enviar
           </button>
         </form>
@@ -108,12 +84,7 @@
           <h5 class="mb-3">Ações</h5>
           <p class="text-center">
             <strong>Status</strong>
-            <select
-              class="form-select mt-2"
-              name="status"
-              id="status"
-              (change)="onStatusChange($event)"
-            >
+            <select class="form-select mt-2" name="status" id="status" (change)="onStatusChange($event)">
               @for (status of todosStatus; track $index) {
               <option [value]="status" [selected]="chamado?.status === status">
                 {{ formatarStatus(status) }}
@@ -146,8 +117,7 @@
             }
           </p>
           <p>
-            <i class="bi bi-calendar-event me-2"></i
-            ><span class="text-muted">Data de criação:</span>
+            <i class="bi bi-calendar-event me-2"></i><span class="text-muted">Data de criação:</span>
             {{ chamado?.dtCriacao | date : 'dd/MM/yyyy' }},
             {{ chamado?.dtCriacao | date : 'HH:mm' }}
           </p>

@@ -7,6 +7,7 @@ import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
+
 export class CategoriaService {
 
   private http = inject(HttpClient);

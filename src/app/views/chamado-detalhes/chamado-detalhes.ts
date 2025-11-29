@@ -26,6 +26,7 @@ import { AuthService } from '../../services/auth-service';
   templateUrl: './chamado-detalhes.html',
   styleUrl: './chamado-detalhes.scss',
 })
+
 export class ChamadoDetalhes implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -73,7 +74,7 @@ export class ChamadoDetalhes implements OnInit, OnDestroy {
       setTimeout(() => {
         this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
       }, 100);
-    } catch (err) {}
+    } catch (err) { }
   }
 
   ngOnInit(): void {
