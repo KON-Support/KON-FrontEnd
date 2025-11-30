@@ -83,14 +83,31 @@ export class Cadastro {
       },
       error: (err) => {
         this.loading = false;
-        this.cdr.detectChanges();
 
-        if (err.status === 500 || err.status === 400) {
-          this.error = err.error?.message || 'E-mail já cadastrado.';
+        if (err.status === 409) {
+          // Conflict - Email já cadastrado
+          this.error = err.error?.message ||
+            'Este e-mail já está cadastrado. Tente fazer login ou use outro e-mail.';
+        } else if (err.status === 400) {
+          // Bad Request
+          this.error = err.error?.message ||
+            'Dados inválidos. Verifique as informações e tente novamente.';
+        } else if (err.status === 500) {
+          // Internal Server Error
+          this.error = err.error?.message ||
+            'Erro no servidor. Tente novamente mais tarde.';
+        } else if (err.status === 0) {
+          // Erro de rede
+          this.error = 'Erro de conexão. Verifique sua internet e tente novamente.';
         } else {
-          this.error = 'Erro ao cadastrar usuário. Tente novamente.';
+          // Outros erros
+          this.error = err.error?.message ||
+            err.message ||
+            'Erro ao cadastrar usuário. Tente novamente.';
         }
-        console.error(err);
+
+        console.log('Mensagem de erro definida:', this.error);
+        this.cdr.detectChanges();
       }
     });
   }

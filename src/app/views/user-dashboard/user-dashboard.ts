@@ -198,6 +198,6 @@ export class UserDashboard implements OnInit {
   }
 
   protected verDetalhesChamado(chamado: Chamado): void {
-    console.log('Ver detalhes:', chamado);
+    this.router.navigate([`/chamado/detalhes/${chamado.cdChamado}`]);
   }
 }
